@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">62</span> / Reading time: <span class="post-count">1 min</span></span>
+                        <span>Word count: <span class="post-count">429</span> / Reading time: <span class="post-count">1 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -399,8 +399,25 @@ height:50vh;
         <p>小试牛刀一下，很初级的内网渗透过程</p>
 <span id="more"></span>
 
-<h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><p>该靶场的主机有三个，分别为Windows7，Windows Server 2003和Windows Server 2008。再加上攻击机kali，四台机器的网络拓扑结构如下图所示。</p>
-<p><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-1-1.png"></p>
+<h1 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h1><p>该靶场的主机有三个，分别为Windows7，Windows Server 2003和Windows Server 2008。再加上攻击机kali，四台机器的网络拓扑结构如下图所示。<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-1-1.png" alt="Intranet_attack-1-1"></p>
+<h1 id="外网渗透"><a href="#外网渗透" class="headerlink" title="外网渗透"></a>外网渗透</h1><p>Win7上有phpstudy，首先探测端口</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmap -sS -sV -Pn -p 1-65535 172.16.61.128</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-2-1.png" alt="Intranet_attack-2-1"></p>
+<p>发现开启了80端口和3389.</p>
+<p>扫一下目录<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-2-2.png" alt="Intranet_attack-2-2"><br>发现文件beifen.rar，疑似网站源代码，分析代码之后发现首页公告中注明了管理页面的访问方式<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-2-3.png" alt="Intranet_attack-2-3"><br>管理后台有直接执行SQL语句的功能，尝试写入一句话木马<br><img src="/./../imgs/Intranet_attack-2-4.png" alt="Intranet_attack-2-4"><br><img src="/./../imgs/Intranet_attack-2-5.png" alt="Intranet_attack-2-5"><br><img src="/./../imgs/Intranet_attack-2-6.png" alt="Intranet_attack-2-6"><br>蚁剑成功连接<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-2-7-1691615746294-11.png" alt="Intranet_attack-2-7"></p>
+<h1 id="内网渗透"><a href="#内网渗透" class="headerlink" title="内网渗透"></a>内网渗透</h1><h2 id="获取权限"><a href="#获取权限" class="headerlink" title="获取权限"></a>获取权限</h2><p>Kali建立监听<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-1.png" alt="Intranet_attack-3-1"><br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-2.png" alt="Intranet_attack-3-2"><br>生成hta文件<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-3.png" alt="Intranet_attack-3-32"><br>使用蚁剑将文件上传到服务器上并执行<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-4.png" alt="Intranet_attack-3-4"><br>成功回弹shell<br>尝试getsystem提权<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-5.png" alt="Intranet_attack-3-5"></p>
+<h2 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h2><p>Ipconfig<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-6.png" alt="Intranet_attack-3-6"><br>探测内网其他主机<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-7.png" alt="Intranet_attack-3-7"><br>查看当前域<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-8.png" alt="Intranet_attack-3-8"><br>域内用户列表<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-9.png" alt="Intranet_attack-3-9"><br>域内计算机列表<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-10.png" alt="Intranet_attack-3-10"><br>查看域控<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-11.png" alt="Intranet_attack-3-11"><br>定位域控IP<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-12.png" alt="Intranet_attack-3-12"><br>内网信息收集完毕，内网中有除了跳板机以外还有两台主机，192.168.52.141和<br>192.168.52.138，其中138为域控。</p>
+<h2 id="渗透域控"><a href="#渗透域控" class="headerlink" title="渗透域控"></a>渗透域控</h2><p>添加路由<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-13.png" alt="Intranet_attack-3-13"><br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-14.png" alt="Intranet_attack-3-14"><br>修改修改proxychains4.conf</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/proxychains4.conf</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-15.png" alt="Intranet_attack-3-15"><br>开始扫描（踩了个大坑，这里不加上 -sT -Pn 参数，将无法使用 proxychains 进行代理扫描）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">proxychains nmap -sT -sV -Pn -p22,80,443,445,135 192.168.52.138</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-16.png" alt="Intranet_attack-3-16"><br>尝试用ms17-010进行攻击：<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-17.png" alt="Intranet_attack-3-17"><br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-18.png" alt="Intranet_attack-3-18"><br>不知道为啥远程桌面没有开启成功，转而尝试PTH，首先开启win7的远程桌面<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-19.png" alt="Intranet_attack-3-19"><br>上传mimikatz获取明文密码<br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-20.png" alt="Intranet_attack-3-20"><br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-21.png" alt="Intranet_attack-3-21"><br><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-22.png" alt="Intranet_attack-3-22"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sekurlsa::pth /domain:god.org /user:administrator /ntlm: sekurlsa::pth /domain:god.org /user:administrator /ntlm: 81be2f80d568100549beac645d6a7141</span><br><span class="line">dir [\\192.168.52.138\c$](file://192.168.52.138/c$)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/./../imgs/$%7Bfiilename%7D/Intranet_attack-3-23.png" alt="Intranet_attack-3-23"><br>拿下域控</p>
 
     </article>
     <!-- license  -->
@@ -550,7 +567,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">环境搭建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%96%E7%BD%91%E6%B8%97%E9%80%8F"><span class="toc-number">2.</span> <span class="toc-text">外网渗透</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F"><span class="toc-number">3.</span> <span class="toc-text">内网渗透</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%9D%83%E9%99%90"><span class="toc-number">3.1.</span> <span class="toc-text">获取权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86"><span class="toc-number">3.2.</span> <span class="toc-text">信息收集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B8%97%E9%80%8F%E5%9F%9F%E6%8E%A7"><span class="toc-number">3.3.</span> <span class="toc-text">渗透域控</span></a></li></ol></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
@@ -839,12 +856,12 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
         </li>
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
         </li>
     
     
@@ -869,9 +886,9 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
     
-        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
-    
         <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
     
         <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
     
@@ -879,11 +896,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
     
-        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
     
         <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
     
-        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
     
     </div>
     <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
@@ -920,9 +937,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
     
-        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
-    
         <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
     
         <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
     
