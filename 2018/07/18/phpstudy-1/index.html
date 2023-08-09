@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>php学习笔记-基础部分 · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">php学习笔记-基础部分</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            php学习笔记-基础部分
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "php学习">php学习</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">6.8k</span> / Reading time: <span class="post-count">26 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/07/18</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>珍爱生命，远离php</p>
+<span id="more"></span>
+<h1 id="PHP基本语法"><a href="#PHP基本语法" class="headerlink" title="PHP基本语法"></a>PHP基本语法</h1><p>php是一种服务器端嵌入html脚本语言，也就是说可以将php标签嵌入到html代码中 </p>
+<h2 id="语法规则"><a href="#语法规则" class="headerlink" title="语法规则"></a>语法规则</h2><p>php每条语句后面必须有“;” <br /><br>php中的变量名必须区分大小写，函数名、方法名、类名不区分 <br /></p>
+<h2 id="PHP标记"><a href="#PHP标记" class="headerlink" title="PHP标记"></a>PHP标记</h2><p>①<code>&lt;?php ...?&gt;</code> <br /><br>②<code>&lt;script language=&quot;php&quot;&gt;...&lt;/script&gt;</code> <br /><br>③<code>&lt;? ... ?&gt;</code> (默认关闭，需要手动开启) <br /><br>④<code>&lt;% ... %&gt;</code> (默认关闭，需要手动开启) <br /><br>在php.ini中开启</p>
+<h2 id="注释"><a href="#注释" class="headerlink" title="注释"></a>注释</h2><p>单行注释：&#x2F;&#x2F;注释内容 <br /><br>多行注释：&#x2F;*注释内容*&#x2F; <br /></p>
+<h1 id="变量及操作"><a href="#变量及操作" class="headerlink" title="变量及操作"></a>变量及操作</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>变量是内存中用于临时存储数据的一个空间，这个空间有一个名字，名字就是变量名。变量名是用于对这个内存中的数据进行引用的。</p>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>语法：  <br /><br>    $变量名&#x3D;值;<br>说明：  <br /><br>    php中的变量必须以”$”开头 <br /><br>    变量名只能包含字母、数字、下划线，只能以字母、下划线开头。</p>
+<h2 id="删除变量"><a href="#删除变量" class="headerlink" title="删除变量"></a>删除变量</h2><p>语法:  <br /><br>    unset(变量名)</p>
+<h2 id="可变变量"><a href="#可变变量" class="headerlink" title="可变变量"></a>可变变量</h2><p>1.通过一个变量来访问另一个变量</p>
+<pre><code>&lt;?php
+    $v = &#39;age&#39;
+    $age = &#39;20&#39;
+    echo $v;
+    echo $$v;
+?&gt;
+</code></pre>
+<p>结果：</p>
+<pre><code>age
+20
+</code></pre>
+<p>2.通过一个变量来创建另一个变量</p>
+<pre><code>&lt;?php
+    $v = &#39;age&#39;
+    $vv = &#39;20&#39;
+    echo $age;
+?&gt;
+</code></pre>
+<p>结果：</p>
+<pre><code>20
+</code></pre>
+<h2 id="预定义变量"><a href="#预定义变量" class="headerlink" title="预定义变量"></a>预定义变量</h2><p>php为了我们预先定义了一组变量，这些变量会在不同的需求中使用 <br /><br>$_GET		用于前台表单使用get方式提交的数据 <br /><br>$_POST		用于前台表单使用post方式提交的数据 <br /><br>$_REQUEST	用于前台表单使用get或post方式提交的数据 <br /><br>$_SERVER	记录了服务器端与客户端的相关信息 <br /><br>$_COOKIE	一种会话技术 <br /><br>$_SESSION	一种会话技术 <br /><br>$_FILES	用于记录用户上传的文件信息 <br /><br>$_GLOBAL	用于记录全局变量 <br /><br>使用方法：  <br /><br>print_r($_SERVER)</p>
+<h1 id="内存原理"><a href="#内存原理" class="headerlink" title="内存原理"></a>内存原理</h1><h2 id="内存结构"><a href="#内存结构" class="headerlink" title="内存结构"></a>内存结构</h2><h3 id="栈区"><a href="#栈区" class="headerlink" title="栈区"></a>栈区</h3><p>保存的是变量名（术语称之为引用） <br /><br>特点：对于CPU来说，读写速度是最快的</p>
+<h3 id="堆区"><a href="#堆区" class="headerlink" title="堆区"></a>堆区</h3><p>存储的是是“复杂”的数据，比如数据、对象、字符串</p>
+<h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><p>分为全局数据段和静态数据段 <br /><br>存储的是简单的数据，比如整型、浮点型、布尔值 <br /><br>（计算机能存储的最大整数为2147483647）</p>
+<h3 id="代码段"><a href="#代码段" class="headerlink" title="代码段"></a>代码段</h3><p>存储的是源代码对应的机器指令</p>
+<h3 id="输出缓存"><a href="#输出缓存" class="headerlink" title="输出缓存"></a>输出缓存</h3><p>只要是有输出指令，比如echo、print、var_dump。这些指令会将所有要输出的数据放在输出缓存中</p>
+<h2 id="php执行过程"><a href="#php执行过程" class="headerlink" title="php执行过程"></a>php执行过程</h2><h3 id="编译阶段"><a href="#编译阶段" class="headerlink" title="编译阶段"></a>编译阶段</h3><p>进行语法检查、词法检查、代码优化 <br /><br>编译通过之后将源代码转换为机器指令 <br /><br>Parse error：编译阶段发生错误，语法有问题</p>
+<h3 id="执行阶段"><a href="#执行阶段" class="headerlink" title="执行阶段"></a>执行阶段</h3><p>如果编译通过后，会将源代码对应的机器指令，保存在代码段，再开始执行代码段中的机器指令 <br /><br>例如：</p>
+<pre><code>&lt;?php
+$v1 = 10;
+$v2 = $v1;
+$v2 = 20;
+echo $v1;
+?&gt;
+</code></pre>
+<p>执行过程如下: <br /><br>1、先通过编译阶段，将源代码存储在代码段中。 <br /><br>2、执行$v1&#x3D;10，会在栈区开辟一个空间存储变量$v1，将数据保存到数据段的全局区，再将数据的物理地址赋给栈区的变量$v1。 <br /><br>3、执行$v2&#x3D;$v1，在栈区开辟一个空间存储变量$v2，读取变量$v1的值，读取出来的数据保存在数据段全局区，将这个数据的地址赋值给栈区中的$v2。 <br /><br>4、执行$v2&#x3D;20，找到栈区中的$v2，并根据地址找到数据段全局区对应的空间，将数据覆盖。 <br /><br>5、执行echo $v1，找到栈区中的变量$v1，并根据地址找到数据段全局区中的值，将值读取出来，并放入到输出缓存中。 <br /><br>6、程序执行结束，输出缓存中的数据会自动返回给apache，apache返回给浏览器，同时栈区、数据段、代码段中的数据会被系统清空</p>
+<h2 id="PHP嵌入到HTML的执行过程"><a href="#PHP嵌入到HTML的执行过程" class="headerlink" title="PHP嵌入到HTML的执行过程"></a>PHP嵌入到HTML的执行过程</h2><p>php功能模块在处理一个php文件时，它只会处理php代码，对于非php代码，它会原样输出 到输出缓存中，由输出缓存发给apche来解析html以及js代码等<br /><br>php仅处理<code>&lt;?php?&gt;</code>标签内的代码，js、html、css对php来说都是字符串 <br /></p>
+<h2 id="php中变量的传值方式"><a href="#php中变量的传值方式" class="headerlink" title="php中变量的传值方式"></a>php中变量的传值方式</h2><h3 id="赋值传值"><a href="#赋值传值" class="headerlink" title="赋值传值"></a>赋值传值</h3><p>使用一个变量a为另一个变量b赋值时，传递的是变量a的值，这种赋值方式称为赋值传值</p>
+<pre><code>$a = 10
+$b = $a
+echo $b
+</code></pre>
+<p>结果：</p>
+<pre><code>10
+</code></pre>
+<h3 id="引用传值"><a href="#引用传值" class="headerlink" title="引用传值"></a>引用传值</h3><p>使用一个变量a为另一个变量b赋值时，传递的是变量a的地址，这种赋值方式称为引用传值</p>
+<pre><code>$a = 10;
+$b = &amp;$a;
+$b = 20;
+echo $a,$b;
+</code></pre>
+<p>结果：</p>
+<pre><code>20,20
+</code></pre>
+<p>执行<code>$b = &amp;$a;</code>时，由于多了一个&amp;符号，所以内存会在栈区中开辟一个空间存储变量$b,并将$a的物理地址赋值给$b。 <br /><br>执行<code>$b = 20;</code>时，根据$b的物理地址找到数据段全局区中的数据并覆盖，由于$a的物理地址也是这个地址，所以$a的值也被改为20。</p>
+<h1 id="常量"><a href="#常量" class="headerlink" title="常量"></a>常量</h1><p>常量是一种特殊的变量，也是用于存储数据。常量一旦定义就不允许修改其值，常量本身不允许删除</p>
+<h2 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h2><p>define（’常量名’，值）； <br /><br>const 常量名 &#x3D; 值； <br /><br>常量一旦被定义就不允许更改 <br /><br>常量的值只能是基本数据类型（标量数据类型） <br /><br>常量默认区分大小写，一般常量在没命时，我们会使用全大写的形式 <br /><br>区别： <br /><br>define允许在分支结构（比如循环语句）中定义常量，但是const不允许 <br /><br>define在值后面加一个true，定义的常量将不区分大小写</p>
+<h2 id="常量的判断以及获取所有的常量"><a href="#常量的判断以及获取所有的常量" class="headerlink" title="常量的判断以及获取所有的常量"></a>常量的判断以及获取所有的常量</h2><h3 id="常量的判断"><a href="#常量的判断" class="headerlink" title="常量的判断"></a>常量的判断</h3><p>defined（‘常量名’） <br /><br>比define多了一个d，判断返回布尔值 <br /></p>
+<h3 id="获取所有常量"><a href="#获取所有常量" class="headerlink" title="获取所有常量"></a>获取所有常量</h3><p>get_defined_constants(); <br /><br>获取php中所有的常量</p>
+<h2 id="魔术常量"><a href="#魔术常量" class="headerlink" title="魔术常量"></a>魔术常量</h2><p>__FILE__	用于获取当前文件路径以及文件名 <br /><br>__DIR__		用于获取当前文件的路径 <br /><br>__LINE__	用于获取当前行号 <br /><br>__FUNCTION__用于获取函数的函数名 <br /><br>__METHOD__	用于获取当前方法的方法名 <br /><br>__CLASS__	用于获取当前类的类名 <br /><br>__NAMESPACE__用于获取当前空间的空间名 <br /></p>
+<h1 id="PHP中的数据类型"><a href="#PHP中的数据类型" class="headerlink" title="PHP中的数据类型"></a>PHP中的数据类型</h1><h2 id="数据类型的分类"><a href="#数据类型的分类" class="headerlink" title="数据类型的分类"></a>数据类型的分类</h2><p>1.标量数据类型 <br /><br>int 	整型 <br /><br>float 	浮点型 <br /><br>boolean 布尔型<br /><br>string 	字符串<br /></p>
+<p>2.复合数据类型 <br /><br>array 	数组<br /><br>object 	对象<br /></p>
+<p>3.特殊数据类型 <br /><br>null 	null<br /><br>resource 资源类型<br /></p>
+<h3 id="int型"><a href="#int型" class="headerlink" title="int型"></a>int型</h3><h4 id="十进制"><a href="#十进制" class="headerlink" title="十进制"></a>十进制</h4><p>$v&#x3D;255 <br /></p>
+<h4 id="八进制"><a href="#八进制" class="headerlink" title="八进制"></a>八进制</h4><p>以0开头，并且不能有超过7的数字 </p>
+<h4 id="十六进制"><a href="#十六进制" class="headerlink" title="十六进制"></a>十六进制</h4><p>以0x开头，包含0-9、a-f <br /></p>
+<p>其他进制在显示时会自动转换为十进制</p>
+<h3 id="float型"><a href="#float型" class="headerlink" title="float型"></a>float型</h3><p>有小数点的数就成为浮点数 <br /><br>浮点数不可能在不丢失精度的情况下转为二进制格式，所以使用浮点数进行运算的时候会出现偏差</p>
+<h3 id="string型"><a href="#string型" class="headerlink" title="string型"></a>string型</h3><p>字符串即单引号或者双引号括起来的0个或多个字符 <br /></p>
+<h4 id="单引号"><a href="#单引号" class="headerlink" title="单引号"></a>单引号</h4><p>在单引号内能被转义的字符串：&#39;、\\ <br /><br>单引号定义的字符串中的变量值不能被解析</p>
+<h4 id="双引号"><a href="#双引号" class="headerlink" title="双引号"></a>双引号</h4><p>在双引号内能被转义的字符串：&quot;、\t、\r、\n、\\、$ <br /><br>双引号定义的字符串中的变量值可以被解析（加{}可以插入变量）</p>
+<h4 id="heredoc"><a href="#heredoc" class="headerlink" title="heredoc"></a>heredoc</h4><p>类似于双引号定义字符串，主要用于定义大段的字符串 <br /><br>语法： <br /></p>
+<pre><code>    $heredoc = &lt;&lt;&lt;开始标记
+    大段文本
+结束标记；
+</code></pre>
+<p>开始标记和结束标记必须相同 <br /><br>结束标记必须定格写 <br /><br>nowdoc:本质上和heredoc一样，只不过nowdoc为单引号书写</p>
+<h3 id="array型"><a href="#array型" class="headerlink" title="array型"></a>array型</h3><h4 id="索引数组"><a href="#索引数组" class="headerlink" title="索引数组 "></a>索引数组 <br /></h4><p>数组元素下标是数值，这样的数组就是索引数组 <br /></p>
+<h4 id="关联数组"><a href="#关联数组" class="headerlink" title="关联数组 "></a>关联数组 <br /></h4><p>数组元素的下标是字符串，这样的数组就是管理数组 <br /></p>
+<h4 id="数组元素的访问"><a href="#数组元素的访问" class="headerlink" title="数组元素的访问"></a>数组元素的访问</h4><p>$a &#x3D; “&lt;h3&gt;$_arry[AAA]&lt;&#x2F;h3&gt;“ <br /><br>or <br /><br>$a &#x3D; “&lt;h3&gt;{$_arry[‘AAA’]}&lt;&#x2F;h3&gt;“ <br /><br>如果在一个字符串中想输出数组的元素，那么下标不需加引号 <br /><br>如果使用了{}来限制了数组，那么下标必须加引号 <br /></p>
+<h3 id="资源类型"><a href="#资源类型" class="headerlink" title="资源类型"></a>资源类型</h3><p>资源型数据类型是一个特殊的变量，程序员没有办法直接定义一个资源，必须使用php提供的函数获取资源。不被php管辖的变量都称为资源，比如与mysql的连接 <br /></p>
+<pre><code>$resource = fopen(&#39;data.txt&#39;,&#39;r&#39;);
+echo fgets($resource);
+</code></pre>
+<p>以读的方式打开data.txt，并将内容echo出来，$resource就是一个资源型数据</p>
+<h1 id="数据类型的转换"><a href="#数据类型的转换" class="headerlink" title="数据类型的转换"></a>数据类型的转换</h1><h2 id="自动转换"><a href="#自动转换" class="headerlink" title="自动转换"></a>自动转换</h2><p>当进行运算的两个数据类型不同的时候，php会进行自动转换</p>
+<h2 id="强制转换"><a href="#强制转换" class="headerlink" title="强制转换"></a>强制转换</h2><p>(interger)变量	将其他数据类型强制转换为整型 <br /><br>(float)变量		将其他数据类型强制转换为浮点型 <br /><br>(array)变量		将其他数据类型强制转换为数组 <br /><br>(object)变量		将其他数据类型强制转换为对象 <br /><br>(string)变量		将其他数据类型强制转换为字符串 <br /><br>(boolean)变量	将其他数据类型强制转换为布尔值 <br /></p>
+<h1 id="运算符"><a href="#运算符" class="headerlink" title="运算符"></a>运算符</h1><h2 id="赋值运算符"><a href="#赋值运算符" class="headerlink" title="赋值运算符"></a>赋值运算符</h2><p>&#x3D; <br /><br>将赋值号右边的值赋给左边的变量，左边必须是变量不能是式子</p>
+<h2 id="算数运算符"><a href="#算数运算符" class="headerlink" title="算数运算符"></a>算数运算符</h2><p>+、-、*、&#x2F;、% <br /><br>%	取膜，即求两数相除，除不尽的部分 <br /><br>在实际运用中，取膜用于判断奇偶数 <br /></p>
+<h2 id="自操作运算符"><a href="#自操作运算符" class="headerlink" title="自操作运算符"></a>自操作运算符</h2><h3 id="自增、–自减"><a href="#自增、–自减" class="headerlink" title="++ 自增、–自减 "></a>++ 自增、–自减 <br /></h3><p>前自增&#x2F;减：先对变量的值自增&#x2F;减1，再使用新值参与运算(先在内存中加1&#x2F;减1，再把值从内存中拿出来) <br /><br>后自增&#x2F;减：先用变量的原值参与式子的运算，在对变量的值加&#x2F;减1 <br /></p>
+<pre><code>&lt;?php
+    $v = 10
+    $a = $v + ++$v + ++$v + ++$v + ++$v
+    echo $v,$a
+</code></pre>
+<p>结果</p>
+<pre><code>61,14
+</code></pre>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>$i+&#x3D;2 <br /><br>$i-&#x3D;2 <br /><br>$i*&#x3D;2 <br /><br>$i&#x2F;&#x3D;2 <br /><br>$i%&#x3D;2 <br /></p>
+<h2 id="字符串运算符"><a href="#字符串运算符" class="headerlink" title="字符串运算符"></a>字符串运算符</h2><p>.、.&#x3D;	:对字符串进行拼接 <br /><br>当.后面拼接的为一个数字，则数字和.之间要有一个空格，否则php会认为是小数点</p>
+<h2 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h2><p><code>&gt;、&lt;、&gt;=、&lt;=、==、!=、===、!==</code> <br /><br><code>==</code>	用于判断两个数的值是否相同 <br /><br><code>===</code> 	用于判断变量的值与类型是否相等，相等则返回true <br /><br><code>！=</code>	用于判断两个变量的值是否不同 <br /><br><code>！==</code>	用于判断两个变量的值或类型至少有一方面不相同 <br /></p>
+<h2 id="逻辑运算符"><a href="#逻辑运算符" class="headerlink" title="逻辑运算符"></a>逻辑运算符</h2><p>&amp;&amp; 	逻辑与 <br /><br>|| 	逻辑或 <br /><br>! 	逻辑非 <br /><br>and 逻辑与，和&amp;&amp;运算规则相同，但是and优先级低于&#x3D; <br /><br>or 	逻辑或，和||运算规则相同，但是or优先级低于&#x3D; <br /></p>
+<h3 id="逻辑与短路"><a href="#逻辑与短路" class="headerlink" title="逻辑与短路"></a>逻辑与短路</h3><pre><code>$v1 = 10;
+$result = false &amp;&amp; ++v1;
+var_dump($result); // 10
+</code></pre>
+<p>因为逻辑与运算中有一个为FALSE，结果就为False，就没必要去计算第二个值的结果</p>
+<h3 id="逻辑或短路"><a href="#逻辑或短路" class="headerlink" title="逻辑或短路"></a>逻辑或短路</h3><pre><code>$v1 = 10;
+$result = true || ++v1;
+var_dump($v2); // 10
+</code></pre>
+<p>逻辑或运算中，只要有一个为True或能转换为True，结果就返回True，就没必要去计算第二个值的结果</p>
+<h3 id="逻辑非的一种用法"><a href="#逻辑非的一种用法" class="headerlink" title="逻辑非的一种用法"></a>逻辑非的一种用法</h3><p>在变量名前面加两个！，比如!!v1，意为把v1强制转换为布尔值</p>
+<h2 id="条件运算符"><a href="#条件运算符" class="headerlink" title="条件运算符"></a>条件运算符</h2><p>三元运算符 <br /><br>语法: <br /><br>    表达式？表达式A：表达式B <br /><br>先计算表达式是否成立，如果成立去表达式A的值，不成立救取表达式B的值 <br /><br>扩展： <br /><br>    变量？：表达式B <br /><br>如果变量存在且值不为空，那么就取变量，否则取表达式B</p>
+<h2 id="错误控制运算符"><a href="#错误控制运算符" class="headerlink" title="错误控制运算符"></a>错误控制运算符</h2><h3 id="错误抑制符"><a href="#错误抑制符" class="headerlink" title="错误抑制符"></a>错误抑制符</h3><p>@	错误抑制符 <br /><br>不显示错误信息 <br /></p>
+<h3 id="php-ini"><a href="#php-ini" class="headerlink" title="php.ini"></a>php.ini</h3><p>在php.ini中，将display_errors的值改为off，就不会显示错误信息 <br /><br>php.ini隐藏错误为全局隐藏，这个服务器下的所有页面的错误信息都会隐藏 <br /></p>
+<h3 id="脚本级的错误控制"><a href="#脚本级的错误控制" class="headerlink" title="脚本级的错误控制"></a>脚本级的错误控制</h3><p>脚本级的错误控制仅限于当前的php脚本文件 <br /><br>ini_set(配置项名，值) 主要用于在php脚本中来设置php.ini中的配置项 <br /><br>ini_get（配置项) 主要用于获取php.ini配置文件中的配置项的值 <br /></p>
+<h1 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h1><h2 id="分支结构"><a href="#分支结构" class="headerlink" title="分支结构"></a>分支结构</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><pre><code>if(条件1)&#123;
+    语句体1
+&#125;else if(条件2)&#123;
+    语句体2
+&#125;else&#123;
+    语句体3
+&#125;
+</code></pre>
+<h3 id="swich"><a href="#swich" class="headerlink" title="swich"></a>swich</h3><pre><code>switch()&#123;
+  case 值1:
+    语句体 1
+    break;
+  case 值2:
+    语句体 2
+    break;
+  default:
+    缺省语句体
+&#125;
+</code></pre>
+<p>当一个语句体执行结束后，如果没有遇到break，则会继续执行下面一条语句体，且不会判断下面那条语句体前面的case</p>
+<h2 id="循环结构"><a href="#循环结构" class="headerlink" title="循环结构"></a>循环结构</h2><h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><pre><code>for(循环控制变量初始值;表达式;循环控制变量的更改)&#123;
+  循环体
+&#125;
+</code></pre>
+<p>执行顺序： <br /><br>1、首先执行循环控制变量初始化，此步仅执行一次 <br /><br>2、判断表达式是否成立，不成立跳出循环 <br /><br>3、执行循环体 <br /><br>4、执行循环控制变量的更改 <br /><br>5、判断表达式是否成立，不成立跳出循环 <br /><br>6、执行循环体 <br /><br>…</p>
+<blockquote>
+<p>嵌套循环时，外层循环控制行，内层循环控制列 <br /><br>使用外层循环的控制变量来控制内层循环的次数</p>
+</blockquote>
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><pre><code>while(表达式)&#123;
+  循环体
+&#125;
+</code></pre>
+<p>与for的区别：while用于循环次数未知的循环 <br /><br>执行顺序：<br>判断表达式是否成立，不成立执行 <br /><br>执行循环体 <br /><br>判断表达式是否成立，不成立 <br /></p>
+<h3 id="do…while"><a href="#do…while" class="headerlink" title="do…while"></a>do…while</h3><pre><code>do&#123;
+  循环体
+&#125;while(表达式);
+</code></pre>
+<p>和while的区别：无论表达式是否成立，都会先执行一次循环体</p>
+<h3 id="循环的结束与退出"><a href="#循环的结束与退出" class="headerlink" title="循环的结束与退出"></a>循环的结束与退出</h3><h4 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h4><p>语法： <br /><br>continue [n] <br /><br>n为整数，如果缺省为1 <br /><br>结束当前循环结构的本次循环，继续上n层循环结构的下一次执行。</p>
+<h4 id="break"><a href="#break" class="headerlink" title="break"></a>break</h4><p>语法： <br /><br>break [n] <br /><br>n为整数，缺省为1 <br /><br>直接结束上n层循环结构。</p>
+<h1 id="文件包含"><a href="#文件包含" class="headerlink" title="文件包含"></a>文件包含</h1><h2 id="require"><a href="#require" class="headerlink" title="require"></a>require</h2><p>require(文件名) <br /><br>require_once(文件名) <br /><br>require如果引用文件出现问题，会直接中断PHP程序执行。 <br /><br>require_once在包含时，会检查是否被包含过了，如果被包含过了就不再包含</p>
+<h2 id="include"><a href="#include" class="headerlink" title="include"></a>include</h2><p>include(文件名) <br /><br>include_once(文件名) <br /><br>include如果引用文件出现问题，虽然会报错，但仍然会执行之后的代码。</p>
+<h2 id="引入路径问题"><a href="#引入路径问题" class="headerlink" title="引入路径问题"></a>引入路径问题</h2><p>在实现项目中，对于HTML文件，是不允许用户直接请求，而是指向一个PHP文件，让PHP文件来引入这个HTML文件 <br /><br>当一个PHP文件引入一个HTML文档时，html文件本身也会引入一些其他的文件，如图片、CSS、JS <br /><br>在这个时候就会发生路径更改的问题 <br /><br>解决办法： <br /><br>使用绝对路径或者使用带域名的相对路径</p>
+<h2 id="魔术变量问题"><a href="#魔术变量问题" class="headerlink" title="魔术变量问题"></a>魔术变量问题</h2><p>__DIR__	用于获取文件所在的完整的文件名 <br /><br>__FILE__用于获取文件所在的路径 <br /><br>如果引入的文件中带有以上魔术常量，它不会随着文件引入而改变，永远为常量所在的文件的文件名与文件路径</p>
+<h1 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h1><h2 id="错误的分类"><a href="#错误的分类" class="headerlink" title="错误的分类"></a>错误的分类</h2><h3 id="编译错误"><a href="#编译错误" class="headerlink" title="编译错误"></a>编译错误</h3><p>编译的过程中发生的错误，一般来说都是书写错误，php会告诉程序员是哪里发生错误</p>
+<h3 id="执行错误"><a href="#执行错误" class="headerlink" title="执行错误"></a>执行错误</h3><p>在编译过程通过后，在执行阶段发生的错误，会根据错误的等级，来决定是否中断程序的执行</p>
+<h3 id="逻辑错误"><a href="#逻辑错误" class="headerlink" title="逻辑错误"></a>逻辑错误</h3><p>因为逻辑不严谨而产生的错误</p>
+<h2 id="错误代码"><a href="#错误代码" class="headerlink" title="错误代码"></a>错误代码</h2><p>在php的错误处理机制中，每一种错误都使用了一个错误标识，这些标识是以常量的形式存在</p>
+<h3 id="系统错误"><a href="#系统错误" class="headerlink" title="系统错误"></a>系统错误</h3><p>[E_ERROR] &#x3D;&gt; 1		致命错误 发生中断程序 <br /><br>[E_WARNING] &#x3D;&gt; 2   警告错误 不会中断程序 <br /><br>[E_PARSE] &#x3D;&gt; 4      编译错误 发生中断程序 <br /><br>[E_NOTICE] &#x3D;&gt; 8     提示错误 不会中断程序 <br /><br>[E_STRICT] &#x3D;&gt; 2048                <br /><br>[E_RECOVERABLE_ERROR] &#x3D;&gt; 4096	警告错误 不会中断程序 <br /></p>
+<p>[E_DEPRECATED] &#x3D; 8192	弃用函数的错误,高版本在使用低版本已经被弃用的函数时会报错，但是仍然可用 <br /></p>
+<p>核心错误(编译器的错误) <br /><br>[E_CORE_ERROR] &#x3D;&gt; 16 <br /><br>[E_CORE_WARNING] &#x3D;&gt; 32 <br /><br>[E_COMPILE_ERROR] &#x3D;&gt; 64 <br /><br>[E_COMPILE_WARNING] &#x3D;&gt; 128 <br /></p>
+<h3 id="自定义错误"><a href="#自定义错误" class="headerlink" title="自定义错误"></a>自定义错误</h3><p>用户错误(可以用户自定义) <br /><br>[E_USER_ERROR] &#x3D;&gt; 256 <br /><br>[E_USER_WARNING] &#x3D;&gt; 512 <br /><br>[E_USER_NOTICE] &#x3D;&gt; 1024 <br /><br>[E_ALL] &#x3D;&gt; 6143 <br /></p>
+<h2 id="错误的触发"><a href="#错误的触发" class="headerlink" title="错误的触发"></a>错误的触发</h2><h3 id="系统错误的触发"><a href="#系统错误的触发" class="headerlink" title="系统错误的触发"></a>系统错误的触发</h3><p>程序员无法干涉系统错误的触发，系统错误是由php自己检测并触发的</p>
+<h3 id="用户自定义错误的触发"><a href="#用户自定义错误的触发" class="headerlink" title="用户自定义错误的触发"></a>用户自定义错误的触发</h3><p>trigger_error(msg, type); <br /><br>msg: 错误描述信息 <br /><br>type：自定义错误的代码（E_USER_ERROR,E_USER_NOTICE…） <br /><br>这个函数会在日志中记录这次错误信息</p>
+<h2 id="错误的控制设置"><a href="#错误的控制设置" class="headerlink" title="错误的控制设置"></a>错误的控制设置</h2><h3 id="控制错误信息是否显示"><a href="#控制错误信息是否显示" class="headerlink" title="控制错误信息是否显示"></a>控制错误信息是否显示</h3><p>php.ini中 <br /><br>控制错误信息是否显示 <br /><br>display_errors&#x3D;On&#x2F;Off <br /></p>
+<h3 id="控制显示哪一类错误"><a href="#控制显示哪一类错误" class="headerlink" title="控制显示哪一类错误"></a>控制显示哪一类错误</h3><p>error_reporting&#x3D;E_ALL <br /><br>error_reporting&#x3D;E_NOTICE | R_WARNING <br /><br>error_reporting&#x3D;E_ALL &amp; ~E_NOTICE <br /></p>
+<h3 id="错误日志设置"><a href="#错误日志设置" class="headerlink" title="错误日志设置"></a>错误日志设置</h3><p>开启日志记录 <br /><br>log_errors&#x3D;on <br /><br>错误日志存放位置 <br /><br>如果没有设置error_log默认是记录到apache的错误日志中\logs\error.log <br /><br>error_log&#x3D;syslog	会记录到操作系统的日志中 <br /><br>error_log&#x3D;文件名	会记录到自定义的位置 <br /></p>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><h2 id="函数的基本概念"><a href="#函数的基本概念" class="headerlink" title="函数的基本概念"></a>函数的基本概念</h2><h3 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h3><p>函数的模块化的产物，在实际开发过程中，会将项目划分为各个大的功能模块。同样将大的功能模块划分为小的功能。 <br /><br>函数名不区分大小写，命名规则与变量命名规则相同 <br /></p>
+<h3 id="函数的声明"><a href="#函数的声明" class="headerlink" title="函数的声明"></a>函数的声明</h3><p>声明语法： <br /></p>
+<pre><code>funciton 函数名（形参列表）&#123;
+函数体
+[return值]
+&#125;
+</code></pre>
+<p>调用语法： <br /></p>
+<pre><code>函数名（实参列表）
+</code></pre>
+<h3 id="可变函数"><a href="#可变函数" class="headerlink" title="可变函数"></a>可变函数</h3><p>与可变变量类似 <br /></p>
+<pre><code>function showInfo()&#123;
+  echo 123;
+&#125;
+$f = &#39;showInfo&#39;;
+$f();
+</code></pre>
+<p>实际运用场景中，可以让用户来任意调用想要调用的函数 <br /></p>
+<pre><code>$f = $_GETp[&#39;f&#39;] 
+$f();
+</code></pre>
+<p>f为get方式传入的函数名</p>
+<h2 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h2><h3 id="从外到内"><a href="#从外到内" class="headerlink" title="从外到内"></a>从外到内</h3><p>函数定义时的参数是形参 <br /><br>形参是被动的接受数据 <br /><br>形参只对内存有效，对外部不可见 <br /><br>函数调用时的参数是实参 <br /><br>主动向函数传递实际的数据</p>
+<h3 id="从内到外"><a href="#从内到外" class="headerlink" title="从内到外"></a>从内到外</h3><p>return <br /><br>函数内部可以有多个return，只要遇到一个return就会终端函数执行</p>
+<h3 id="形参的默认值"><a href="#形参的默认值" class="headerlink" title="形参的默认值"></a>形参的默认值</h3><p>php在定义函数时，可以为形参赋值，这个值就是形参的默认值。 <br /><br>如果调用函数没有给具有默认值的形参传递数据，那么形参会使用默认值。 <br /><br>一般具有默认值的形参，一般位于形参列表的最后 <br /></p>
+<h3 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h3><p>没有名字的函数即是匿名函数，有成为闭包函数 <br /></p>
+<pre><code>$fn = function()&#123;
+  echo 123;
+&#125;;
+$fn(); 
+</code></pre>
+<p>匿名函数没有名字，并且结尾必须加入分号 <br /><br>PHP中的匿名函数无法自调用 <br /><br>但是可以赋值给一个变量，还可以作为某个函数的参数 <br /><br>所以我们可以将它赋值给变量，并通过变量来调用。  <br /></p>
+<h3 id="回调函数callback"><a href="#回调函数callback" class="headerlink" title="回调函数callback"></a>回调函数callback</h3><p>在开发过程中，我们使用别人的函数或者系统函数时，函数的参数需要你传递一个函数，作为参数传递的函数就是回调函数。 <br /><br>使用匿名函数作为回调函数:</p>
+<pre><code>function showInfo($fn)&#123;
+    $fn();
+&#125;
+
+function say()&#123;
+    echo 123;
+&#125;
+
+
+showInfo(&#39;say&#39;);
+
+showInfo(function()&#123;
+  echo 123;
+&#125;);
+</code></pre>
+<h3 id="形参和实参之间的引用传值"><a href="#形参和实参之间的引用传值" class="headerlink" title="形参和实参之间的引用传值"></a>形参和实参之间的引用传值</h3><p>形参和实参之间其实是一个赋值过程，那么我们也可以将这个赋值过程，变为一个引用传值过程。 <br /></p>
+<pre><code>function showInfo(&amp;$msg)&#123;
+  $msg = 200;
+&#125;
+$msg = 100;
+showInfo($msg);
+echo $msg;
+</code></pre>
+<h3 id="伪类型"><a href="#伪类型" class="headerlink" title="伪类型"></a>伪类型</h3><p>php规定了8种数据类型，在php手册中规定了另外几种类型，只会存在于手册中 <br /><br>mixed		表示类型不确定 <br /><br>callback	表示函数 <br /><br>scalar 		如果是int float string boolean就属于这种 <br /></p>
+<h3 id="相关函数"><a href="#相关函数" class="headerlink" title="相关函数"></a>相关函数</h3><p>func_get_args() 	用于获取实参，并以数组的形式返回<br /><br>func_get_arg(ind) 用于获取ind下标指定的实参<br /><br>func_num_args() 	用于获取实参的个数<br /><br>实际运用： <br /></p>
+<pre><code>// 方法1
+function showInfo()&#123;
+  echo func_num_args(); // 获取实参的个数
+  echo func_get_arg(0); // 第一个实参
+  print_r(func_get_args()); // 所有的实参
+&#125;
+showInfo(1,2,3,4);
+
+// 方法2 PHP&gt;=5.6  
+function showInfo(...$args)&#123;
+    print_r($args); // 结果会以数组的形式打印出来
+&#125;
+
+showInfo(1,2,3,4);
+</code></pre>
+<h2 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h2><h3 id="全局变量和局部变量"><a href="#全局变量和局部变量" class="headerlink" title="全局变量和局部变量"></a>全局变量和局部变量</h3><p>在函数外部定义的变量，其作用域就是全局作用域，这个变量就是全局变量 <br /><br>在函数内部定义的变量，其作用域就是局部作用域，这个变量就是局部变量 <br /><br>在PHP中只有相同作用域的才能互相访问 <br /></p>
+<h3 id="global关键字"><a href="#global关键字" class="headerlink" title="global关键字"></a>global关键字</h3><p>很多时候我们需要在局部变量中使用全局变量，或者全局变量中访问内部。 <br /></p>
+<h4 id="通过参数的传址方式"><a href="#通过参数的传址方式" class="headerlink" title="通过参数的传址方式"></a>通过参数的传址方式</h4><pre><code>$i = 10;
+function showinfo(&amp;$v)&#123;
+    $v = $v+10;
+    echo $v,&#39;&lt;br /&gt;&#39;;
+&#125;
+showinfo($v);
+echo $v;
+</code></pre>
+<h4 id="GLOBALS"><a href="#GLOBALS" class="headerlink" title="$GLOBALS"></a>$GLOBALS</h4><p>使用超全部变量实现内部访问外部 <br /></p>
+<pre><code>$a=&#39;a&#39;;
+$b=2;
+function showinfo()&#123;
+    echo $GLOBALS[&#39;a&#39;],&#39;&lt;br /&gt;&#39;;
+    echo $GLOBALS[&#39;b&#39;]，&#39;&lt;br /&gt;&#39;;
+&#125;
+showinfo();
+</code></pre>
+<h4 id="GLOBAL关键字"><a href="#GLOBAL关键字" class="headerlink" title="GLOBAL关键字"></a>GLOBAL关键字</h4><p>语法： <br /><br>    global 变量名</p>
+<pre><code>$i=10
+function showinfo()
+    global $i;
+    echo $i;
+showinfo();
+echo $i;
+</code></pre>
+<p>在函数内部建立一个与函数外部同名的变量的引用，如果外部没有这样的同名变量，会在外部创建一个同名变量</p>
+<h2 id="静态变量"><a href="#静态变量" class="headerlink" title="静态变量"></a>静态变量</h2><p>在函数内部使用static声明的变量即为静态变量 <br /><br>静态变量在函数被多次调用时，只会在编译阶段初始化一次，并且变量的值不会随着函数执行完毕被销毁 <br /><br>在函数下一次被调用时，仍然可以访问其值 <br /><br>在编译阶段时，如果发现函数内部有static变量，则会在数据段的静态区存储这个数据 <br /><br>函数执行时，会在函数空间内创建变量，并把在静态区的变量地址传给栈区中的变量 <br /></p>
+<h2 id="递归"><a href="#递归" class="headerlink" title="递归"></a>递归</h2><p>递归思想其实就是函数自己调用自己，一般用于解决有规律性的重复 <br /></p>
+<pre><code>1 2 3 5 8 13 21 34 55 89 ...
+
+function func($pos)&#123;
+    if($pos == 1)&#123;
+        return 1;
+    &#125;elseif($pos == 2)&#123;
+        return 2;
+    &#125;else&#123;
+        return func($pos-1) + func($pos-2);
+    &#125;
+&#125;
+
+echo func(10);
+    
+</code></pre>
+<h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><h2 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h2><h3 id="trtlen"><a href="#trtlen" class="headerlink" title="trtlen"></a>trtlen</h3><p>语法： <br /><br>    terlen(变量) <br /><br>用于获取字符串的一个字节数(一共有几个字符)</p>
+<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><p>strstr(str, substr); <br /><br>查找str首次出现substr的位置，并截取到最后</p>
+<p>strrchr(str, substr); <br /><br>查找str最后一次出现substr的位置，并截取到最后</p>
+<p>strpos(str, substr); <br /><br>查找str首次出现substr的位置</p>
+<p>strrpos(str, substr) <br /><br>查找str最后一次出现substr的位置</p>
+<h3 id="分割"><a href="#分割" class="headerlink" title="分割"></a>分割</h3><p>explode(分隔符, str) <br /><br>根据指定的分隔符，将字符串str进行分割，并将每一部分组织成数组，并返回</p>
+<pre><code>$string = &#39;a,b,c&#39;;
+$strArr = explode(&#39;,&#39;, $string);
+print_r($strArr); //Array ( [0] =&gt; a [1] =&gt; b [2] =&gt; c )
+</code></pre>
+<p>也可以用于获取文件名</p>
+<h3 id="替换"><a href="#替换" class="headerlink" title="替换"></a>替换</h3><p>str_replace(replace, search, str); <br /><br>在str中查找search部分，并替换成replace部分，并返回替换后的内容</p>
+<p>$str &#x3D; ‘a, b’;<br>echo str_replace(‘b’, ‘c’ ,$str); &#x2F;&#x2F; a, c</p>
+<h3 id="大小写转换"><a href="#大小写转换" class="headerlink" title="大小写转换"></a>大小写转换</h3><p>strtolower(str) <br /><br>转换为小写 <br /></p>
+<p>strtoupper(str) <br /><br>转换为大写</p>
+<h3 id="去除指定字符"><a href="#去除指定字符" class="headerlink" title="去除指定字符"></a>去除指定字符</h3><p>trim(str [,substr])<br>将字符串两侧的子字符串去除，substr可以省略，省略为去除空格 <br /></p>
+<pre><code>$str = &#39;AstringA&#39;;
+echo trim($str, &#39;A&#39;); // string
+</code></pre>
+<p>ltrim(str [,substr]) <br /><br>rtrim(str [,substr]) <br /><br>区别于只去掉左&#x2F;右</p>
+<h3 id="pathinfo"><a href="#pathinfo" class="headerlink" title="pathinfo"></a>pathinfo</h3><p>pathinfo(path [,option])<br>获取一个文件的路径信息 <br /><br>path：是一个文件路径的字符串 <br /><br>option: 获取执行的路径信息 <br /><br> PATHINFO_DIRNAME <br /><br> PATHINFO_BASENAME <br /></p>
+<h3 id="md5"><a href="#md5" class="headerlink" title="md5"></a>md5</h3><p>语法： <br /><br>md5(str)； <br /><br>说明： <br /><br>用于对str字符串进行md5加密 <br /><br>可以在用户输入密码的时候给密码加密 <br /></p>
+<h3 id="htmlspecialchars"><a href="#htmlspecialchars" class="headerlink" title="htmlspecialchars()"></a>htmlspecialchars()</h3><p>htmlspecialchars(str) <br /><br>htmlspecialchars_decode(str) <br /><br>用于将str中的特殊符号转换为HTML字符实体。 <br /></p>
+<pre><code>echo htmlspecialchars(&#39;&lt;&gt;&#39;); // &amp;lt;&amp;gt;gt;
+</code></pre>
+<h1 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h1><p>数组是一种数据的集合，数组主要是用于存储具有行列特征(表格)的数据。 <br /></p>
+<h2 id="数组的概念"><a href="#数组的概念" class="headerlink" title="数组的概念"></a>数组的概念</h2><h3 id="数组的创建"><a href="#数组的创建" class="headerlink" title="数组的创建"></a>数组的创建</h3><h4 id="索引数组的创建"><a href="#索引数组的创建" class="headerlink" title="索引数组的创建"></a>索引数组的创建</h4><p>显示创建 <br /></p>
+<pre><code>$arr = array(10, 20, 30, 40);
+$arr2 = [10, 20, 30, 40];
+</code></pre>
+<p>隐式创建 <br /></p>
+<pre><code>$arr3 = array();
+$arr3[0] = 10;
+$arr3[1] = 20;
+$arr3[6] = 20;
+</code></pre>
+<p>PHP中的数据下标可以不规连续</p>
+<h4 id="关联数组的创建"><a href="#关联数组的创建" class="headerlink" title="关联数组的创建"></a>关联数组的创建</h4><p>显示创建 <br /></p>
+<pre><code>$arr = array(键名=&gt;键值, 键名=&gt;键值, ...);
+$arr2 = [键名=&gt;键值, 键名=&gt;键值, ...]
+$arr = array(&#39;key&#39;=&gt;&#39;value&#39;);
+$arr2 = [&#39;key&#39;=&gt;&#39;value&#39;];
+</code></pre>
+<p>隐式创建 <br /></p>
+<pre><code>$arr = array();
+$arr[&#39;key&#39;] = &#39;value&#39;;
+</code></pre>
+<h3 id="多维数组"><a href="#多维数组" class="headerlink" title="多维数组"></a>多维数组</h3><p>PHP中支持多维数组，如果一个数组的元素又是数组，那么就是多维数组。(最多支持60维) <br /><br>显示创建 <br /></p>
+<pre><code>$arr = array(
+    &#39;userInfo&#39; =&gt; array(&#39;id&#39;=&gt;1, &#39;username&#39;=&gt;&#39;Json&#39;)
+);
+$arr2 = [
+    &#39;userInfo&#39; =&gt; array(&#39;id&#39;=&gt;1, &#39;username&#39;=&gt;&#39;Json&#39;)
+];
+</code></pre>
+<p>隐式创建</p>
+<pre><code>$arr3 = array();
+$arr3[&#39;userInfo&#39;] = array(&#39;id&#39;=&gt;1, &#39;username&#39;=&gt;&#39;Json&#39;);
+</code></pre>
+<h3 id="数组元素的访问-1"><a href="#数组元素的访问-1" class="headerlink" title="数组元素的访问"></a>数组元素的访问</h3><p>一维数组    $数组名[下标&#x2F;键名] <br /><br>echo $arr[‘userInfo’]; <br /><br>二维数组    $数组名[行下标&#x2F;列下标] <br /><br>echo $arr[‘userInfo’][‘id’]; <br /></p>
+<h3 id="数组的长度"><a href="#数组的长度" class="headerlink" title="数组的长度"></a>数组的长度</h3><p>count（） <br /><br>用于获取数组的长度 <br /><br>echo count($arr); &#x2F;&#x2F;行数 <br /><br>echo count($arr[‘userInfo’]); &#x2F;&#x2F; 具体行的列数 <br /></p>
+<h2 id="数组的指针"><a href="#数组的指针" class="headerlink" title="数组的指针"></a>数组的指针</h2><p>表示当前所获得的点 <br /><br>current(arr)    获取当前指针所指向元素的键值 <br /><br>key(arr)		获取当前指针所指向元素的键名 <br /><br>next(arr)		将指针下移 <br /><br>prev(arr)		指针上移 <br /><br>reset(arr)		指针重置 <br /><br>end(arr)		将指针移到最后 <br /></p>
+<h2 id="数组的遍历"><a href="#数组的遍历" class="headerlink" title="数组的遍历"></a>数组的遍历</h2><h3 id="for-1"><a href="#for-1" class="headerlink" title="for"></a>for</h3><pre><code>$arr = [10,20,30,40];
+for($i=0;$i&lt;=count($arr);$i++)&#123;
+  echo $arr[$i];
+&#125;
+</code></pre>
+<p>只能作用于这种下标有规律的方式</p>
+<h3 id="foreach"><a href="#foreach" class="headerlink" title="foreach"></a>foreach</h3><pre><code>foreach($arr as [$key=&gt;]$value)&#123;
+  // 循环体
+&#125;
+</code></pre>
+<p>原理： <br /><br>对数组的指针进行重置。 <br /><br>读取当前指针所指向的数组元素， <br /><br>并将元素的键名赋值给$key, <br /><br>键值赋值给$value， <br /><br>同时数组下移一行 <br /><br>直接读取到数组最后(数组的最后一行其实为NULL，当foreach读到BNULL会自动止) <br /></p>
+<pre><code>$arr = array(&#39;one&#39;=&gt;&#39;1&#39;, &#39;two&#39;=&gt;&#39;2&#39;, &#39;three&#39;=&gt;&#39;3&#39;);
+foreach($arr as $key=&gt;$value)&#123;
+  echo $key.&#39;=&gt;&#39;.$value, &#39;&lt;br/&gt;&#39;;
+&#125;
+</code></pre>
+<p>结果</p>
+<pre><code>one=&gt;1
+two=&gt;2
+three=&gt;3
+</code></pre>
+<h2 id="数组操作常用函数"><a href="#数组操作常用函数" class="headerlink" title="数组操作常用函数"></a>数组操作常用函数</h2><h3 id="数组的长度-1"><a href="#数组的长度-1" class="headerlink" title="数组的长度"></a>数组的长度</h3><p>count($arr);</p>
+<h3 id="获取数组元素的键名与键值"><a href="#获取数组元素的键名与键值" class="headerlink" title="获取数组元素的键名与键值"></a>获取数组元素的键名与键值</h3><p>array_keys(); 	返回所有键名 <br /><br>array_values();	返回所有键值 <br /></p>
+<h3 id="判断键名-值是否存在"><a href="#判断键名-值是否存在" class="headerlink" title="判断键名&#x2F;值是否存在"></a>判断键名&#x2F;值是否存在</h3><p>array_key_exists(key, arr);	判断键名是否存在(区分大小写) <br /><br>in_array(value, arr);		判断键值是否存在 <br /></p>
+<h3 id="数组的合并"><a href="#数组的合并" class="headerlink" title="数组的合并"></a>数组的合并</h3><p>array_merge($arr, $arr2);	合并两个数组</p>
+<h3 id="数组的排序"><a href="#数组的排序" class="headerlink" title="数组的排序"></a>数组的排序</h3><p>sort();		按键值升序 <br /><br>rsort();	按键值降序 <br /><br>asort();	按键值进行升序，但原下标不变 <br /><br>arsort();	按键值进行降序，但原下标不变 <br /></p>
+<h3 id="数组解压-extract"><a href="#数组解压-extract" class="headerlink" title="数组解压(extract)"></a>数组解压(extract)</h3><pre><code>$arr = [&#39;id&#39;=&gt;&#39;1&#39;,&#39;username&#39;=&gt;&#39;admin&#39;]; 
+extract($arr); // 将我们关联元素转换为键名为名的变量
+echo $id;
+echo $username;
+</code></pre>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/07/18/phpstudy-1/">https://perfect-time.xyz/2018/07/18/phpstudy-1/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/07/18/phpstudy-1/">July 18th 2018, 10:10:22 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/07/19/dvwa-low/" title= 基于DVWA的web漏洞原理-low >
+                    <div class="nextTitle">基于DVWA的web漏洞原理-low</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/07/18/phpstudy-2/" title= php中一些比较实用的技巧 >
+                    <div class="prevTitle">php中一些比较实用的技巧</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "php学习笔记-基础部分", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">PHP基本语法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95%E8%A7%84%E5%88%99"><span class="toc-number">1.1.</span> <span class="toc-text">语法规则</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E6%A0%87%E8%AE%B0"><span class="toc-number">1.2.</span> <span class="toc-text">PHP标记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A"><span class="toc-number">1.3.</span> <span class="toc-text">注释</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E5%8F%8A%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">变量及操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">2.2.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%8F%98%E9%87%8F"><span class="toc-number">2.3.</span> <span class="toc-text">删除变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%8F%98%E9%87%8F"><span class="toc-number">2.4.</span> <span class="toc-text">可变变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-number">2.5.</span> <span class="toc-text">预定义变量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E5%8E%9F%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">内存原理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-number">3.1.</span> <span class="toc-text">内存结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E5%8C%BA"><span class="toc-number">3.1.1.</span> <span class="toc-text">栈区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A0%86%E5%8C%BA"><span class="toc-number">3.1.2.</span> <span class="toc-text">堆区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%AE%B5"><span class="toc-number">3.1.3.</span> <span class="toc-text">数据段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%AE%B5"><span class="toc-number">3.1.4.</span> <span class="toc-text">代码段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA%E7%BC%93%E5%AD%98"><span class="toc-number">3.1.5.</span> <span class="toc-text">输出缓存</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">3.2.</span> <span class="toc-text">php执行过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%98%B6%E6%AE%B5"><span class="toc-number">3.2.1.</span> <span class="toc-text">编译阶段</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E9%98%B6%E6%AE%B5"><span class="toc-number">3.2.2.</span> <span class="toc-text">执行阶段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E5%B5%8C%E5%85%A5%E5%88%B0HTML%E7%9A%84%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">3.3.</span> <span class="toc-text">PHP嵌入到HTML的执行过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php%E4%B8%AD%E5%8F%98%E9%87%8F%E7%9A%84%E4%BC%A0%E5%80%BC%E6%96%B9%E5%BC%8F"><span class="toc-number">3.4.</span> <span class="toc-text">php中变量的传值方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E4%BC%A0%E5%80%BC"><span class="toc-number">3.4.1.</span> <span class="toc-text">赋值传值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E4%BC%A0%E5%80%BC"><span class="toc-number">3.4.2.</span> <span class="toc-text">引用传值</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F"><span class="toc-number">4.</span> <span class="toc-text">常量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="toc-number">4.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F%E7%9A%84%E5%88%A4%E6%96%AD%E4%BB%A5%E5%8F%8A%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E7%9A%84%E5%B8%B8%E9%87%8F"><span class="toc-number">4.2.</span> <span class="toc-text">常量的判断以及获取所有的常量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F%E7%9A%84%E5%88%A4%E6%96%AD"><span class="toc-number">4.2.1.</span> <span class="toc-text">常量的判断</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%89%80%E6%9C%89%E5%B8%B8%E9%87%8F"><span class="toc-number">4.2.2.</span> <span class="toc-text">获取所有常量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AD%94%E6%9C%AF%E5%B8%B8%E9%87%8F"><span class="toc-number">4.3.</span> <span class="toc-text">魔术常量</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">PHP中的数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">5.1.</span> <span class="toc-text">数据类型的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#int%E5%9E%8B"><span class="toc-number">5.1.1.</span> <span class="toc-text">int型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E8%BF%9B%E5%88%B6"><span class="toc-number">5.1.1.1.</span> <span class="toc-text">十进制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%AB%E8%BF%9B%E5%88%B6"><span class="toc-number">5.1.1.2.</span> <span class="toc-text">八进制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%81%E5%85%AD%E8%BF%9B%E5%88%B6"><span class="toc-number">5.1.1.3.</span> <span class="toc-text">十六进制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#float%E5%9E%8B"><span class="toc-number">5.1.2.</span> <span class="toc-text">float型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#string%E5%9E%8B"><span class="toc-number">5.1.3.</span> <span class="toc-text">string型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E5%BC%95%E5%8F%B7"><span class="toc-number">5.1.3.1.</span> <span class="toc-text">单引号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%8C%E5%BC%95%E5%8F%B7"><span class="toc-number">5.1.3.2.</span> <span class="toc-text">双引号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#heredoc"><span class="toc-number">5.1.3.3.</span> <span class="toc-text">heredoc</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#array%E5%9E%8B"><span class="toc-number">5.1.4.</span> <span class="toc-text">array型</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%95%B0%E7%BB%84"><span class="toc-number">5.1.4.1.</span> <span class="toc-text">索引数组 </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E8%81%94%E6%95%B0%E7%BB%84"><span class="toc-number">5.1.4.2.</span> <span class="toc-text">关联数组 </span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9A%84%E8%AE%BF%E9%97%AE"><span class="toc-number">5.1.4.3.</span> <span class="toc-text">数组元素的访问</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.1.5.</span> <span class="toc-text">资源类型</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E7%9A%84%E8%BD%AC%E6%8D%A2"><span class="toc-number">6.</span> <span class="toc-text">数据类型的转换</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%BD%AC%E6%8D%A2"><span class="toc-number">6.1.</span> <span class="toc-text">自动转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%BA%E5%88%B6%E8%BD%AC%E6%8D%A2"><span class="toc-number">6.2.</span> <span class="toc-text">强制转换</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.</span> <span class="toc-text">运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.1.</span> <span class="toc-text">赋值运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%95%B0%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.2.</span> <span class="toc-text">算数运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E6%93%8D%E4%BD%9C%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.3.</span> <span class="toc-text">自操作运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%A2%9E%E3%80%81%E2%80%93%E8%87%AA%E5%87%8F"><span class="toc-number">7.3.1.</span> <span class="toc-text">++ 自增、–自减 </span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-number">7.3.2.</span> <span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.4.</span> <span class="toc-text">字符串运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.5.</span> <span class="toc-text">比较运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.6.</span> <span class="toc-text">逻辑运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E4%B8%8E%E7%9F%AD%E8%B7%AF"><span class="toc-number">7.6.1.</span> <span class="toc-text">逻辑与短路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E6%88%96%E7%9F%AD%E8%B7%AF"><span class="toc-number">7.6.2.</span> <span class="toc-text">逻辑或短路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E9%9D%9E%E7%9A%84%E4%B8%80%E7%A7%8D%E7%94%A8%E6%B3%95"><span class="toc-number">7.6.3.</span> <span class="toc-text">逻辑非的一种用法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.7.</span> <span class="toc-text">条件运算符</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E6%8E%A7%E5%88%B6%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="toc-number">7.8.</span> <span class="toc-text">错误控制运算符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E6%8A%91%E5%88%B6%E7%AC%A6"><span class="toc-number">7.8.1.</span> <span class="toc-text">错误抑制符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#php-ini"><span class="toc-number">7.8.2.</span> <span class="toc-text">php.ini</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E7%BA%A7%E7%9A%84%E9%94%99%E8%AF%AF%E6%8E%A7%E5%88%B6"><span class="toc-number">7.8.3.</span> <span class="toc-text">脚本级的错误控制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">8.</span> <span class="toc-text">循环语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E6%94%AF%E7%BB%93%E6%9E%84"><span class="toc-number">8.1.</span> <span class="toc-text">分支结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if"><span class="toc-number">8.1.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#swich"><span class="toc-number">8.1.2.</span> <span class="toc-text">swich</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E7%BB%93%E6%9E%84"><span class="toc-number">8.2.</span> <span class="toc-text">循环结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#for"><span class="toc-number">8.2.1.</span> <span class="toc-text">for</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#while"><span class="toc-number">8.2.2.</span> <span class="toc-text">while</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#do%E2%80%A6while"><span class="toc-number">8.2.3.</span> <span class="toc-text">do…while</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E7%9A%84%E7%BB%93%E6%9D%9F%E4%B8%8E%E9%80%80%E5%87%BA"><span class="toc-number">8.2.4.</span> <span class="toc-text">循环的结束与退出</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#continue"><span class="toc-number">8.2.4.1.</span> <span class="toc-text">continue</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#break"><span class="toc-number">8.2.4.2.</span> <span class="toc-text">break</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">9.</span> <span class="toc-text">文件包含</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#require"><span class="toc-number">9.1.</span> <span class="toc-text">require</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#include"><span class="toc-number">9.2.</span> <span class="toc-text">include</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E5%85%A5%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98"><span class="toc-number">9.3.</span> <span class="toc-text">引入路径问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AD%94%E6%9C%AF%E5%8F%98%E9%87%8F%E9%97%AE%E9%A2%98"><span class="toc-number">9.4.</span> <span class="toc-text">魔术变量问题</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86"><span class="toc-number">10.</span> <span class="toc-text">错误处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">10.1.</span> <span class="toc-text">错误的分类</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E9%94%99%E8%AF%AF"><span class="toc-number">10.1.1.</span> <span class="toc-text">编译错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E9%94%99%E8%AF%AF"><span class="toc-number">10.1.2.</span> <span class="toc-text">执行错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E9%94%99%E8%AF%AF"><span class="toc-number">10.1.3.</span> <span class="toc-text">逻辑错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E4%BB%A3%E7%A0%81"><span class="toc-number">10.2.</span> <span class="toc-text">错误代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E9%94%99%E8%AF%AF"><span class="toc-number">10.2.1.</span> <span class="toc-text">系统错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF"><span class="toc-number">10.2.2.</span> <span class="toc-text">自定义错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="toc-number">10.3.</span> <span class="toc-text">错误的触发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="toc-number">10.3.1.</span> <span class="toc-text">系统错误的触发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E8%87%AA%E5%AE%9A%E4%B9%89%E9%94%99%E8%AF%AF%E7%9A%84%E8%A7%A6%E5%8F%91"><span class="toc-number">10.3.2.</span> <span class="toc-text">用户自定义错误的触发</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%9A%84%E6%8E%A7%E5%88%B6%E8%AE%BE%E7%BD%AE"><span class="toc-number">10.4.</span> <span class="toc-text">错误的控制设置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E6%98%AF%E5%90%A6%E6%98%BE%E7%A4%BA"><span class="toc-number">10.4.1.</span> <span class="toc-text">控制错误信息是否显示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E6%98%BE%E7%A4%BA%E5%93%AA%E4%B8%80%E7%B1%BB%E9%94%99%E8%AF%AF"><span class="toc-number">10.4.2.</span> <span class="toc-text">控制显示哪一类错误</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97%E8%AE%BE%E7%BD%AE"><span class="toc-number">10.4.3.</span> <span class="toc-text">错误日志设置</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">11.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">11.1.</span> <span class="toc-text">函数的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">11.1.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%A3%B0%E6%98%8E"><span class="toc-number">11.1.2.</span> <span class="toc-text">函数的声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E5%87%BD%E6%95%B0"><span class="toc-number">11.1.3.</span> <span class="toc-text">可变函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">11.2.</span> <span class="toc-text">函数的参数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%A4%96%E5%88%B0%E5%86%85"><span class="toc-number">11.2.1.</span> <span class="toc-text">从外到内</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8E%E5%86%85%E5%88%B0%E5%A4%96"><span class="toc-number">11.2.2.</span> <span class="toc-text">从内到外</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%A2%E5%8F%82%E7%9A%84%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-number">11.2.3.</span> <span class="toc-text">形参的默认值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0"><span class="toc-number">11.2.4.</span> <span class="toc-text">匿名函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0callback"><span class="toc-number">11.2.5.</span> <span class="toc-text">回调函数callback</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%A2%E5%8F%82%E5%92%8C%E5%AE%9E%E5%8F%82%E4%B9%8B%E9%97%B4%E7%9A%84%E5%BC%95%E7%94%A8%E4%BC%A0%E5%80%BC"><span class="toc-number">11.2.6.</span> <span class="toc-text">形参和实参之间的引用传值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%AA%E7%B1%BB%E5%9E%8B"><span class="toc-number">11.2.7.</span> <span class="toc-text">伪类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%B8%E5%85%B3%E5%87%BD%E6%95%B0"><span class="toc-number">11.2.8.</span> <span class="toc-text">相关函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">11.3.</span> <span class="toc-text">作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F%E5%92%8C%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">11.3.1.</span> <span class="toc-text">全局变量和局部变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#global%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">11.3.2.</span> <span class="toc-text">global关键字</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%8F%82%E6%95%B0%E7%9A%84%E4%BC%A0%E5%9D%80%E6%96%B9%E5%BC%8F"><span class="toc-number">11.3.2.1.</span> <span class="toc-text">通过参数的传址方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GLOBALS"><span class="toc-number">11.3.2.2.</span> <span class="toc-text">$GLOBALS</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GLOBAL%E5%85%B3%E9%94%AE%E5%AD%97"><span class="toc-number">11.3.2.3.</span> <span class="toc-text">GLOBAL关键字</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">11.4.</span> <span class="toc-text">静态变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92"><span class="toc-number">11.5.</span> <span class="toc-text">递归</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">12.</span> <span class="toc-text">字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">12.1.</span> <span class="toc-text">常用函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trtlen"><span class="toc-number">12.1.1.</span> <span class="toc-text">trtlen</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE"><span class="toc-number">12.1.2.</span> <span class="toc-text">查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%89%B2"><span class="toc-number">12.1.3.</span> <span class="toc-text">分割</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2"><span class="toc-number">12.1.4.</span> <span class="toc-text">替换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BD%AC%E6%8D%A2"><span class="toc-number">12.1.5.</span> <span class="toc-text">大小写转换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%BB%E9%99%A4%E6%8C%87%E5%AE%9A%E5%AD%97%E7%AC%A6"><span class="toc-number">12.1.6.</span> <span class="toc-text">去除指定字符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pathinfo"><span class="toc-number">12.1.7.</span> <span class="toc-text">pathinfo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#md5"><span class="toc-number">12.1.8.</span> <span class="toc-text">md5</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#htmlspecialchars"><span class="toc-number">12.1.9.</span> <span class="toc-text">htmlspecialchars()</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84"><span class="toc-number">13.</span> <span class="toc-text">数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%A6%82%E5%BF%B5"><span class="toc-number">13.1.</span> <span class="toc-text">数组的概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">13.1.1.</span> <span class="toc-text">数组的创建</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">13.1.1.1.</span> <span class="toc-text">索引数组的创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E8%81%94%E6%95%B0%E7%BB%84%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">13.1.1.2.</span> <span class="toc-text">关联数组的创建</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84"><span class="toc-number">13.1.2.</span> <span class="toc-text">多维数组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9A%84%E8%AE%BF%E9%97%AE-1"><span class="toc-number">13.1.3.</span> <span class="toc-text">数组元素的访问</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%95%BF%E5%BA%A6"><span class="toc-number">13.1.4.</span> <span class="toc-text">数组的长度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%8C%87%E9%92%88"><span class="toc-number">13.2.</span> <span class="toc-text">数组的指针</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%81%8D%E5%8E%86"><span class="toc-number">13.3.</span> <span class="toc-text">数组的遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#for-1"><span class="toc-number">13.3.1.</span> <span class="toc-text">for</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#foreach"><span class="toc-number">13.3.2.</span> <span class="toc-text">foreach</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E6%93%8D%E4%BD%9C%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">13.4.</span> <span class="toc-text">数组操作常用函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E9%95%BF%E5%BA%A6-1"><span class="toc-number">13.4.1.</span> <span class="toc-text">数组的长度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0%E7%9A%84%E9%94%AE%E5%90%8D%E4%B8%8E%E9%94%AE%E5%80%BC"><span class="toc-number">13.4.2.</span> <span class="toc-text">获取数组元素的键名与键值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E9%94%AE%E5%90%8D-%E5%80%BC%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="toc-number">13.4.3.</span> <span class="toc-text">判断键名&#x2F;值是否存在</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E5%90%88%E5%B9%B6"><span class="toc-number">13.4.4.</span> <span class="toc-text">数组的合并</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%9A%84%E6%8E%92%E5%BA%8F"><span class="toc-number">13.4.5.</span> <span class="toc-text">数组的排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E8%A7%A3%E5%8E%8B-extract"><span class="toc-number">13.4.6.</span> <span class="toc-text">数组解压(extract)</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

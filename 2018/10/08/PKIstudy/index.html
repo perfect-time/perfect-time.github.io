@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>PKI学习笔记 · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">PKI学习笔记</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            PKI学习笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "PKI">PKI</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">2k</span> / Reading time: <span class="post-count">7 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/10/08</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>老叶的课还是一如既往的催眠</p>
+<span id="more"></span>
+<h1 id="导论"><a href="#导论" class="headerlink" title="导论"></a>导论</h1><h2 id="PKI是什么"><a href="#PKI是什么" class="headerlink" title="PKI是什么"></a>PKI是什么</h2><p>Public Key Infrastructure，公钥基础设施 <br /><br>以公钥为基础的数字证书  <br /></p>
+<h2 id="信息安全"><a href="#信息安全" class="headerlink" title="信息安全"></a>信息安全</h2><p>广义上的网络安全即网络空间安全，狭义上的网络安全为信息安全 <br /><br>信息安全的内涵： <br /><br>信息的机密性、信息的真实性、信息的完整性、抗依赖性 <br /><br>想要保证信息是安全的，要做到信息的内部与外部安全，外部安全即各种设备的防护，内部安全则是信息自身要足够强壮 <br /><br>密码技术分为三种，对称密码、非对称密码、Hash函数(单向散列)</p>
+<h2 id="古典密码与现代密码"><a href="#古典密码与现代密码" class="headerlink" title="古典密码与现代密码"></a>古典密码与现代密码</h2><h3 id="古典密码"><a href="#古典密码" class="headerlink" title="古典密码"></a>古典密码</h3><p>古典密码大多只有替代法和换位法两种 <br /><br>替代法：将明文中的字母按照一定的规律换成其他字母 <br /><br>换位法：将明文中的字母重新进行排列 <br /><br>同音密码：一个字母有多种替换方案，用来应对频率分析法 <br /></p>
+<h3 id="现代密码"><a href="#现代密码" class="headerlink" title="现代密码"></a>现代密码</h3><p>明文：M、密文：C、加密：E、解密：D <br /><br>加密：C&#x3D;E（M，Ke） <br /><br>解密：M&#x3D;D（M，Kd） <br /><br>互逆：M&#x3D;D(E（M，Ke)，kd) <br /><br>加密密钥ke，解密密钥Kd <br /><br>密码技术的安全不依赖于算法的保密，只依赖于密钥的保密</p>
+<h1 id="对称密码"><a href="#对称密码" class="headerlink" title="对称密码"></a>对称密码</h1><h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>对称密码算法也叫传统密码算法，传统密码算法继承了古典密码的算法，本质上为现代密码 <br /><br>对称密码的安全基础是对密钥K的保密 <br /><br>对称密码算法：DES、IDEA、AES、RC <br /></p>
+<h2 id="DES"><a href="#DES" class="headerlink" title="DES"></a>DES</h2><h3 id="概念-1"><a href="#概念-1" class="headerlink" title="概念"></a>概念</h3><p>数据加密标准，用于加密保护静态存储和传输信道中的数据 <br /><br>DES是一个分组密码，明文、密文、密钥都是64位 <br /><br>DES是一对对合运算，即加密和解密是可以互逆的，明文M进去，密文C出来；密文C进去，明文M出来 <br /><br>对合运算的优点在于省钱，拿芯片来举例，加密和解密只需要用一块芯片就可以解决 <br /><br>3EDS:把明文经过3次DES加密的即为3DES <br /></p>
+<h3 id="工作流程"><a href="#工作流程" class="headerlink" title="工作流程"></a>工作流程</h3><p><img src="http://p1.i.img9.top/ipfs/QmazbSwtiLrFzETDRpZNUUZSkK3hsv8FsxiRC3TAE34Efk?1.png" alt="图1-1"> <br /><br>1、DES把明文以64位分组，没有满足64位的用0填充，具体的后面会说。之后把输入的64位二进制数据打乱，为初始置换ip；经过一系列变换置换再换回去，为逆初始置换ip <br /><br>2、置换之后，前32位为L0，后32位为R0，R0经过函数f处理之后，与L0做异或运算，得到的结果作为下一轮的R1，而没有经过f函数处理过的R0作为下一轮的L1，再次执行前一步的步骤，循环16轮 <br /><br>3、用64位的密钥生成16个48位的子密钥，分别输入16轮中的f函数中 <br /><br>4、f函数的本质是将输入的32位二进制和48位的子密钥做异或运算，但是他们的位数不同，是无法做异或的，这就需要将32位扩展到48位，输出时再将48位精简成32位 <br /><br>5、先做扩展运算，扩展原理如下表 <br /><br><img src="http://p4.i.img9.top/ipfs/Qmapx1ZHtDVnvjEx2uS6wD6ZMhUHAUTEkd9KMrSFUDP9bC?4.png" alt="图1-3"> <br /><br>表中的数字代表位，两列黄色数据是扩展的数据，可以看出，扩展的数据是从相邻两组分别取靠近的一位，4位变为6位 <br /><br>6、异或运算之后，要进行S盒替换来把48位精简为32位。DES定义了一个S盒，一共有8个S盒。S盒为4行5列，每行是打乱的0-15的矩阵。把输入的6位二进制数的头与尾合成一个两位二进制作为行号，中间的四位数作为列号，对应的一个0-15的数，把这个数用四位二进制来表示 <br /><br><img src="http://p4.i.img9.top/ipfs/QmWeRaexZX7J9oesymBxRfMqBQp5SCXzbAsvHzk1hPrfmZ?4.png" alt="图1-2">  <br /><br>7、S盒代替运算的32位输出按照P盒进行置换。该置换把输入的每位映射到输出位，任何一位不能被映射两次，也不能被略去，映射规则如下 <br /><br><img src="http://p1.i.img9.top/ipfs/QmS5xo6KC5A8cxxwT9b9fHm1Vqo1GQJWeWhDmodAQuvgkB?1.png" alt="图1-2"> <br /><br>表中的数字代表原数据中此位置的数据在新数据中的位置，即原数据块的第16位放到新数据的第1位，第7位放到第2位，……依此类推，第25位放到第32位。 <br /><br>8、64位的密钥生成16个48位的字密钥，分别输入16轮中的f函数中，64位中最后8位为奇偶校验位，所以真正的密钥只有56位。通过移位循环来生成16个子密钥 <br /><br><img src="http://p1.i.img9.top/ipfs/QmeLmD5dTyt1hHBrGFxBv87QYHmKvneSxmH1cEwDaCw6ck?1.png" alt="图1-2"> <br /><br>9、当最后一块明文不满足64位时，有很多种方法解决，一般是使用00填充，然后可以在尾部附上8个字节，这8个字节表示初始明文的长度，这样解密者解密之后，就知道截取多少字节的长度了。这只是其中一种做法，事实上有很多种方法，只要发送方和接收方事先约定好即可 <br /></p>
+<h1 id="非对称密码"><a href="#非对称密码" class="headerlink" title="非对称密码"></a>非对称密码</h1><h2 id="概念-2"><a href="#概念-2" class="headerlink" title="概念"></a>概念</h2><p>加密：C&#x3D;E(M,Ke);解密M&#x3D;D(C,Kd);Ke不等于Kd <br /><br>把加密密钥ke公开，成为公钥；解密密钥kd保留，成为私钥 <br /><br>公钥密码的安全基础是利用数学上的难题来设计密钥，确保ke不能推出kd <br /><br>非对称密码算法：RSA、ELGamal(离散对数)、ECC(椭圆曲线) <br /></p>
+<h2 id="RSA"><a href="#RSA" class="headerlink" title="RSA"></a>RSA</h2><h3 id="概念-3"><a href="#概念-3" class="headerlink" title="概念"></a>概念</h3><p>RSA的安全性是基于大整数素因子的分解的困难性，从而保证ke不等于kd <br /><br>从安全的角度出发，密钥至少要为500位长，比如512位、1024位、2048位,标准为1024位<br /><br>RSA的加密E和解密D采用指数运算 <br /></p>
+<h3 id="密钥生成"><a href="#密钥生成" class="headerlink" title="密钥生成"></a>密钥生成</h3><p>1、随机选择两个大素数p和q，并保密 <br /><br>2、计算n&#x3D;pq，将n公开 <br /><br>3、计算φ(n)&#x3D;(p-1)(q-1)，并保密φ(n) <br /><br>4、随机选择正整数e，1&lt;e&lt;φ(n),且(e,φ(n))&#x3D;1，将e公开 <br /><br>5、计算d，ed mod φ(n)&#x3D;1，并保密d <br /><br>公钥ke&#x3D;&lt;n,e&gt;,私钥kd&#x3D;&lt;p,q,d,φ(n)&gt; <br /><br><img src="https://p4.cdn.img9.top/ipfs/QmcwF7JGbZntSXgFiHBtxfrumX7UymMsqoDU8NCNDckjy3?4.png" alt="图2-1"> <br /><br>结论  <br /><br>n&#x3D;pq	无法由n推出pq <br /><br>φ(n)&#x3D;(p-1)(q-1)	由于p、q无法得知，φ(n)也无法算出 <br /><br>ed mod φ(n)&#x3D;1	在φ(n)未知的情况下，无法由e推出d <br /><br>设计完之后，把pq都销毁掉，只保留一个d也可以用于加密解密</p>
+<h3 id="加密解密"><a href="#加密解密" class="headerlink" title="加密解密"></a>加密解密</h3><p>加密E：C&#x3D;E(M,Ke)&#x3D;M<sup>e</sup> mod n <br /><br>解密D：M&#x3D;D(C,Kd)&#x3D;C<sup>d</sup> mod n <br /><br>互逆：D(E(M,Ke),Kd)&#x3D;(M<sup>e</sup>)<sup>d</sup> mod n&#x3D;M<sup>ed</sup> mod n&#x3D;M <br /><br>因为RSA是幂指数运算，所以可以用公钥加密，私钥解密，也可以用私钥加密，公钥解密</p>
+<h3 id="数字签名"><a href="#数字签名" class="headerlink" title="数字签名"></a>数字签名</h3><p>因为私钥是绝对唯一的，所以RSA的安全基础就在于此 <br /><br>当发送方与接收方通信时，发送方要怎么证明自己是自己呢?利用数字签名就可以解决这个问题 <br /><br>发送方在发送密文前，先随便写一段明文，将明文用私钥加密，就得到了数字签名S，将数字签名S和加密前的明文一起发送给接收方。因为私钥是唯一的，所以只有真正的发送方才能用真正的私钥加密，接收方得到S之后，用发送方的公钥解密，得到的明文与发送方发过来的明文相比较，如果一致则可以认定为真正的发送方 <br /><br>(发送方)私钥加密，(发送方)公钥解密实现数字签名 <br /><br>(接收方)公钥加密，(接收方)私钥解密实现保密通信 <br /></p>
+<h1 id="单向散列函数"><a href="#单向散列函数" class="headerlink" title="单向散列函数"></a>单向散列函数</h1><p>H&#x3D;Hash(M) <br /><br>信息摘要，M为明文，H为哈希值，为固定长度，称为报文摘要，或者数据指纹 <br /><br>单向(不可逆)：M→H，H无法推出M <br /><br>散列(抗碰撞)：不存在碰撞现象 <br /><br>如M1≠M2，则Hash(M1)≠Hash(M2) <br /><br>Hash函数算法：MD5(128bit)、SHA-1(160bit)、SHA256(256bit)</p>
+<p>未完待续~</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/10/08/PKIstudy/">https://perfect-time.xyz/2018/10/08/PKIstudy/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/10/08/PKIstudy/">October 8th 2018, 9:07:59 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/10/18/python-auto-script/" title= python自动化脚本学习笔记 >
+                    <div class="nextTitle">python自动化脚本学习笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/09/07/python/" title= python学习笔记 >
+                    <div class="prevTitle">python学习笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "PKI学习笔记", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%BC%E8%AE%BA"><span class="toc-number">1.</span> <span class="toc-text">导论</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#PKI%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.1.</span> <span class="toc-text">PKI是什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8"><span class="toc-number">1.2.</span> <span class="toc-text">信息安全</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81%E4%B8%8E%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81"><span class="toc-number">1.3.</span> <span class="toc-text">古典密码与现代密码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%A4%E5%85%B8%E5%AF%86%E7%A0%81"><span class="toc-number">1.3.1.</span> <span class="toc-text">古典密码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E4%BB%A3%E5%AF%86%E7%A0%81"><span class="toc-number">1.3.2.</span> <span class="toc-text">现代密码</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="toc-number">2.</span> <span class="toc-text">对称密码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DES"><span class="toc-number">2.2.</span> <span class="toc-text">DES</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-1"><span class="toc-number">2.2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">2.2.2.</span> <span class="toc-text">工作流程</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%AF%86%E7%A0%81"><span class="toc-number">3.</span> <span class="toc-text">非对称密码</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-2"><span class="toc-number">3.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RSA"><span class="toc-number">3.2.</span> <span class="toc-text">RSA</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5-3"><span class="toc-number">3.2.1.</span> <span class="toc-text">概念</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%86%E9%92%A5%E7%94%9F%E6%88%90"><span class="toc-number">3.2.2.</span> <span class="toc-text">密钥生成</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86"><span class="toc-number">3.2.3.</span> <span class="toc-text">加密解密</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D"><span class="toc-number">3.2.4.</span> <span class="toc-text">数字签名</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%95%E5%90%91%E6%95%A3%E5%88%97%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">单向散列函数</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

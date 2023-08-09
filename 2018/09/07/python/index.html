@@ -1,0 +1,2445 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>python学习笔记 · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">python学习笔记</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            python学习笔记
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "python学习">python学习</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">17.8k</span> / Reading time: <span class="post-count">77 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/09/07</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>python是世界上最好的语言.jpg</p>
+<span id="more"></span>
+<h1 id="对象类型"><a href="#对象类型" class="headerlink" title="对象类型"></a>对象类型</h1><h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><h3 id="集合的定义"><a href="#集合的定义" class="headerlink" title="集合的定义"></a>集合的定义</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>集合是一种无序不重复对象类型 <br /><br>集合类似字典，但是只有键，没有值 <br /><br>set（【1，2，3，4】） <br /><br>set（【’e’,’d’,’i’,’h’,’o’,’,’,’r’,’w’,’;’】） <br /><br>集合(set) <br /></p>
+<h4 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h4><p>消除重复元素 <br /><br>实现交、并、差等数学计算 <br /></p>
+<h4 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h4><p>set（【元素1，元素2，元素3……】） <br /><br>变量&#x3D;set（列表&#x2F;字符串） <br /><br>先要有其他的列表或者字符串，再用set（）变为集合 <br /></p>
+<h4 id="特征"><a href="#特征" class="headerlink" title="特征"></a>特征</h4><p>无序                   类似字典，没有序列&#x2F;索引，不支持切片和索引 <br /><br>不重复                每个项都是唯一的 <br /><br>可变&amp;不可变       可变集合set；不可变集合frozenset <br /></p>
+<h3 id="操作符"><a href="#操作符" class="headerlink" title="操作符"></a>操作符</h3><h4 id="交集"><a href="#交集" class="headerlink" title="交集"></a>交集</h4><p><code>&amp;</code>     获取集合中相同的元素</p>
+<pre><code>&gt;&gt;&gt; l1 = [1,2,3,4,5]
+&gt;&gt;&gt; l2 = [2,3,4,5,6]
+&gt;&gt;&gt; s1 = set(l1)
+&gt;&gt;&gt; s1
+set([1, 2, 3, 4, 5])
+&gt;&gt;&gt; s2 = set(l2)
+&gt;&gt;&gt; s2
+set([2, 3, 4, 5, 6])
+&gt;&gt;&gt; s1 &amp; s2
+set([2, 3, 4, 5])
+</code></pre>
+<h4 id="并集"><a href="#并集" class="headerlink" title="并集"></a>并集</h4><p><code>|</code>       将集合中的元素合并</p>
+<pre><code>&gt;&gt;&gt;s1|s2
+set（【1，2，3，4，5，6】）
+</code></pre>
+<h4 id="差集"><a href="#差集" class="headerlink" title="差集"></a>差集</h4><p><code>-</code>       获取集合中不同的元素，不同的元素在s1中</p>
+<pre><code>&gt;&gt;&gt; s1 - s2
+set([1])
+^       对称差分，获取集合中不同的元素，元素在不同的集合中
+&gt;&gt;&gt; s1 ^ s2
+set([1, 6])
+</code></pre>
+<h3 id="内置函数"><a href="#内置函数" class="headerlink" title="内置函数"></a>内置函数</h3><h4 id="交集-1"><a href="#交集-1" class="headerlink" title="交集"></a>交集</h4><p>s.intersection（t）          集合s和集合t的交集  <br /></p>
+<h4 id="并集-1"><a href="#并集-1" class="headerlink" title="并集"></a>并集</h4><p>s.union（t）                  集合s和集合t的并集     <br />      </p>
+<h4 id="差集-1"><a href="#差集-1" class="headerlink" title="差集"></a>差集</h4><p>s.difference（）                        差集 <br /><br>s.symmetric_difference（）      对称差分 <br /></p>
+<h4 id="增加"><a href="#增加" class="headerlink" title="增加"></a>增加</h4><p>s.add（）              增加元素 <br /><br>s.update（）         增加集合中的元素，用于集合叠加 <br /></p>
+<h4 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h4><p>s.remove（）         删掉特定的元素，若没有则报错 <br /><br>s.discard（）         删掉特定的元素，若没有不报错 <br /><br>s.pop（）              删掉一个元素，随机删除 <br /></p>
+<h4 id="清除"><a href="#清除" class="headerlink" title="清除"></a>清除</h4><p>s.clear（）            清除该集合 <br /></p>
+<h4 id="判断"><a href="#判断" class="headerlink" title="判断"></a>判断</h4><p>s.issubset（）        判断s1是否为s2的子集 <br /><br>s.issuperset（）     判断s1是否包含s2，与上一个相反 <br /></p>
+<h2 id="映射"><a href="#映射" class="headerlink" title="映射"></a>映射</h2><h3 id="字典的定义"><a href="#字典的定义" class="headerlink" title="字典的定义"></a>字典的定义</h3><h4 id="字典的定义-1"><a href="#字典的定义-1" class="headerlink" title="字典的定义"></a>字典的定义</h4><p>字典是一种无序的集合对象类型，可以存储任意的数据类型 <br /><br> 如：{‘A’:1,’B’:2,’C’:3} <br /><br> 字典是python中位移的映射类型，通过key-value键值方式存储数据 <br /><br>与列表相比，字典是无序的，列表有有序的；列表采用偏移位置来存取，字典采用键&#x2F;散列映射来存取，速度快效率高 <br /></p>
+<h4 id="字典的功能"><a href="#字典的功能" class="headerlink" title="字典的功能"></a>字典的功能</h4><p>支持复杂的数据存储和处理 <br /><br>用于存储其他对象信息 <br /><br>python最强大的容器 <br /></p>
+<h4 id="语法-1"><a href="#语法-1" class="headerlink" title="语法"></a>语法</h4><p>{key 1:value1,key2:value2,key3:value3,……}  <br /><br>变量&#x3D;{键1：值1，键2：值2……}</p>
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><p>先将key用哈希函数进行转换，得到每个key对应的一个哈希值 <br /><br>再讲哈希值与变量对应，做成一张表 <br /><br>每次需要查找的时候，先用哈希函数计算出哈希值，再去表中查找对应的变量 <br /><br>速度快，但是需要更多的存储量  <br /></p>
+<h4 id="特征-1"><a href="#特征-1" class="headerlink" title="特征"></a>特征</h4><p>无序，字典中没有索引位置这个概念 <br /><br>可变，键是不可变的，而且必须是唯一的，值是可变的，相同值可以出现在同一个字典里  <br /><br>键只能用数字、字符串。元组等不可变的对象组成，不能用列表 <br /><br>一个键只能对应一个值 <br /></p>
+<h3 id="操作符-1"><a href="#操作符-1" class="headerlink" title="操作符"></a>操作符</h3><h4 id="查找操作符"><a href="#查找操作符" class="headerlink" title="查找操作符"></a>查找操作符</h4><p>d【k】         通过键k，查询字典中的某元素的值 <br /></p>
+<pre><code>&gt;&gt;&gt; d =&#123;&#39;A&#39;:1,&#39;B&#39;:2,&#39;C&#39;:3&#125;
+&gt;&gt;&gt; d[&#39;A&#39;]
+1
+</code></pre>
+<p>d【k】&#x3D;v    通过键k，给字典中的k赋值v，若没有k，则新增加进来 <br /></p>
+<pre><code>&gt;&gt;&gt; d =&#123;&#39;A&#39;:1,&#39;B&#39;:2,&#39;C&#39;:3&#125;
+&gt;&gt;&gt; d[&#39;A&#39;] = 10
+&gt;&gt;&gt; d
+&#123;&#39;A&#39;: 10, &#39;C&#39;: 3, &#39;B&#39;: 2&#125; 
+</code></pre>
+<h4 id="成员操作符"><a href="#成员操作符" class="headerlink" title="成员操作符"></a>成员操作符</h4><pre><code>&gt;&gt;&gt; &#39;A&#39; in d
+True
+
+&gt;&gt;&gt; &#39;a&#39; not in d
+True
+</code></pre>
+<h3 id="内置函数-1"><a href="#内置函数-1" class="headerlink" title="内置函数"></a>内置函数</h3><p>d.items（）                   返回一个由字典d的键-值对应的关系图 <br /><br>d.keys（）                     返回一个由字典d的键组成的关系图 <br /><br>d.values（）                   返回一个由字典d的值组成的关系图 <br /><br>d.get（key）                  返回与key相关联的值 <br /><br>d.pop（key）                 删除键key并返回与之相关联的值 <br /><br>d.popitem（）               删除某个键值对，返回被删除的对，不需要指定某一值 <br /><br>d.clear（）                     删除字典d中的所有元素 <br /><br>d.copy（）                    复制字典d <br /><br>d.update（e）               合并，将e中的值添加到d中 <br /><br>d.setdefault（key.v）     如果键key包含在字典d中，则返回；否则就添加到d中   <br /><br>d.has_key（key）          判断某个key是否在字典中，如果有返回True，没有Flase <br /></p>
+<h2 id="数字"><a href="#数字" class="headerlink" title="数字"></a>数字</h2><h3 id="数字：内建函数"><a href="#数字：内建函数" class="headerlink" title="数字：内建函数"></a>数字：内建函数</h3><h4 id="数值计算函数"><a href="#数值计算函数" class="headerlink" title="数值计算函数"></a>数值计算函数</h4><p>abs（）          返回给定参数的绝对值 <br /><br>pow（）         用于指数计算    pow（2，5）意为2的5次方 <br /><br>round（）      用于给定一个浮点数进行截断处理 or 告诉round函数精确到小数点后多少位   round（8.55555，3）精确到小数点第三位 <br /><br>divmod（）    把出发和余运算结合，结果为包含商和余数的结合  divmod（10，3）→（3。1） <br /><br>coerce（）      把两个不同类型的数值转换为同一种类型，哪个数值更复杂就转换为哪种数值    coerce（10，0.1）→（10.0，0.1） <br /></p>
+<h4 id="类型转换函数"><a href="#类型转换函数" class="headerlink" title="类型转换函数"></a>类型转换函数</h4><p>将给的数值转换为特定的类型 <br /><br>int （）           将数字类型转换为整数 <br /><br>complex（）   将数字类型转换为复数 <br /><br>float（）         将数字类型转换为浮点数 <br /><br>long（）         将数字类型转换为长整数 <br /><br>bool（）         将数字类型转换为布尔值，即进行真假判断。除了’’、“”、o、()、[]、{}、None、0.0、0L&#x2F;0.0+0.0j、False为False，其他都为True <br /></p>
+<h4 id="进制转换函数"><a href="#进制转换函数" class="headerlink" title="进制转换函数"></a>进制转换函数</h4><p>hex（）          传一个整数进去，得到一个十六进制 <br /><br>oct（）           传一个整数进去，得到一个八进制 <br /><br>bin（）           传一个整数进去，得到一个二进制 <br /></p>
+<h4 id="ASCII转换函数"><a href="#ASCII转换函数" class="headerlink" title="ASCII转换函数"></a>ASCII转换函数</h4><p>范围为0到255 <br /><br>ord（）           接受一个字符，返回一个整数值 <br /><br>chr（）           接受一个整数值，返回一个字符 <br /></p>
+<h3 id="内置模块"><a href="#内置模块" class="headerlink" title="内置模块"></a>内置模块</h3><h4 id="math"><a href="#math" class="headerlink" title="math"></a>math</h4><p>高级数学模块，模块中包含大量已经编写好的数值代码</p>
+<pre><code>&gt;&gt;&gt;import math      调用math模块
+&gt;&gt;&gt;math.sqrt（4）
+2.0                 计算4的平方根
+</code></pre>
+<h4 id="random"><a href="#random" class="headerlink" title="random"></a>random</h4><p>随机数学模块，模块中包含多个伪随机数发生器，已当前时间戳为随机数种子</p>
+<pre><code>import random
+randrange（）     随机返回（最小值，最大值）中的一个整数
+uniform（）         返回二者之间的浮点数
+choice（）           给定一个数列，从数列中调选一个参数
+</code></pre>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><p>id（）      查询当前内存的变量 <br /><br>var &#x3D; value     var变量   var&#x3D;赋值运算符    value对象 <br /><br>变量长度不受限制，但是只能为字母，数字，下划线    <br /><br>第一个字符不能是数字，不能是123，但可以是a123 <br /><br>区分大小写     一些关键词不能作为变量 <br /></p>
+<p>多值赋值：a，b，c &#x3D; 1，2，3 <br /><br>交叉赋值：</p>
+<pre><code>a = 123
+b = a
+a = &#39;xyz&#39;
+print b
+123
+</code></pre>
+<h2 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h2><h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><h4 id="列表的定义"><a href="#列表的定义" class="headerlink" title="列表的定义"></a>列表的定义</h4><p>列表是一组有序的集合对象类型，可以包括数字、字符串甚至列表等信息 <br /><br>列表理论上可以存储无限的元素且支持复杂的数据存储和处理 <br /><br>语法：变量&#x3D;【元素1，元素2，元素3……】<br /><br>       L&#x3D;【‘hello’，123，【10，20】】<br /></p>
+<h4 id="操作符-2"><a href="#操作符-2" class="headerlink" title="操作符"></a>操作符</h4><h5 id="索引操作符"><a href="#索引操作符" class="headerlink" title="索引操作符"></a>索引操作符</h5><pre><code>&gt;&gt;&gt; l = [&#39;hello&#39;, 123, [10,20]]
+&gt;&gt;&gt; l[0]
+&#39;hello&#39;
+&gt;&gt;&gt; l[1]
+123
+&gt;&gt;&gt; l[2][0]
+10
+&gt;&gt;&gt; l[2][1]
+20
+替换：L[1] = &#39;hi&#39;
+</code></pre>
+<h5 id="切片操作符"><a href="#切片操作符" class="headerlink" title="切片操作符"></a>切片操作符</h5><pre><code>&gt;&gt;&gt; l = [&#39;hello&#39;, 123, [10,20]]
+&gt;&gt;&gt; l[0:1]
+[&#39;hello&#39;]
+&gt;&gt;&gt; l[0:2]
+[&#39;hello&#39;, 123]
+&gt;&gt;&gt; l[0:3]
+[&#39;hello&#39;, 123, [10, 20]]
+</code></pre>
+<h5 id="连接操作符"><a href="#连接操作符" class="headerlink" title="连接操作符"></a>连接操作符</h5><pre><code>&gt;&gt;&gt; l1 = [&#39;hello&#39;,123]
+&gt;&gt;&gt; l2 = [456,789]
+&gt;&gt;&gt; l1 + l2 
+[&#39;hello&#39;, 123, 456, 789]
+</code></pre>
+<h5 id="重复操作符"><a href="#重复操作符" class="headerlink" title="重复操作符"></a>重复操作符</h5><pre><code>&gt;&gt;&gt; l1 * 3
+[&#39;hello&#39;, 123, &#39;hello&#39;, 123, &#39;hello&#39;, 123]
+</code></pre>
+<h5 id="成员操作符-1"><a href="#成员操作符-1" class="headerlink" title="成员操作符"></a>成员操作符</h5><pre><code>&gt;&gt;&gt; &#39;hello&#39; in l
+True
+&gt;&gt;&gt; &#39;hi&#39; in l
+False
+&gt;&gt;&gt; 123 not in l
+False
+</code></pre>
+<h4 id="内置函数-2"><a href="#内置函数-2" class="headerlink" title="内置函数"></a>内置函数</h4><h5 id="内置函数（字符串也通用的函数）"><a href="#内置函数（字符串也通用的函数）" class="headerlink" title="内置函数（字符串也通用的函数）"></a>内置函数（字符串也通用的函数）</h5><p> len（）     获取列表的元素个数 <br /><br>max（）    获取列表中的最大值 <br /><br>min（）     获取列表中的最小值 <br /><br>sum（）     将列表元素相加 <br /><br>cmp（）    对比两个列表的大小；返回的值中，-1表示小于，1表示大于，0表示相等 <br /></p>
+<h5 id="列表增加"><a href="#列表增加" class="headerlink" title="列表增加"></a>列表增加</h5><p>L.append（）         添加元素到列表末端 <br /><br>L.insert（）            添加元素到具体索引位置    <br />                  l.insert(1,20) 在1位置添加一个20 <br /><br>L.extend（）          在列表的末尾添加其他列表的元素 <br /></p>
+<h5 id="列表删除"><a href="#列表删除" class="headerlink" title="列表删除"></a>列表删除</h5><p>L.pop（）              默认删除列表末尾的元素，可以指定索引删除 <br /><br>L.remove（）        删除某个指定的元素（第一个匹配项） <br /></p>
+<h5 id="列表搜索"><a href="#列表搜索" class="headerlink" title="列表搜索"></a>列表搜索</h5><p>L.count（）          统计某个元素出现的次数 <br /><br>L.index（）           找出列表某个元素第一个出现的索引位置 <br /></p>
+<h5 id="列表排序"><a href="#列表排序" class="headerlink" title="列表排序"></a>列表排序</h5><p>L.reverse（）       翻转列表元素位置 <br /><br>L.sort（）             对列表大小进行排序 <br /></p>
+<h4 id="进阶操作"><a href="#进阶操作" class="headerlink" title="进阶操作"></a>进阶操作</h4><p>列表解析 又称列表生成式：即通过特定的表达式简洁方便的生成新的列表<br /><br>语法：【X for Y in Z】  X为需要得到的结果；Y是用于遍历Z的参数；Z是被遍历的对象；X与Y是相关联的<br /><br>进阶语法：【X for Y in Z if J】  ifJ为判断条件<br /></p>
+<pre><code>&gt;&gt;&gt; [x + 1 for x in (1,2,3)]    X即x + 1；Y即x；Z即（1，2，3）
+[2, 3, 4]
+
+&gt;&gt;&gt; [x for x in &#39;hello&#39;]   X即x；Y即x；Z即‘hello&#39;
+[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;]
+
+&gt;&gt;&gt; [x * x for x in range(1,5)]
+[1, 4, 9, 16]
+
+&gt;&gt;&gt; [x + 1 for x in [1,2,3,4,5] if x &gt; 3]
+[5, 6]
+
+&gt;&gt;&gt; l1 = [&#39;hello&#39;,&#39;world&#39;]
+&gt;&gt;&gt; l2 = [x.upper() for x in l1]
+&gt;&gt;&gt; l2
+[&#39;HELLO&#39;, &#39;WORLD&#39;]
+</code></pre>
+<h3 id="元组"><a href="#元组" class="headerlink" title="元组"></a>元组</h3><h4 id="元组的定义"><a href="#元组的定义" class="headerlink" title="元组的定义"></a>元组的定义</h4><p>元组是一组有序的不可变的集合对象类型，可以包括数字、字符串甚至列表&#x2F;元组等信息 <br /><br>对比列表，元组是用小括号来创建，其他特征基本相同 <br /><br>元组不可修改，如果对对象的操作要求是只读的，使用元组更加安全 <br /><br>可以通过list（）或者tuple（）函数实现列表和元组的转换 <br /><br>当元组的元素只有一个时，即单元组，必须在最后加一个逗号，否则会变为字符串 <br /></p>
+<h4 id="操作符-3"><a href="#操作符-3" class="headerlink" title="操作符"></a>操作符</h4><p>基本与列表相同 </p>
+<h5 id="索引操作符-1"><a href="#索引操作符-1" class="headerlink" title="索引操作符"></a>索引操作符</h5><pre><code>&gt;&gt;&gt; t = (&#39;hello&#39;,123,[10,20])
+&gt;&gt;&gt; t[0]
+&#39;hello&#39;
+</code></pre>
+<h5 id="切片操作符-1"><a href="#切片操作符-1" class="headerlink" title="切片操作符"></a>切片操作符</h5><pre><code>&gt;&gt;&gt; t = (&#39;hello&#39;,123,[10,20])
+&gt;&gt;&gt; t[0:1]
+(&#39;hello&#39;,)  
+</code></pre>
+<h5 id="连接操作符-1"><a href="#连接操作符-1" class="headerlink" title="连接操作符"></a>连接操作符</h5><pre><code>&gt;&gt;&gt; t = (&#39;hello&#39;,123)
+&gt;&gt;&gt; t1 = (&#39;hello&#39;,123)
+&gt;&gt;&gt; t2 = (456,789)
+&gt;&gt;&gt; t = t1 + t2
+&gt;&gt;&gt; t
+(&#39;hello&#39;, 123, 456, 789) 
+</code></pre>
+<h5 id="重复操作符-1"><a href="#重复操作符-1" class="headerlink" title="重复操作符"></a>重复操作符</h5><pre><code>&gt;&gt;&gt; t = (&#39;hello&#39;, 123)
+&gt;&gt;&gt; t * 2
+(&#39;hello&#39;, 123, &#39;hello&#39;, 123) 
+</code></pre>
+<h5 id="成员操作符-2"><a href="#成员操作符-2" class="headerlink" title="成员操作符"></a>成员操作符</h5><pre><code>&gt;&gt;&gt; t = (&#39;hello&#39;, 123)
+&gt;&gt;&gt; &#39;hello&#39; in t
+True
+
+&gt;&gt;&gt; 123 not in t
+False
+  
+</code></pre>
+<h4 id="内置函数-3"><a href="#内置函数-3" class="headerlink" title="内置函数"></a>内置函数</h4><p>T.coun（）          统计某个元素在列表出现的次数 <br /><br>T.index（）         找出列表某个元素第一出现的索引位置 <br /></p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><h4 id="字符串的定义"><a href="#字符串的定义" class="headerlink" title="字符串的定义"></a>字符串的定义</h4><h5 id="单引号双引号以及三引号"><a href="#单引号双引号以及三引号" class="headerlink" title="单引号双引号以及三引号"></a>单引号双引号以及三引号</h5><p>字符串可以用单引号、双引号、三引号来表示 <br /><br>单引号和双引号使得字符串本身具备引号 <br /><br>三引号主要用于多行字符串&#x2F;文本说明 <br /></p>
+<h5 id="有序性和不可逆性"><a href="#有序性和不可逆性" class="headerlink" title="有序性和不可逆性"></a>有序性和不可逆性</h5><p>有序性是指字符串的顺序是从左到右    0→1→2→3→4→… <br /><br>不可逆性是指数字、字符串、元祖是不可变的，列表、字典是可变的 <br /></p>
+<h4 id="操作符-4"><a href="#操作符-4" class="headerlink" title="操作符"></a>操作符</h4><h5 id="索引操作符-2"><a href="#索引操作符-2" class="headerlink" title="索引操作符"></a>索引操作符</h5><p>操作语法：字符串[索引值x]  索引为x的字符<br /></p>
+<pre><code>&gt;&gt;&gt;s = &#39;hello&#39;
+&gt;&gt;&gt;s[1]
+ &#39;e&#39;
+&gt;&gt;&gt;s[-1]
+ &#39;o&#39;
+</code></pre>
+<h5 id="切片操作符-2"><a href="#切片操作符-2" class="headerlink" title="切片操作符"></a>切片操作符</h5><p>操作语法：字符串[索引值x:索引值y]  访问索引从x到y的字符，包括x单不包括y <br /><br>反向切片道理相同 <br /><br>默认切片：可以只打x或者y  <br /><br>比如：s[1:] or s[:-3]</p>
+<h5 id="连接操作符-2"><a href="#连接操作符-2" class="headerlink" title="连接操作符"></a>连接操作符</h5><p>两个字符串叠加在一起，得到一个新的字符串，用+连接 <br /></p>
+<pre><code>&gt;&gt;&gt;s1 = &#39;hello&#39;
+&gt;&gt;&gt;s2 = &#39;world&#39;
+&gt;&gt;&gt;s3 = s1 + s2
+&gt;&gt;&gt;s3
+&#39;hello，world&#39;
+</code></pre>
+<h5 id="重复操作符-2"><a href="#重复操作符-2" class="headerlink" title="重复操作符"></a>重复操作符</h5><p>用于copy字符串，用*连接<br /></p>
+<pre><code>&gt;&gt;&gt;s1 = &#39;hello&#39;
+&gt;&gt;&gt;s1*10
+&quot;hellohellohellohellohellohellohellohellohellohello&quot;
+</code></pre>
+<h5 id="成员操作符-3"><a href="#成员操作符-3" class="headerlink" title="成员操作符"></a>成员操作符</h5><p>通过in or not in 判断字符串里是否夹带某些字符 <br /></p>
+<pre><code>&gt;&gt;&gt;s1 = &#39;hello&#39;
+&gt;&gt;&gt;&#39;h&#39; in s1
+True
+&gt;&gt;&gt;&#39;he&#39; not in s1
+False
+</code></pre>
+<h4 id="内置函数-4"><a href="#内置函数-4" class="headerlink" title="内置函数"></a>内置函数</h4><h5 id="判断函数"><a href="#判断函数" class="headerlink" title="判断函数"></a>判断函数</h5><p>s.isalnum（）         判断字符串s是否只包含数字或者字母，是返回True，否返回False <br /><br>s.isalpha（）           判断字符串s是否只包含字母，是返回True，否返回False <br /><br>s.isdigit（）            判断字符串s是否只包含数字，是返回True，否返回False <br /><br>s.islower（）           判断字符串s是否只包含小写字母，是返回True，否返回False <br /><br>s.isupper（）           判断字符串s是否只包含大写字母，是返回True，否返回False <br /><br>s.isspace（）            判断字符串s是否只包含空白字符，是返回True，否返回False <br /><br>s.startswith（t）      判断字符串s是否以t开头，是返回True，否返回False <br /><br>s.endswith（t）        判断字符串s是否以t结尾，是返回True，否返回False <br /><br>s.isidentifier（）        判断字符串s是否合法的标识符，如果是返回True，否则返回False <br /><br>s.isdecimal（）          判断字符串s是否只包含十进制数字的字符，如果是返回True，否则返回False <br /><br>s.isnumeric（）          判断字符串s是否只包含数字，如果是返回True，否则返回False <br /><br>s.isprintable（）          判断字符串s是否只包含可打印字符，如果是返回True，否则返回False <br /><br>s.istitle（）                  判断字符串s大小写符合头衔要求（title-case），如果是返回True，否则返回False <br /></p>
+<h5 id="搜索函数"><a href="#搜索函数" class="headerlink" title="搜索函数"></a>搜索函数</h5><p>s.count（t）            搜索字符t，返回字符串中出现t的次数 <br /><br>s.find（t）               搜索字符t，如果没有找到，则返回-1；否则返回t在s中的起始位置 <br /><br>s.index（t）             与find相同，如果没有找到t的话，则引发ValueError异常 <br /><br>s.rfind（t）              与find相同，但从右到左搜索。返回t在s中的最后一次出现时的起始位置索引 <br /><br>s.rindex（t）            与index相同，但从右到左搜索。返回t在s中的最后一次出现时的起始位置索引 <br /></p>
+<h5 id="格式函数"><a href="#格式函数" class="headerlink" title="格式函数"></a>格式函数</h5><p>s.center（n,t）          包含n个字符的字符串，其中s位于中央，两边用t填充，t可选 <br /><br>s.ljust（n,t）              包含n个字符的字符串，其中s位于左边，右边用t填充，t可选 <br /><br>s. rjust（n,t）            包含n个字符的字符串，其中s位于右边，左边用t填充，t可选 <br /><br>s.format（vars）       格式化字符串，类似%。用于字符映射以及格式限定  <br /></p>
+<h5 id="剥离函数"><a href="#剥离函数" class="headerlink" title="剥离函数"></a>剥离函数</h5><p>s.strip（t）               从s开头和末尾删除所有包含在字符串中的t字符，默认删除空格 <br /><br>s.lstrip（t）              从s开头（左端）和末尾删除所有包含在字符串中的t字符，默认删除空格 <br /><br>s.rstrip（t）              从s开头（右端）和末尾删除所有包含在字符串中的t字符，默认删除空格 <br /></p>
+<h5 id="拆分函数"><a href="#拆分函数" class="headerlink" title="拆分函数"></a>拆分函数</h5><p>s.partition（t）         将s拆分成三个字符串（head、t、tail），其中head为t前面的子串，tail为t后面的子串 <br /><br>s.rpartition（t）        与partition相同，单从s的右端开始搜索t <br /><br>s.split（t）                以t为分隔符，将s划分为一系列子串，并返回一个由这些子串组成的列表 <br /><br>s.rsplit（t）               与split相同，但从s的右边开始搜索t <br /><br>s.splitilines（）          返回一个由s中的各行组成的列表，一般用于多行的切割 <br /></p>
+<h5 id="替换函数"><a href="#替换函数" class="headerlink" title="替换函数"></a>替换函数</h5><p>s.replace（old，new）  将s中的每个old替换为new <br /><br>s.expandtabs（n）        将s中的每个字符表tab替换为n个空格 <br /></p>
+<h5 id="大小写函数"><a href="#大小写函数" class="headerlink" title="大小写函数"></a>大小写函数</h5><p>s.lower（）                让s中的所有字母都小写 <br /><br>s.upper（）                让s中的所有字母都大写 <br /><br>s.capitalize（）           将s的第一个字符改为大写 <br /><br>s.swapcase（）           将小写字母改为大写，并将大写改为小写 <br /><br>s.title（）                     让s的大小写符合标题化要求，即第一个字符大写，其他字符小写 <br /></p>
+<h4 id="进阶操作-1"><a href="#进阶操作-1" class="headerlink" title="进阶操作"></a>进阶操作</h4><h5 id="字符编码"><a href="#字符编码" class="headerlink" title="字符编码"></a>字符编码</h5><p>编码原理：因为电脑只认识0和1，处理字符时，需要将字符转换为数字存储并处理，将字符与数字相互对应的编码规范称为字符编码（码表） <br /><br>编码分类：ASCII：最早的字符编码规则称为ASCII；采用1个字节8个比特来表示字符；最多支持255个字符；只能支持英语Unicode：又称万国码，采用2个字节或者4个字节来表示字符，一般采用两个；支持所有国家 UTF-8：Unicode有些字符并不需要两个字节来进行存储和传输，所以UTF-8为可变长编码；采用1到6个字节来存储和传输；支持所有国家 <br /><br>编码设置：<code>#！/usr/bin/python</code>：为Linux&#x2F;Unix环境设置环境变量&#x2F;执行路径 <br /><br><code>#-*-coxling：UTF-8-*-</code>：采用UTF-8打开，支持中文，使python支持中文字符  <br /></p>
+<h5 id="转义字符"><a href="#转义字符" class="headerlink" title="转义字符"></a>转义字符</h5><p>转义概述：通过引入转义字符，可以实现字符串中的特殊需求，比如换行、回车等功能；在需要使用特殊字符时，用反斜杠转义字符 <br /><br>\          续行符 <br /><br>\         反斜杠符号，结果保留一个斜杠 <br /><br>&#39;          单引号 <br /><br>&quot;          双引号 <br /><br>\n         换行 <br /><br>\t          横向制表符 <br /><br>\v          纵向制表符 <br /><br>\r           回车 <br /><br>\b          退格 <br /><br>\a          响铃 <br /><br>\e          转义 <br /><br>\000      空 <br /><br>\f           换页 <br /><br>\ott        八进制数，tt代表的字符 <br /><br>\xtt        十六进制数，tt代表的字符 <br /><br>关闭转义：在字符串之前加入r’，就可以关闭r之后的转义字符 <br /></p>
+<h5 id="格式化字符"><a href="#格式化字符" class="headerlink" title="格式化字符"></a>格式化字符</h5><p>通过引入格式化字符，可以实现更加复杂的字符串表达，通常用%表示 <br /><br>在%的左侧放置一个需要格式化的字符串，这个字符串带有一个或多个转换目标，都以%开头 <br /><br>在%的右侧放置一个或多个对象，这些对象会插入左侧的字符串中去 <br /><br>%s       格式化字符串<br>%d       格式化整数<br>%c       格式化字符及其ASCII码<br>%u       格式化无符号整形<br>%o       格式化无符号八进制<br>%x       格式化无符号十六进制<br>%X       格式化无符号十六进制（大写）<br>%f        格式化浮点数字，可指定小数点后的精度<br>%e       用科学计数法格式化浮点数<br>%E       作用同e<br>%g       %f和%e的简写<br>%G       %F和%E的简写<br>%p         用十六进制格式化变量的地址</p>
+<pre><code>&gt;&gt;&gt; &#39;hello, %s&#39; % &#39;J&#39;
+&#39;hello, J&#39;
+&gt;&gt;&gt; &#39;Hello, %s, Welcome to %s&#39; % (&#39;J&#39;, &#39;PINGINGLAB&#39;)
+&#39;Hello, J, Welcome to PINGINGLAB&#39;
+&gt;&gt;&gt; &#39;%s is %d years old&#39; % (&#39;J&#39;, 18)
+&#39;J is 18 years old&#39;
+&gt;&gt;&gt; x = &#39;J&#39;
+&gt;&gt;&gt; y = 18
+&gt;&gt;&gt; &#39;%s is %d years old&#39; % ( x , y)
+&#39;J is 18 years old&#39;
+</code></pre>
+<h1 id="流程控制"><a href="#流程控制" class="headerlink" title="流程控制"></a>流程控制</h1><h2 id="条件语句-if"><a href="#条件语句-if" class="headerlink" title="条件语句-if"></a>条件语句-if</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>if语句用于实现条件判断，让程序作出简单或者复制的决策<br>若为真则执行，反之不执行 <br /><br>if……else: <br /><br><img src="https://p2.cdn.img9.top/ipfs/QmfEJ2aGgq87tQJJPG3bVH7kQ2dgziSE3CFogbYU7vWnDr?2.png" alt="图2-1-1"> <br /><br>if……eief……else: <br /><br><img src="https://p3.cdn.img9.top/ipfs/QmX7etfCTeZ68R1hrjbD6dmEYpJXfY5fyytp7xLDg5vS7S?3.png" alt="图2-1-2"></p>
+<h3 id="语法-2"><a href="#语法-2" class="headerlink" title="语法"></a>语法</h3><h4 id="单if条件"><a href="#单if条件" class="headerlink" title="单if条件"></a>单if条件</h4><pre><code>if条件判断1：         if条件判断根据代码返回的布尔值T或者F来进行选择操作
+    代码块1              布尔/比较/身份/成员操作能够返回T或者R
+else：
+     代码块2
+</code></pre>
+<p>else是可选部分，若没有else，if为假时什么都不执行 <br /></p>
+<h4 id="多if条件"><a href="#多if条件" class="headerlink" title="多if条件"></a>多if条件</h4><pre><code>if条件判断1：
+    代码块1
+elif条件判断2：        elif相当于else if
+    代码块2               多条件判断时，只要有一个为真，则执行后结束判断 
+elif条件判断3：
+    代码块3
+……
+else：
+    代码块n
+</code></pre>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><h4 id="单条件判断"><a href="#单条件判断" class="headerlink" title="单条件判断"></a>单条件判断</h4><pre><code>判断正负数
+&gt;&gt;&gt; num = 10
+&gt;&gt;&gt; if num &gt; 0 :
+...     print &#39;正数&#39;
+... else:
+...     print &#39;负数&#39;
+...     
+正数
+
+用户输入一个数字，判断正负数
+num = input(&#39;number: &#39;)              通过input( )函数获取用户输入
+n = int(num)                               通过int( )整数函数将用户输入转换为整数
+if n &gt; 0 :
+    print &#39;正数&#39;
+else:
+    print &#39;负数&#39;
+</code></pre>
+<h4 id="多条件判断"><a href="#多条件判断" class="headerlink" title="多条件判断"></a>多条件判断</h4><pre><code>判断成绩优良中差
+&gt;&gt;&gt; score = 80
+&gt;&gt;&gt; if score &lt; 60:
+...     print &#39;不及格&#39;
+... elif 60&lt;= score &lt;= 79:
+...     print &#39;中等&#39;
+... elif 80 &lt;= score &lt;= 100:
+...     print &#39;优良&#39;
+... else:
+...     pass
+...     
+优良
+
+用于输入分数，给出判断结果
+score = int(input(&#39;分数: &#39;))
+if score &lt; 60:
+...     print &#39;不及格&#39;
+... elif 60&lt;= score &lt;= 79:
+...     print &#39;中等&#39;
+... elif 80 &lt;= score &lt;= 100:
+...     print &#39;优良&#39;
+... else:
+...     pass
+</code></pre>
+<h4 id="多条件同时判断"><a href="#多条件同时判断" class="headerlink" title="多条件同时判断"></a>多条件同时判断</h4><pre><code>or表示任意一个条件成立即可
+&gt;&gt;&gt; num = 8
+&gt;&gt;&gt; if num &gt; 9 or num &lt; 10:
+...     print &#39;yes&#39;
+... else:
+...     print &#39;no&#39;
+...     
+yes
+
+and表示所有条件成才可以
+&gt;&gt; num = 8
+&gt;&gt;&gt; if num &gt; 9 and num &lt; 10:
+...     print &#39;yes&#39;
+... else:
+...     print &#39;no&#39;
+...
+no
+</code></pre>
+<h4 id="嵌套条件判断"><a href="#嵌套条件判断" class="headerlink" title="嵌套条件判断"></a>嵌套条件判断</h4><pre><code>if...else...语句嵌套if...else...语句
+&gt;&gt;&gt; num = 8
+&gt;&gt;&gt; if num &lt; 10:
+...     print &#39;yes&#39;
+...     if num == 8:
+...         print &#39;it is 8&#39;
+...     else:
+...         print &#39;it is others&#39;
+... else:
+...     print &#39;no&#39;
+...     
+yes
+it is 8
+</code></pre>
+<h4 id="条件表达式"><a href="#条件表达式" class="headerlink" title="条件表达式"></a>条件表达式</h4><p>条件表达式也称为三元操作符，是if语句的缩写格式 <br /><br>如果X为真，则A等于Y，否则A等于Z <br /></p>
+<pre><code>if X:
+   A=Y
+else:
+    A=Z
+
+A=Y if X else Z
+
+&gt;&gt;&gt; num = 8
+&gt;&gt;&gt; A = 10 if num &gt; 0 else 9
+&gt;&gt;&gt; A
+10
+</code></pre>
+<h2 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h2><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h3><p>for语句用于实现循环，例如对列表和字符等可迭代对象进行遍历<br><img src="https://p3.cdn.img9.top/ipfs/QmehzBoQGZhcDJvBLJ1H4qfgiuihCUogR69Ga1sodVwu4f?3.png" alt="图2-3-1"></p>
+<h3 id="语法-3"><a href="#语法-3" class="headerlink" title="语法"></a>语法</h3><p>for x in y:<br>  代码块              </p>
+<p>x为变量 <br /><br>y为可迭代对象，可以是字符串&#x2F;元祖&#x2F;列表&#x2F;字典&#x2F;函数等可迭代对象</p>
+<h3 id="举例-1"><a href="#举例-1" class="headerlink" title="举例"></a>举例</h3><h4 id="遍历字符串"><a href="#遍历字符串" class="headerlink" title="遍历字符串"></a>遍历字符串</h4><pre><code>&gt;&gt;&gt; s = &#39;hello,world&#39;
+&gt;&gt;&gt; for x in s:
+...     print x
+...     
+</code></pre>
+<p>会得到s中的所以字符</p>
+<h4 id="遍历列表"><a href="#遍历列表" class="headerlink" title="遍历列表"></a>遍历列表</h4><pre><code>&gt;&gt;&gt; l = [1,2,3]
+&gt;&gt;&gt; for x in l:
+...     print x
+...     
+</code></pre>
+<p>会得到l中的所有数字</p>
+<h4 id="计算和"><a href="#计算和" class="headerlink" title="计算和"></a>计算和</h4><pre><code>&gt;&gt;&gt; l = [1,2,3,4,5]
+&gt;&gt;&gt; sum = 0
+&gt;&gt;&gt; for i in l:
+...     sum = sum + i
+...     print sum
+...
+</code></pre>
+<p>会得到叠加的结果</p>
+<h4 id="计算乘阶"><a href="#计算乘阶" class="headerlink" title="计算乘阶"></a>计算乘阶</h4><pre><code>&gt;&gt;&gt; i = 1
+&gt;&gt;&gt; for x in [1,2,3,4,5]:
+...     i = i * x
+...     print i
+...
+</code></pre>
+<p>会得到叠乘的结果</p>
+<h4 id="for语句结合else"><a href="#for语句结合else" class="headerlink" title="for语句结合else"></a>for语句结合else</h4><p>当循环执行完之后则执行else语句 <br /></p>
+<pre><code>&gt;&gt;&gt; l1 = [1,2,3,4,5]
+&gt;&gt;&gt; for i in l1:
+...     l = i * i
+...     print l
+... else:
+...     print i
+...     
+</code></pre>
+<p>会得到列表中的每个数的平方，以及结束循环后的5</p>
+<h4 id="for语句结合range"><a href="#for语句结合range" class="headerlink" title="for语句结合range( )"></a>for语句结合range( )</h4><p>range( )函数可以生成整数列表 <br /><br>range(x,y）会生成x到y-1的整数列表 <br /><br>range(start, end, step) <br /></p>
+<pre><code>range(start, end, step)
+&gt;&gt;&gt; for x in range(5):
+...     i = i * (x + 1)
+...     print i
+...     
+range(5)等于【1，2，3，4】
+</code></pre>
+<h4 id="for语句结合zip"><a href="#for语句结合zip" class="headerlink" title="for语句结合zip( )"></a>for语句结合zip( )</h4><p>zip( )函数获取多个列表的元素，生成内置元祖的列表 <br /><br>结合for循环语句可以实现多列表并行遍历 <br /><br>for (x,y) in zip (l1, l2) <br /></p>
+<pre><code>&gt;&gt;&gt; l1 = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;]
+&gt;&gt;&gt; l2 = [1,2,3,4]
+&gt;&gt;&gt; zip(l1,l2)
+[(&#39;a&#39;, 1), (&#39;b&#39;, 2), (&#39;c&#39;, 3), (&#39;d&#39;, 4)]
+&gt;&gt;&gt; for (x,y) in zip(l1,l2):
+...     print x , y
+...     
+</code></pre>
+<h4 id="for语句结合map"><a href="#for语句结合map" class="headerlink" title="for语句结合map( )"></a>for语句结合map( )</h4><p>map( )函数将可迭代对象的每个元素传入函数并返回一个列表 <br /><br>map函数包括函数和可迭代对象（列表等） <br /><br>当函数为None时，map( )可以实现并行解析 <br /><br>map(f, iterable) <br /></p>
+<pre><code>&gt;&gt;&gt; l1 = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;]
+&gt;&gt;&gt; l2 = [1,2,3,4]
+&gt;&gt;&gt; map(None,l1,l2)
+[(&#39;a&#39;, 1), (&#39;b&#39;, 2), (&#39;c&#39;, 3), (&#39;d&#39;, 4)]
+&gt;&gt;&gt; for (x,y) in map(None,l1,l2):
+...     print x , y
+...     
+</code></pre>
+<h4 id="for语句结合enumerate"><a href="#for语句结合enumerate" class="headerlink" title="for语句结合enumerate( )"></a>for语句结合enumerate( )</h4><p>enumerate( )用于给传入的可迭代对象索引，返回迭代器</p>
+<pre><code>&gt;&gt;&gt; for (x,y) in enumerate(迭代对象):
+&gt;&gt;&gt; l1 = [&#39;a&#39;,&#39;b&#39;,&#39;c&#39;]
+&gt;&gt;&gt; for (x,y) in enumerate(l1):
+...     print x,y
+...     
+</code></pre>
+<h2 id="条件循环语句"><a href="#条件循环语句" class="headerlink" title="条件循环语句"></a>条件循环语句</h2><h3 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h3><p>while语句用于实现条件循环，可以在条件满足的情况下循环执行代码块 <br /><br>若结果为真则执行循环，反之不执行（若…则循环…） <br /><br><img src="https://p0.cdn.img9.top/ipfs/QmQsqyiS9KF5KDi2QhUjrAvtD8ycJwDVr3J91MxmCNSdty?0.png" alt="图2-2-1"></p>
+<h3 id="语法-4"><a href="#语法-4" class="headerlink" title="语法"></a>语法</h3><p>while条件判断：<br> 循环代码块  <br /> </p>
+<p>While条件判断根据代码返回的布尔值T或F来进行选择操作 <br /><br>般在条件判断之前，会有初始语句，例如定义变量初始值等 <br /></p>
+<h3 id="举例-2"><a href="#举例-2" class="headerlink" title="举例"></a>举例</h3><h4 id="输出1到10"><a href="#输出1到10" class="headerlink" title="输出1到10"></a>输出1到10</h4><pre><code>&gt;&gt;&gt; n = 0
+&gt;&gt;&gt; while n &lt; 10:
+...     n = n + 1
+...     print n
+</code></pre>
+<h4 id="输出0到10数字相加的结果"><a href="#输出0到10数字相加的结果" class="headerlink" title="输出0到10数字相加的结果"></a>输出0到10数字相加的结果</h4><pre><code>&gt;&gt;&gt; n = 0
+&gt;&gt;&gt; sum = 0
+&gt;&gt;&gt; while n &lt; 10:
+...     sum = sum + n
+...     n = n + 1
+...     print sum
+</code></pre>
+<h4 id="while与else结合"><a href="#while与else结合" class="headerlink" title="while与else结合"></a>while与else结合</h4><p><img src="https://p2.cdn.img9.top/ipfs/Qmdeqp9x76YoW9N5epWEQjEZPxShbFydWvBAJtW7sKyZ6N?2.png" alt="图2-2-2"></p>
+<pre><code>&gt;&gt;&gt; n = 0
+&gt;&gt;&gt; while n &lt; 10:
+...     n = n + 1
+...     print n
+... else:
+...     n = -n
+...     print n
+...     
+</code></pre>
+<h2 id="循环控制"><a href="#循环控制" class="headerlink" title="循环控制"></a>循环控制</h2><h3 id="break"><a href="#break" class="headerlink" title="break"></a>break</h3><h4 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h4><p><img src="https://p0.cdn.img9.top/ipfs/QmZBQpnnee5wk7KdWinUGu9qgjMUUZF5pXt43zuaZMzppo?0.png" alt="图2-4-1"><br>用于while和for循环中，用于终止整个循环语句</p>
+<h4 id="举例-3"><a href="#举例-3" class="headerlink" title="举例"></a>举例</h4><p>while语句中使用break，结合if判断，当搜索到某个字符串时，终止遍历</p>
+<pre><code>&gt;&gt;&gt; n = 0
+&gt;&gt;&gt; while n &lt; 10:
+...     n = n + 1
+...     if n == 5:
+...         break
+...     print n
+...
+1
+2
+3
+4
+</code></pre>
+<p>for语句中使用break，结合if判断，当搜索到某个字符串时，终止遍历</p>
+<pre><code>&gt;&gt;&gt; for i in &#39;Hello,world!&#39;:
+...     if i == &#39;,&#39;:
+...         break
+...     print &#39;The letter is: &#39;,i
+...     
+The letter is:  H
+The letter is:  e
+The letter is:  l
+The letter is:  l
+The letter is:  o
+</code></pre>
+<h3 id="continue"><a href="#continue" class="headerlink" title="continue"></a>continue</h3><h4 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a>定义</h4><p><img src="https://p0.cdn.img9.top/ipfs/QmbsWP9VRifmFneLqygZB51u5VsYDn9R3mvuNXxcn2BZDL?0.png" alt="图2-4-2"><br>用于while和for循环中，用于终止本次循环</p>
+<h4 id="举例-4"><a href="#举例-4" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; for i in &#39;Hello,world!&#39;:
+...     if i == &#39;,&#39;:                        检查到字符串“,”时，直接忽略并继续下面的循环
+...         continue
+...     print &#39;The letter is: &#39;,i
+...     
+</code></pre>
+<p>结果会忽略‘，’,除这个以外的都会显示</p>
+<h3 id="pass"><a href="#pass" class="headerlink" title="pass"></a>pass</h3><h4 id="定义-6"><a href="#定义-6" class="headerlink" title="定义"></a>定义</h4><p>用于循环语句、条件语句、函数语句中占空，保证语句完整</p>
+<h4 id="举例-5"><a href="#举例-5" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; for i in &#39;Hello,world!&#39;:
+...     pass
+...     
+
+&gt;&gt;&gt; while n &lt; 10:
+...     pass                                用ctrl + c快捷键终止此循环执行
+&gt;&gt;&gt; def f():
+...     pass
+...     
+</code></pre>
+<h2 id="进阶语句"><a href="#进阶语句" class="headerlink" title="进阶语句"></a>进阶语句</h2><h3 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h3><h4 id="定义和语法"><a href="#定义和语法" class="headerlink" title="定义和语法"></a>定义和语法</h4><p><img src="https://p4.cdn.img9.top/ipfs/QmfTqtaP2B927vwET1eY5ZUAVv5eTAfawWELNxXjPCUFPU?4.png" alt="图2-5-1"><br /><br>迭代: <br /><br>迭代（Iteration）指的是对可迭代对象进行从头到尾访问&#x2F;遍历的过程。例如for循环的底层原理就是一个迭代 <br /><br>迭代器: <br /><br>迭代器（Itarator）指的是通过iter( )函数所返回的一个支持next( )方法的对象 <br /><br>迭代方法: <br /><br>iter( ) <br /><br>通过iter( )可以获得可迭代对象；默认可迭代对象没有next( )函数，通过iter( )迭代函数赋予next( ) <br /><br>next( ) <br /><br>返回可迭代对象中的下一个元素，并检查StopIteration异常终止迭代 <br /><br>迭代的原理: <br /><br>可迭代对象（iterable）在进行遍历&#x2F;迭代的时候，自动调用iter获取迭代器，自动调用next方法获取下一个元素例如 for i in [1,2,3] Python自动调用iter( )函数获取迭代器，自动调用next( )函数获得下一个元素 <br /><br>iter( L )&amp;next( L )</p>
+<h4 id="举例-6"><a href="#举例-6" class="headerlink" title="举例"></a>举例</h4><h5 id="手工迭代列表"><a href="#手工迭代列表" class="headerlink" title="手工迭代列表"></a>手工迭代列表</h5><pre><code>&gt;&gt;&gt; l = [1,2,3]
+&gt;&gt;&gt; I = iter(l)
+&gt;&gt;&gt; I
+&lt;listiterator object at 0x10d2b8b50&gt;         i为列表迭代器
+&gt;&gt;&gt; I.next()
+1
+&gt;&gt;&gt; I.next()
+2
+&gt;&gt;&gt; I.next()
+3
+&gt;&gt;&gt; I.next()
+Traceback (most recent call last):               成为迭代器之后才能使用next函数
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+StopIteration
+</code></pre>
+<h5 id="手工迭代字典"><a href="#手工迭代字典" class="headerlink" title="手工迭代字典"></a>手工迭代字典</h5><pre><code>&gt;&gt;&gt; D = &#123;&#39;a&#39;:1, &#39;b&#39;:2, &#39;c&#39;:3&#125;
+&gt;&gt;&gt; I = iter(D)
+&gt;&gt;&gt; I
+&lt;dictionary-keyiterator object at 0x10d2bbaf8&gt;
+&gt;&gt;&gt; next(I)
+&#39;a&#39;
+&gt;&gt;&gt; next(I)
+&#39;c&#39;
+&gt;&gt;&gt; next(I)
+&#39;b&#39;
+&gt;&gt;&gt; next(I)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+StopIteration
+
+通过try...except...语句自动迭代列表
+&gt;&gt;&gt; l = [1,2,3,4,5]
+&gt;&gt;&gt; i = iter(l)
+&gt;&gt;&gt; i
+&lt;listiterator object at 0x10d2b8bd0&gt;
+&gt;&gt;&gt; try:
+...     while True:
+...         n = i.next()
+...         print n
+... except StopIteration:
+...     pass
+...     
+
+ 注：等价于for i in l
+</code></pre>
+<h3 id="列表解析"><a href="#列表解析" class="headerlink" title="列表解析"></a>列表解析</h3><h4 id="定义和语法-1"><a href="#定义和语法-1" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>列表解析（List comprehensions）主要用于动态的创建列表 <br /><br>列表解析是迭代技术的一个应用，采用for循环和迭代函数动态生成列表，更简洁方便 <br /></p>
+<pre><code>[X for Y in Z]
+[expr for iter_var in iterable]    for循环通过变量iter_var遍历可迭代对象iterable
+                                           expr应用于序列的每个成员，最终结果即产生的列表
+[X for Y in Z if J]                 if J 为判断条件
+</code></pre>
+<h4 id="举例-7"><a href="#举例-7" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; [x + 1 for x in (1,2,3)]
+[2, 3, 4]
+
+&gt;&gt;&gt; [x for x in &#39;hello&#39;]
+[&#39;h&#39;, &#39;e&#39;, &#39;l&#39;, &#39;l&#39;, &#39;o&#39;]
+
+&gt;&gt;&gt; [x * x for x in range(1,5)]
+[1, 4, 9, 16]
+
+&gt;&gt;&gt; [x + 1 for x in [1,2,3,4,5] if x &gt; 3]
+[5, 6]
+
+&gt;&gt;&gt; l1 = [&#39;hello&#39;,&#39;world&#39;]
+&gt;&gt;&gt; l2 = [x.upper() for x in l1]
+&gt;&gt;&gt; l2
+[&#39;HELLO&#39;, &#39;WORLD&#39;]
+</code></pre>
+<h3 id="生成器表达式"><a href="#生成器表达式" class="headerlink" title="生成器表达式"></a>生成器表达式</h3><h4 id="定义和语法-2"><a href="#定义和语法-2" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>生成器是特定的函数, 允许返回一个值, 然后”暂停”代码的执行, 稍后恢复 <br /><br>生成器表达式是生成器的应用，是列表解析和生成器的结合，也是列表解析的拓展 <br /><br>生成器表达式按需返回产生结果的一个对象，而不是返回或构建一整个结果列表 <br /><br>列表解析是直接生产最终的列表，而生成器表达式按需生产内容，相比而言，后者更加节省内存空间 <br /></p>
+<p>语法： <br /><br>(expr for iter_var in iterable if cond_expr) <br /><br>列表解析用[ ] 生成器表达式用（ ） <br /></p>
+<h4 id="举例-8"><a href="#举例-8" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; l1 = [x + 1 for x in (1,2,3)]
+&gt;&gt;&gt; l1
+[2, 3, 4]
+&gt;&gt;&gt; l2 = (x + 1 for x in (1,2,3))
+&gt;&gt;&gt; l2
+&lt;generator object &lt;genexpr&gt; at 0x10d2bf8c0&gt;
+&gt;&gt;&gt; l2.next()
+2
+&gt;&gt;&gt; l2.next()
+3
+&gt;&gt;&gt; l2.next()
+4
+&gt;&gt;&gt; l2.next()
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+StopIteration
+</code></pre>
+<h1 id="函数模块"><a href="#函数模块" class="headerlink" title="函数模块"></a>函数模块</h1><h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><h3 id="定义和功能"><a href="#定义和功能" class="headerlink" title="定义和功能"></a>定义和功能</h3><p>函数（Function）是一组可重复使用、有特定功能的代码块 <br /><br>可重复使用 <br /><br>减少程序代码量 <br /><br>提高代码可读性 <br /></p>
+<h3 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h3><h4 id="调用函数"><a href="#调用函数" class="headerlink" title="调用函数"></a>调用函数</h4><p>通过为函数传入参数，即可得到相关的返回结果 <br /><br>函数使用过程中，我们无需知道函数内部实现原理 <br /><br>不同函数需要的参数个数和类型不同，有些需要多个参数，有些需要字符串&#x2F;数字&#x2F;列表参数 <br /></p>
+<h4 id="创建函数"><a href="#创建函数" class="headerlink" title="创建函数"></a>创建函数</h4><h5 id="语法-5"><a href="#语法-5" class="headerlink" title="语法"></a>语法</h5><p><img src="https://p1.cdn.img9.top/ipfs/QmbpVL1TwKJrUKHG1hBk3dxcP7BCf9r3whNdo5hqgJhy2Q?1.png" alt="图3-1-1"> <br /><br>函数头由def + 函数名+ （参数）三个部分组成 <br /><br>函数名与变量名称规则一致，可以包括字母、数字、下划线等 <br /><br>括号内可以有参数或者没有参数 <br /><br>return 表达式：return表达式为函数的可选部分；若不包括return表达式，则该函数为“不返回值函数”；若包括return表达式，则该函数为”返回值函数” <br /></p>
+<h5 id="举例-9"><a href="#举例-9" class="headerlink" title="举例"></a>举例</h5><pre><code>&gt;&gt;&gt; def hello():
+...     print &#39;hello,world!&#39;
+...     
+&gt;&gt;&gt; hello()
+hello,world!
+
+&gt;&gt;&gt; def hello(name):
+...     print &#39;hello&#39;,name
+...     return name * 2
+...
+&gt;&gt;&gt; hello(&#39;Jay&#39;)
+hello Jay
+&#39;JayJay&#39;
+</code></pre>
+<h4 id="函数的参数"><a href="#函数的参数" class="headerlink" title="函数的参数"></a>函数的参数</h4><h5 id="位置参数"><a href="#位置参数" class="headerlink" title="位置参数"></a>位置参数</h5><p>函数根据位置顺序将参数值传入参数</p>
+<pre><code>&gt;&gt;&gt; def sum(a,b):
+...     return a + b
+...     
+&gt;&gt;&gt; sum(1,2)
+3
+</code></pre>
+<h5 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h5><p>函数将部分参数指向默认值，后续可以不用为此参数传入值 <br /><br>通过默认参数，可以减低调用函数的难度 <br /><br>函数包含默认参数时，必选参数在前，默认参数在后 <br /></p>
+<pre><code>&gt;&gt;&gt; def sum(a , b=2):              第二个参数b设置默认值为2
+...     return a + b
+...     
+&gt;&gt;&gt; x = 1
+&gt;&gt;&gt; sum(x)                             调用sum函数，a指向x的值，b采用默认值
+3
+&gt;&gt;&gt; y = 10
+&gt;&gt;&gt; sum(x,y)                           默认参数可以被覆盖
+11
+</code></pre>
+<h5 id="关键字参数"><a href="#关键字参数" class="headerlink" title="关键字参数"></a>关键字参数</h5><p>使用关键字参数允许函数调用时参数的顺序与声明时不一致，Python解释器根据参数名匹配参数值</p>
+<pre><code>&gt;&gt;&gt; def m(a, b):
+...     return a * b
+...
+&gt;&gt;&gt; m (b = 5, a=10)
+50
+</code></pre>
+<h5 id="可变长参数"><a href="#可变长参数" class="headerlink" title="可变长参数"></a>可变长参数</h5><p>非关键字可变参数（*元祖）def func(*tuple)函数通过*获取可变数量的参数，并全部放入元祖 <br /><br>关键字可变参数（**字典）def func(**dict)函数通过**获取可变数量的参数，并全部放入字典 <br /></p>
+<pre><code>&gt;&gt;&gt; def f(*args):                         此处的打星号的参数，即代表可变长度元祖
+...     print args
+...     
+&gt;&gt;&gt; f(1)
+(1,)
+&gt;&gt;&gt; f(1,2)
+(1, 2)
+
+&gt;&gt;&gt; def sum(*v):                         此处的打星号的参数，即代表可变长度元祖
+...     s = 0
+...         s = s + i
+...     return s
+...     
+&gt;&gt;&gt; sum(1,2)
+3
+&gt;&gt;&gt; sum(1,2,3,4,5)
+15
+
+&gt;&gt;&gt; def func(**dict):
+...     print dict
+...     
+&gt;&gt;&gt; func(x = 1, y = 2, z = 3)
+&#123;&#39;y&#39;: 2, &#39;x&#39;: 1, &#39;z&#39;: 3&#125;
+&gt;&gt;&gt; func(x = 1, y = 2, z = 3, j = 4)
+&#123;&#39;y&#39;: 2, &#39;x&#39;: 1, &#39;z&#39;: 3, &#39;j&#39;: 4&#125;
+</code></pre>
+<h5 id="混合参数"><a href="#混合参数" class="headerlink" title="混合参数"></a>混合参数</h5><p>函数头定义参数列表时，可以同时包含位置参数、默认参数、关键字参数、可变参数 <br /><br>通过混合参数的方式，可以接收和处理更加复杂的内容 <br /><br>混合参数需要按照特定位置放置 <br /><br>位置参数(必备参数）-&gt; 默认参数  -&gt; 可变参数（* -&gt; **） <br /></p>
+<pre><code>&gt;&gt;&gt; def func(x, y = 1, *tuple, **dict):
+...     print x
+...     print y
+...     print tuple
+...     print dict
+...     
+&gt;&gt;&gt; func(10,20,30,40,z=1,j=50)
+10
+20
+(30, 40)
+&#123;&#39;z&#39;: 1, &#39;j&#39;: 50&#125;
+</code></pre>
+<h4 id="变量作用域"><a href="#变量作用域" class="headerlink" title="变量作用域"></a>变量作用域</h4><h5 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h5><p><img src="https://p1.cdn.img9.top/ipfs/QmYGrA4ThNZQb7BrN6aWQAgGqX5GKVUxZsmfsJUwszuANM?1.png" alt="图3-1-2"> <br /><br>在函数内部定义的变量称为局部变量 <br /><br>变量作用域指的是该变量能够被使用的范围 <br /><br>局部变量只能在其所属函数中使用 <br /><br>在函数外面，不能访问函数的局部变量。 <br /> </p>
+<pre><code>&gt;&gt;&gt; def var(x,y):
+...     s = x - y
+...     print(s)
+...     
+&gt;&gt;&gt; var(5,1)               s为函数var的变量，由x和y参数的表达式组成
+4                                 由于s的作用域在函数内部，所以无法在外部调用此变量
+&gt;&gt;&gt; s                                          
+Traceback (most recent call last):     
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#39;s&#39; is not defined
+&gt;&gt;&gt; print(s)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#39;s&#39; is not defined
+
+&gt;&gt;&gt; def A():
+...     a = 1
+...     print(a)
+...     
+&gt;&gt;&gt; def B():
+...     a = 2
+...     print(a)
+...     
+&gt;&gt;&gt; a = 3
+&gt;&gt;&gt; A()
+1
+&gt;&gt;&gt; B()
+2
+&gt;&gt;&gt; a
+3
+</code></pre>
+<h5 id="全局变量"><a href="#全局变量" class="headerlink" title="全局变量"></a>全局变量</h5><p>在函数外部定义的变量称为全局变量 <br /><br>全局变量能被整个程序范围调用 <br /> </p>
+<pre><code>&gt;&gt;&gt; name =&#39;JAY&#39;
+&gt;&gt;&gt; def hello():
+...     print(&#39;HI&#39;,name)        调用外部变量
+...     
+&gt;&gt;&gt; hello()
+HI JAY
+
+&gt;&gt;&gt; name = &#39;JAY&#39;        外部变量name
+&gt;&gt;&gt; def hello():        
+...     name = &#39;James&#39;     函数内部变量name
+...     print(&#39;HI&#39;,name)     这里调用变量name，若函数内部有则调用内部，若没                            
+&gt;&gt;&gt; hello()                  有，调用外部；若外部也没有，报错
+HI James
+
+&gt;&gt;&gt; name = &#39;JAY&#39;      
+&gt;&gt;&gt; def hello():
+...     global name           调用外部变量
+...     name = &#39;J&#39;              进行重新赋值
+...     print(&#39;HI&#39;,name)
+...     
+&gt;&gt;&gt; hello()
+HI J
+&gt;&gt;&gt; name                   外部变量被修改
+&#39;J&#39;
+</code></pre>
+<h3 id="进阶"><a href="#进阶" class="headerlink" title="进阶"></a>进阶</h3><h4 id="函数式编程"><a href="#函数式编程" class="headerlink" title="函数式编程"></a>函数式编程</h4><p>函数式编程是一种高级的编程方法，采用一系列的函数来解决问题 <br /><br>函数式编程是一种面向过程的实现，数据经过函数不断输入输出处理 <br /><br>函数式编程采用高阶函数来实现复杂的处理 <br /> </p>
+<p>高阶函数是一种高级函数，至少包含以下条件之一： <br /><br>函数作为参数被传入 <br /><br>函数作为结果被输出 <br /><br>Python可以支持高阶函数，通过高阶函数可以实现函数式编程。 <br /> </p>
+<p>支持递归、闭包、装饰器等高级特性 <br /><br>Python实现部分的函数式编程，函数输入允许有变量 <br /> </p>
+<p>纯函数式编程输入没有变量，输出是固定的 <br /><br>含变量的输入，输出结果会发生变动，有副作用 <br /> </p>
+<h4 id="内置高阶函数"><a href="#内置高阶函数" class="headerlink" title="内置高阶函数"></a>内置高阶函数</h4><h5 id="lambda函数"><a href="#lambda函数" class="headerlink" title="lambda函数"></a>lambda函数</h5><p>匿名函数，当需要一个函数，但是不需要这个函数的名字的时候，则可以通过lambda表达式来实现 <br /><br>通过lambda表达式，减少程序中的函数名字和代码量，实现更简洁的代码 <br /> </p>
+<p>lambda 参数：表达式 <br /><br>lambda x, y: x + y <br /> </p>
+<pre><code>&gt;&gt;&gt; lambda x,y:x + y
+&lt;function &lt;lambda&gt; at 0x0000000003313620&gt;
+&gt;&gt;&gt; a = lambda x,y:x + y
+&gt;&gt;&gt; a(1,2)
+3
+
+&gt;&gt;&gt; b = lambda x,y = 2:x + y
+&gt;&gt;&gt; b(1)
+3
+&gt;&gt;&gt; b(2)
+4
+
+&gt;&gt;&gt; c = lambda *z:z
+&gt;&gt;&gt; c(1)
+(1,)
+&gt;&gt;&gt; c(1,2)
+(1, 2)
+&gt;&gt;&gt; c(3)
+(3,)
+</code></pre>
+<h5 id="map函数"><a href="#map函数" class="headerlink" title="map函数"></a>map函数</h5><p>map函数接收两个参数，第一个是函数，第二个是列表（可迭代对象） <br /><br>将函数作用在序列的每个元素上， 然后创建由每次函数应用组成的返回值列表 <br /><br>map函数能够用列表解析表达式来实现 <br /> </p>
+<p>map( 函数，列表） <br /> </p>
+<pre><code>&gt;&gt;&gt; list(map((lambda x:x*x),[1,2,3]))
+[1, 4, 9]
+</code></pre>
+<h5 id="reduce函数"><a href="#reduce函数" class="headerlink" title="reduce函数"></a>reduce函数</h5><p>reduce跟map类似，也是接收函数和列表 <br /><br>区别在于reduce将列表中两个元素放入函数计算并得到值，然后将此值与列表的下一个元素放入函数计算得到另外一个值 <br /><br>reduce这种“折叠”的处理方式，最终可以得到一个值 <br /> </p>
+<p>reduce( 函数，列表） <br /><br>reduce每次从列表中取出2个元素放入函数 <br /><br>reduce(func, [1, 2, 3])→func(func(1, 2), 3) <br /> </p>
+<pre><code>&gt;&gt;&gt; from functools import reduce
+&gt;&gt;&gt; reduce ((lambda x,y: x + y),[1,2,3,4])
+10
+reduce在py3.0.0之后就除名了，想要使用就必须调用from functools import reduce
+</code></pre>
+<h5 id="filter函数"><a href="#filter函数" class="headerlink" title="filter函数"></a>filter函数</h5><p>filter函数是一个过滤函数，根据True或False来决定最终结果，如果是True则保留下来 <br /> </p>
+<p>filter( 函数，列表） <br /> </p>
+<pre><code>&gt;&gt;&gt; def pos(n):
+...     return n &gt; 0
+...     
+&gt;&gt;&gt; list(filter(pos,[-1,1,0,-2,3]))
+[1, 3]
+
+&gt;&gt;&gt; def odd(n):
+...     return n % 2 == 1
+...     
+&gt;&gt;&gt; list(filter(odd,range(10)))
+[1, 3, 5, 7, 9
+</code></pre>
+<h4 id="返回函数"><a href="#返回函数" class="headerlink" title="返回函数"></a>返回函数</h4><p>函数作为结果被输出 <br /><br>内置函数中如map函数，是将函数作为输入 <br /></p>
+<pre><code>&gt;&gt;&gt; def sum2(x,y):
+...     def sum1():
+...         return x + y
+...     return sum1    
+...     
+&gt;&gt;&gt; s = sum2(1,2)
+&gt;&gt;&gt; s()
+3
+&gt;&gt;&gt; s = sum2(1,3)
+&gt;&gt;&gt; s()
+4
+
+&gt;&gt;&gt; def closure():
+...  i = 10
+...  def clo2():
+...      return i * i
+...  return clo2    
+...  
+&gt;&gt;&gt; c = closure()
+&gt;&gt;&gt; c
+&lt;function closure.&lt;locals&gt;.clo2 at 0x000000000331F0D0&gt;
+&gt;&gt;&gt; c()
+100
+</code></pre>
+<h5 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h5><p>如果在一个内部函数里，对在外部作用域（但不是在全局作用域）的变量进行引用，那么内部函数就被认为是闭包（closure）。 <br /><br>例：以上的两个例子 <br /></p>
+<h4 id="装饰器"><a href="#装饰器" class="headerlink" title="装饰器"></a>装饰器</h4><p>装饰器（Decorator）采用函数作为参数，然后对此函数进行装饰，增强其功能 <br /><br>装饰器可以为函数增加功能，但是无需修改原有函数内部结构 <br /><br>装饰器是闭包的高阶应用，闭包是内部函数调用外部函数的变量，装饰器是调用函数 <br /></p>
+<pre><code>第一步，定义装饰器
+def  deco（func）：
+     def wrapper( )：
+    函数体包括func( )
+    return wrapper
+第二步，定义函数
+def func( )：
+    函数体
+第三步，装饰函数
+@deco
+def  func( )
+    函数体
+</code></pre>
+<h5 id="不带参数的装饰器"><a href="#不带参数的装饰器" class="headerlink" title="不带参数的装饰器"></a>不带参数的装饰器</h5><pre><code>&gt;&gt;&gt; def deco(func):
+...     def wrapper():
+...         print(&#39;this is a decorator!&#39;)
+...         return func()
+...     return wrapper
+...     
+&gt;&gt;&gt; @deco
+... def f1():
+...     print(&#39;this is a function!&#39;)
+...     
+&gt;&gt;&gt; f1()
+this is a decorator!
+this is a function!
+</code></pre>
+<h4 id="生成器"><a href="#生成器" class="headerlink" title="生成器"></a>生成器</h4><p>在 Python 中，带有 yield 的函数被称之为 generator（生成器） <br /><br>生成器是特定的函数, 允许返回一个值, 然后”暂停”代码的执行, 稍后恢复 <br /><br>使用yield语句一次返回一个结果，在每个结果之间挂起和继续它们的状态<br>通过生成器，可以节省内存空间，使得函数结果散落在不同时间的请求上 <br /></p>
+<p>yield vs return <br /><br>return返回结果并结束函数 <br /><br>yield返回结果并挂起当前状态，并于下次再次执行 <br /></p>
+<pre><code>&gt;&gt;&gt; def num():
+...     print(&#39;first&#39;)
+...     yield 1
+...     print(&#39;second&#39;)
+...     yield 2
+...     print(&#39;third&#39;)
+...     yield 3
+...     print(&#39;over&#39;)
+...     
+&gt;&gt;&gt; n = num()
+&gt;&gt;&gt; next(n)
+first
+1
+&gt;&gt;&gt; next(n)
+second
+2
+&gt;&gt;&gt; next(n)
+third
+3
+&gt;&gt;&gt; next(n)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+StopIteration
+over
+
+&gt;&gt;&gt; def squars(N):
+...     for i in range(N):
+...         yield i ** 2
+...         
+&gt;&gt;&gt; s = squars(5)
+&gt;&gt;&gt; s.__next__()
+0
+&gt;&gt;&gt; s.__next__()
+1
+&gt;&gt;&gt; s.__next__()
+4
+&gt;&gt;&gt; s.__next__()
+9
+&gt;&gt;&gt; s.__next__()
+16
+&gt;&gt;&gt; s.__next__()
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+StopIteration
+</code></pre>
+<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><h3 id="定义-7"><a href="#定义-7" class="headerlink" title="定义"></a>定义</h3><p><img src="https://p2.cdn.img9.top/ipfs/QmRX9dQ7eNfx6k4C9HYdkB9BPwzzxvgyZaitDD2j9Jbsay?2.png" alt="图3-2-1"> <br /><br>模块（Module）是一系列函数、变量、类的组成 <br /><br>Python程序是由一系列模块文件组成，一个.py文件就是一个模块 <br /><br><img src="https://p4.cdn.img9.top/ipfs/Qmeg3wcKaHfjHr9NLk3DytKAtXsiba5tNiJWNjDcYGqott?4.png" alt="图3-2-2"> </p>
+<h3 id="功能-1"><a href="#功能-1" class="headerlink" title="功能"></a>功能</h3><p>提高代码重用率，需要用到某些函数，直接调用某个模块即可，无需重复编写 <br /><br>提高程序层次性，不同功能模块放入不同的模块，逻辑性和层次性提高 <br /><br>方便协作防止冲突 <br /><br>函数和变量在不同模块下可以有同样命名，但是不会冲突 <br /><br>这样多人协作时，即便命名冲突，也不会干扰 <br /></p>
+<h3 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h3><h4 id="模块创建"><a href="#模块创建" class="headerlink" title="模块创建"></a>模块创建</h4><p>用代码编辑器编写代码并保存为py文件 <br /><br>通过IDE编写模块 <br /></p>
+<h4 id="模块导入"><a href="#模块导入" class="headerlink" title="模块导入"></a>模块导入</h4><h5 id="语法-6"><a href="#语法-6" class="headerlink" title="语法 "></a>语法 <br /></h5><h6 id="import-Module"><a href="#import-Module" class="headerlink" title="import Module"></a>import Module</h6><p><img src="https://p1.cdn.img9.top/ipfs/QmNiGmoPbkyY9nowd5anKPEr6e52r8SYjzdmHYJW8wrSgD?1.pngg" alt="图3-2-3"> <br /><br>导入整个模块到内存，不覆盖本地命名空间 <br /><br>采用点号调用函数，Module.Func1 <br /><br>不会覆盖本地命名（变量&#x2F;函数等） <br /></p>
+<h6 id="from-Module-import-Func"><a href="#from-Module-import-Func" class="headerlink" title="from Module import Func"></a>from Module import Func</h6><p><img src="https://p3.cdn.img9.top/ipfs/QmRJzgHp26evmx5urDj9z5TWJSY3EDMrZQSGcoRWwGuhud?3.png" alt="图3-2-4"> <br /><br>导入模块某个函数到内存 <br /><br>直接调用此函数， Func1 <br /><br>会覆盖本地某个命名（若本地有） <br /></p>
+<h6 id="from-Module-import"><a href="#from-Module-import" class="headerlink" title="from Module import *"></a>from Module import *</h6><p><img src="https://p4.cdn.img9.top/ipfs/QmaHBgxNXXbJ3hoTwm3A5s8hM2F5JymoGDNBFaBoFERL8h?4.png" alt="图3-2-5"> <br /><br>导入整个模块到内存 <br /><br>覆盖本地命名空间 <br /><br>直接调用此模块所有函数 <br /><br>会覆盖本地所有命名（若本地有） <br /></p>
+<h6 id="reload-Module"><a href="#reload-Module" class="headerlink" title="reload Module"></a>reload Module</h6><p>Python只会导入同一模块一次，若再次通过import或者from命令调用同一模块，也不会再次加载，而直接从内存寻找 <br /><br>通过reload关键词可以重新载入该模块（另外一种方式便是重启Python) <br /><br>若脚本文件有变动，则需要通过reload重新载入 <br /></p>
+<h5 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h5><p>搜索      模块路径 <br /><br>编译      编译成字节码.pyc <br /><br>运行      将模块定义的函数和类等导入运行 <br /></p>
+<p>一般导入一次之后，再import相同模块则不会再搜索、编译、运行,需要通过reload来实现重新导入 <br /></p>
+<h5 id="举例-10"><a href="#举例-10" class="headerlink" title="举例"></a>举例</h5><pre><code>&gt;&gt;&gt; import math                      调用数学模块
+&gt;&gt;&gt; math.sin(10)
+-0.5440211108893699
+</code></pre>
+<h4 id="模块路径"><a href="#模块路径" class="headerlink" title="模块路径"></a>模块路径</h4><h5 id="搜索路径"><a href="#搜索路径" class="headerlink" title="搜索路径"></a>搜索路径</h5><p>导入模块时，路径的搜索按以下的顺序 <br /><br>程序运行目录</p>
+<blockquote>
+<p>程序运行或安装目录 <br /></p>
+</blockquote>
+<p>环境变量PYTHONPATH</p>
+<blockquote>
+<p>PYTHONPATH是设置包含Python程序文件的目录的列表，这些目录可以是用户定义的或平台特定的目录名</p>
+</blockquote>
+<p>标准库模块目录</p>
+<blockquote>
+<p>标准库模块目录存储Python内置的模块文件Python会自动搜索标准库模块安装在此电脑上的目录</p>
+</blockquote>
+<p>.pth文件</p>
+<h5 id="查看路径"><a href="#查看路径" class="headerlink" title="查看路径"></a>查看路径</h5><p>sys.p                 </p>
+<blockquote>
+<p>python会将模块搜索的路径统一存储在sys模块中的path变量中sys.path 包括程序运行路径、PYTHONPATH、标准库路径等，以列表方式存储</p>
+</blockquote>
+<pre><code>&gt;&gt;&gt; import sys      导入sys模块
+&gt;&gt;&gt; sys.path          通过path函数查看标准库路径
+</code></pre>
+<h5 id="配置路径"><a href="#配置路径" class="headerlink" title="配置路径"></a>配置路径</h5><p>通过函数sys.path增加模块搜索路径</p>
+<pre><code>&gt;&gt;&gt; import sys
+&gt;&gt;&gt; sys.path
+&gt;&gt;&gt; sys.path.append(&quot;C:\\PATH&quot;)
+&gt;&gt;&gt; sys.path
+&gt;&gt;&gt; import MOD1                C盘路径下创建PATH文件夹并创建MOD1.py模块
+</code></pre>
+<p>通过环境变量PYTHONPATH增加模块搜索路径</p>
+<p>通过文件.pth增加模块搜索路径 <br /><br>在site-packages添加一个路径文件，如sitepath.pth，文件中加入要增加模块所在的路径即可 <br /></p>
+<h4 id="模块互导"><a href="#模块互导" class="headerlink" title="模块互导"></a>模块互导</h4><p>模块和模块之间可以相互导入 <br /><br>模块中导入内置模块 <br /><br>模块中导入自定义模块 <br /><br>已有路径的情况下直接导入名字，没有路径的情况下要加入路径<br>                                             <code>sys.path.append(&#39;/users/jaykingchen/MOD&#39;)</code></p>
+<p>if __name__ &#x3D;&#x3D; ‘__main__‘: <br /><br>模块直接执行时，这个模块的名字为 <strong>main</strong>_ <br /><br>模块被导入时，这个模块的名字便是模块本身 <br /><br>所以，当模块直接执行时，这个判断条件成立，if语句后面的代码可以执行 <br /><br>当模块被导入时，这个判断不成立，if语句后面的代码不被执行 <br /><br>一般情况下，在模块里面的测试代码例如print等输出，我们可以放置在这个判断语句后面，这样其他人调用我们的模块时，则不会有额外的输出</p>
+<h3 id="进阶-1"><a href="#进阶-1" class="headerlink" title="进阶"></a>进阶</h3><h4 id="命名空间和作用域"><a href="#命名空间和作用域" class="headerlink" title="命名空间和作用域"></a>命名空间和作用域</h4><h5 id="定义和功能-1"><a href="#定义和功能-1" class="headerlink" title="定义和功能"></a>定义和功能</h5><p><img src="https://p4.cdn.img9.top/ipfs/Qmb82oziLrPpuzfFSSE54jqcjjZ1Gc4MwZod2CqcMNnvNa?4.png" alt="图3-2-6"> <br /><br>名称空间（Namespace）是名字和对象的映射 <br /><br>名称空间是一个字典，其中键是名字，值是对象 <br /><br>内建、模块、函数、类都有自己的名称空间 <br /><br>名称空间通过__dict___属性和dir( )函数查看 <br /><br><img src="https://p1.cdn.img9.top/ipfs/QmdZqmpw8KKCEyRPGUXxDiPjtTCPeiUJ9EgywXifyxJ7Jt?1.png" alt="图3-2-7"> <br /><br>作用域（Scope）即一个作用范围，表示名称空间可被访问的范围 <br /><br>根据Python的命名空间，可以得到如下的作用域 <br /><br>内部函数的局部作用域 <br /><br>外层函数的局部作用域 <br /><br>模块的全局作用域 <br /><br>Python内置对象的最外层作用域 <br /><br><img src="https://p3.cdn.img9.top/ipfs/QmUTNZeWb1UcjABpEkCrrvJk4DDg6UiMMJUgYhHFJ6c1b9?3.png" alt="图3-2-8"> <br /><br>LEGB查找原则 <br /><br>当引用一个变量时，Python按以下顺序依次进行查找：从本地变量中，在任意上层函数的作用域，在全局作用域，最后在内置作用域中查找。 <br /><br>第一个能够完成查找的就算成功；变量在代码中被赋值的位置通常就决定了它的作用域。 <br /></p>
+<h5 id="举例-11"><a href="#举例-11" class="headerlink" title="举例"></a>举例</h5><h6 id="Local本地作用域"><a href="#Local本地作用域" class="headerlink" title="Local本地作用域"></a>Local本地作用域</h6><pre><code>&gt;&gt;&gt; a = 10                   全局作用域
+&gt;&gt;&gt; def printa():            本地作用域
+...     a = 1                      有a变量
+...     print(a)                   根据LEGB搜索规则，直接调用本地变量
+...     
+&gt;&gt;&gt; printa()  
+1
+&gt;&gt;&gt; a
+10
+</code></pre>
+<h6 id="Enclosing作用域"><a href="#Enclosing作用域" class="headerlink" title="Enclosing作用域"></a>Enclosing作用域</h6><pre><code>&gt;&gt;&gt; a = 10                  全局作用域
+&gt;&gt;&gt; def printA():          Enclosing作用域
+...     a = 1
+...     def printa():
+...         print(a+2)        根据LEGB原则，本地Local没有变量a，此时调用            
+...     printa()                 Enclosing外部函数a
+...     
+&gt;&gt;&gt; printA()
+3
+&gt;&gt;&gt; print(a)                全局作用域/命名空间不被影响
+10
+</code></pre>
+<h6 id="Global作用域"><a href="#Global作用域" class="headerlink" title="Global作用域"></a>Global作用域</h6><pre><code>&gt;&gt;&gt; a = 10                全局作用域
+&gt;&gt;&gt; def printa():         本地作用域，没有a变量
+...     print(a)                 根据LEGB搜索规则，local和enclosing作用域都没有a变
+...                                 量，此时直接调用global变量
+&gt;&gt;&gt; printa()
+10
+</code></pre>
+<h6 id="Bulti-in作用域"><a href="#Bulti-in作用域" class="headerlink" title="Bulti-in作用域"></a>Bulti-in作用域</h6><pre><code>&gt;&gt;&gt; def printa():          本地作用域
+...     print(abs(-10))       本地没有abs()函数和变量，通过内置bulti-in作用域查找
+...                                   abs()函数并调用
+&gt;&gt;&gt; printa()
+10
+</code></pre>
+<h4 id="包（package）"><a href="#包（package）" class="headerlink" title="包（package）"></a>包（package）</h4><p><img src="https://p1.cdn.img9.top/ipfs/QmQEw5Pnf5YqRqdTVeqRcPBPJ7wUuz6YjZ79eWRYxmsZdW?1.png" alt="图3-2-9"> <br /><br>包（Package）是一种层次化的程序组织结构，由一系列子包和模块组成<br>类似模块，可以通过import和from…import语法导入，可以通过点号语法访问 <br /><br>与模块最大不同的是，包通常由模块和__init__文件组成 <br /><br>包导入语句的路径中的每个目录内都必须有__init__.py这个文件，否则导入包会失败 <br /><br>__init__.py是一个初始化模块，Python首次导入某个目录时，会自动执行该目录下__init__.py文件中的所有代码 <br /><br>__init__.py文件可以直接是一个空文件，但也可以为包执行初始化语句或设置__all__等变量 <br /></p>
+<p>语法：<code>import package1.package2.module</code> <br /><br>          <code>from package1.package2 import module</code></p>
+<p>包导入环境下，采用from…import语句，可以简化模块&#x2F;函数&#x2F;变量的调用，无需输入完整路径 <br /><br>若包目录中，所有模块名字唯一，则可以通过from…import…语句导入，简化模块中函数和变量等调用 <br /><br>若包目录中，有些模块的名字重叠，则需要通过import语句，之后采用点号语法进行函数&#x2F;变量调用，保证唯一性 <br /></p>
+<h1 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h1><h2 id="类的基础"><a href="#类的基础" class="headerlink" title="类的基础"></a>类的基础</h2><h3 id="什么是类"><a href="#什么是类" class="headerlink" title="什么是类"></a>什么是类</h3><h4 id="定义-8"><a href="#定义-8" class="headerlink" title="定义"></a>定义</h4><p><img src="https://p0.cdn.img9.top/ipfs/QmPy4WU2LKfH6cgAGLF2Pmx2wEFqFXPhdY6Xvk3dS4n2qJ?0.png" alt="图4-1-1"> <br /><br>类(Class）是设计蓝图（或模型），用来创建不同类型的对象 <br /><br>类是一种数据结构，可以用来定义对象，将数据值和行为特征融合在一起 <br /><br>类指定了对象将包含哪些数据和函数，数据一般是变量即对应值，函数一般我们称之为方法 <br /><br>相当于面包的模具一样</p>
+<h4 id="功能-2"><a href="#功能-2" class="headerlink" title="功能"></a>功能</h4><p>对事务进行高度抽象；类是对事务的抽象 <br /><br>提高代码重用率；通过子类和超类，实现类的（多重）继承 <br /><br>提高程序层次性；类支持继承 <br /></p>
+<h4 id="语法-7"><a href="#语法-7" class="headerlink" title="语法"></a>语法</h4><p><img src="https://p0.cdn.img9.top/ipfs/QmPqEZDpnuLQUexTspf5EdFPs75Jumzx6e7x73cDqSAkQK?0.png" alt="图4-1-2"> <br /><br>class ClassName ：                                             定义类的名称 <br /><br>‘class documentation string’                             #类文档字符串    <br /><br>class_suite                                                           #类体 <br /></p>
+<h4 id="举例-12"><a href="#举例-12" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; class person:
+...     &#39;The person Class&#39;
+...  def __init__(self,name,gender,age):     构造函数，用于给实例/对象初始化参数
+...      self.name = name                         类中第一个函数必须是self，代表实例/
+...      self.gender = gender                     对象本身
+...      self.age = age
+...  def print_gender(self):    
+...      print(&#39;%s:%s&#39;%(self.name,self.gender))
+...  def print_age(self):    
+...      print(&#39;%s:%s&#39;%(self.name,self.age))
+</code></pre>
+<h3 id="类的实例"><a href="#类的实例" class="headerlink" title="类的实例"></a>类的实例</h3><h4 id="定义和语法-3"><a href="#定义和语法-3" class="headerlink" title="定义和语法"></a>定义和语法</h4><p>类（Class）是现实世界的抽象的实体以编程形式出现，实例（Instance）则是这些对象的具体化 <br /><br>通过实例化，类的方法&#x2F;函数才可以调用，这是类的绑定特征 <br /><br>Inst_a &#x3D; Class( ) <br /></p>
+<h4 id="举例-13"><a href="#举例-13" class="headerlink" title="举例"></a>举例</h4><pre><code>&gt;&gt;&gt; class person:
+...     &#39;The person Class&#39;
+...     def __init__(self,name,gender,age):                            
+...         self.name = name
+...         self.gender = gender
+...         self.age = age
+...     def print_gender(self):             
+...         print(&#39;%s:%s&#39;%(self.name,self.gender))
+...     def print_age(self):         
+...         print(&#39;%s:%s&#39;%(self.name,self.age))
+...         
+&gt;&gt;&gt; A = person(&#39;A&#39;,&#39;male&#39;,&#39;10&#39;)          创建实例A，并传入三个参数给构造函数
+&gt;&gt;&gt; B = person(&#39;B&#39;,&#39;Female&#39;,&#39;12&#39;)       创建实例B，并传入三个参数给构造函数
+&gt;&gt;&gt; A.name
+&#39;A&#39;
+&gt;&gt;&gt; A.age
+&#39;10&#39;
+&gt;&gt;&gt; B.gender
+&#39;Female&#39;
+</code></pre>
+<h3 id="类的属性"><a href="#类的属性" class="headerlink" title="类的属性"></a>类的属性</h3><h4 id="属性概述"><a href="#属性概述" class="headerlink" title="属性概述"></a>属性概述</h4><p>类的属性由数据和方法两个部分组成，可以通过点号方式来访问 <br /><br>数据属性存储数据和变量值，方法属性存储操作数据的函数 <br /></p>
+<pre><code>&gt;&gt;&gt; class person():
+...     version = 1.0                         数据属性
+...     def printver(self):                   方法属性
+...         print(self.version)              方法调用数据
+...         
+&gt;&gt;&gt; p = person()
+&gt;&gt;&gt; p.version
+1.0
+&gt;&gt;&gt; p.printver()
+1.0
+</code></pre>
+<h4 id="调用语法"><a href="#调用语法" class="headerlink" title="调用语法"></a>调用语法</h4><p>Inst_a. value1      调用类的数据属性（变量值） <br /><br>Inst_a. method1  调用类的方法属性（函数） <br /></p>
+<h4 id="属性操作"><a href="#属性操作" class="headerlink" title="属性操作"></a>属性操作</h4><h5 id="属性访问"><a href="#属性访问" class="headerlink" title="属性访问"></a>属性访问</h5><h6 id="访问数据属性"><a href="#访问数据属性" class="headerlink" title="访问数据属性"></a>访问数据属性</h6><p>数据属性仅仅是所定义的类的变量 <br /><br>数据属性即静态变量和静态数据 <br /></p>
+<p>类.数据属性 <br /><br>实例.数据属性 <br /></p>
+<h6 id="访问方法属性"><a href="#访问方法属性" class="headerlink" title="访问方法属性"></a>访问方法属性</h6><p>类中所定义的函数，称之为方法 <br /><br>方法有应用范围的，只能在类里面 <br /><br>要调用方法，必须先实例化 <br /></p>
+<p>类函数规则： <br /><br>①类内部函数与其他函数没有太大区别 <br /><br>②类中所有函数第一个参数必须是self <br /><br>self就是代表实例自己 <br /><br>创建实例时，实例名代替self <br /><br>③很多类的第一个函数是__init__构造函数 <br /><br>__init__构造函数用于初始化对象值 <br /><br>通过__init__，在创建实例的时候，不能传入空参数，必须传入与__init__方法匹配的参数 <br /></p>
+<h5 id="属性修改"><a href="#属性修改" class="headerlink" title="属性修改"></a>属性修改</h5><pre><code>&gt;&gt;&gt; Person.version        数据属性可以不经过实例化之间由类调用
+1.0
+
+&gt;&gt;&gt; DaXiong.version     实例也可以调用数据属性
+1.0
+
+&gt;&gt;&gt; DaXiong.version = 2.0     实例可以对属性进行修改
+&gt;&gt;&gt; DaXiong.version
+2.0
+
+&gt;&gt;&gt; DaXiong.age = 11         修改传入的参数
+&gt;&gt;&gt; DaXiong.age
+11
+</code></pre>
+<p>实例属性修改不影响类的属性</p>
+<h5 id="增加属性"><a href="#增加属性" class="headerlink" title="增加属性"></a>增加属性</h5><pre><code>&gt;&gt;&gt; DaXiong.score = 59          增加一个score属性，并赋值为59
+&gt;&gt;&gt; DaXiong.score
+59
+</code></pre>
+<p>只会给实例赋值，不会影响到类</p>
+<h5 id="查看属性"><a href="#查看属性" class="headerlink" title="查看属性"></a>查看属性</h5><pre><code>dir( )：
+&gt;&gt;&gt; dir(DaXiong)
+[&#39;__doc__&#39;, &#39;__init__&#39;, &#39;__module__&#39;, &#39;age&#39;, &#39;gender&#39;, &#39;name&#39;, &#39;print_age&#39;, &#39;print_gender&#39;, &#39;score&#39;, &#39;version&#39;]
+
+__dict__：
+&gt;&gt;&gt; DaXiong.__dict__
+&#123;&#39;gender&#39;: &#39;male&#39;, &#39;age&#39;: 11, &#39;version&#39;: 2.0, &#39;name&#39;: &#39;Daxiong&#39;, &#39;score&#39;: 59&#125;
+</code></pre>
+<h4 id="特殊类属性"><a href="#特殊类属性" class="headerlink" title="特殊类属性"></a>特殊类属性</h4><p>这里的特殊类属性以__value__方式命名，前后都有2个下划线<br>特殊类属性是Python内置属性，所有创建的类默认都有<br>C.__doc__ 类Ｃ的文档字符串：</p>
+<pre><code>&gt;&gt;&gt; Person.__doc__
+&#39;The Person Class&#39;
+</code></pre>
+<p>C.__dict__ 类Ｃ的属性：</p>
+<pre><code>&gt;&gt;&gt; Person.__dict__
+&#123;&#39;__module__&#39;: &#39;__builtin__&#39;, &#39;print_age&#39;: &lt;function print_age at 0x106132b18&gt;, &#39;print_gender&#39;: &lt;function print_gender at 0x1061329b0&gt;, &#39;version&#39;: 1.0, &#39;__doc__&#39;: &#39;The Person Class&#39;, &#39;__init__&#39;: &lt;function __init__ at 0x1061328c0&gt;&#125;
+</code></pre>
+<p>C.__name__: 类名</p>
+<p>C.__module__ 类Ｃ定义所在的模块：</p>
+<pre><code>&gt;&gt;&gt; Person.__module__
+&#39;__builtin__&#39;
+</code></pre>
+<p>C.__bases__ : 类的所有父类构成元素</p>
+<h2 id="类的进阶"><a href="#类的进阶" class="headerlink" title="类的进阶"></a>类的进阶</h2><h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><p>当编写一个类（Class）时，可以从之前的类进行继承，这样可以获取之前的类的所有属性 <br /><br>新的类称为子类（Subclass），而被继承的类被称为基类&#x2F;父类&#x2F;超类（Superclass） <br /></p>
+<pre><code>&gt;&gt;&gt; class Parent(object):
+……
+&gt;&gt;&gt; class Child(Parent):             子类在父类上创建
+</code></pre>
+<h4 id="创建子类"><a href="#创建子类" class="headerlink" title="创建子类"></a>创建子类</h4><h5 id="继承判断函数"><a href="#继承判断函数" class="headerlink" title="继承判断函数"></a>继承判断函数</h5><pre><code>isinstance( )
+&gt;&gt;&gt; isinstance(DaXiong, Male)
+True
+&gt;&gt;&gt; isinstance(DaXiong, Female)
+False
+
+issubclass( )
+&gt;&gt;&gt; issubclass(Male, Person)
+True
+&gt;&gt;&gt; issubclass(Female, Person)
+True
+</code></pre>
+<h5 id="创建子类-1"><a href="#创建子类-1" class="headerlink" title="创建子类"></a>创建子类</h5><pre><code>class A(object):
+……………………
+
+class B(A):
+
+B为子类
+</code></pre>
+<h4 id="方法定制"><a href="#方法定制" class="headerlink" title="方法定制"></a>方法定制</h4><p><img src="https://p3.cdn.img9.top/ipfs/Qmb9Ny9e41x769x3jvqE6JjtqSHfqcsSqB4YeGQnXCnpgY?3.png" alt="图4-2-1"> <br /><br>类中的继承方法搜索规则：实例 -&gt; 子类 -&gt; 父类 <br /><br>子类除了继承父类的属性，还可以自己添加、定制、拓展更多功能 <br /><br>若子类的属性与父类属性名字相同，则以子类属性为主，即子类将父类的方法重写或拓展 <br /></p>
+<h5 id="定制方法"><a href="#定制方法" class="headerlink" title="定制方法"></a>定制方法</h5><pre><code>&gt;&gt;&gt; class person:
+    &#39;The person Class&#39;
+    def __init__(self,name,gender,age):                            
+        self.name = name
+        self.gender = gender
+        self.age = age
+    def print_gender(self):             
+        print(&#39;%s:%s&#39;%(self.name,self.gender))
+    def print_age(self):         
+        print(&#39;%s:%s&#39;%(self.name,self.age))
+&gt;&gt;&gt; class male(person):
+...     &#39;The male class&#39;
+...     def print_gender(self):                  子类中方法与父类相同，则根据继承搜索
+...         print(&#39;He is %s&#39; % self.gender)   规则，子类方法优先
+...         
+&gt;&gt;&gt; a = male(&#39;a&#39;,&#39;male&#39;,10)
+&gt;&gt;&gt; a.print_gender()
+He is male
+</code></pre>
+<h5 id="定制构造函数"><a href="#定制构造函数" class="headerlink" title="定制构造函数"></a>定制构造函数</h5><pre><code>gender
+        self.age = age
+    def print_gender(self):             
+        print(&#39;%s:%s&#39;%(self.name,self.gender))
+    def print_age(self):         
+        print(&#39;%s:%s&#39;%(self.name,self.age))
+&gt;&gt;&gt; class male(person):
+...     &#39;The male class&#39;
+...     def __init__(self,name,age):
+...         person.__init__(self,name,&#39;male&#39;,age)
+...     def print_gender(self):        
+...         print(&#39;HE is %s&#39; % ,self.gender)
+...  
+&gt;&gt;&gt; class male(person):
+...     &#39;The male class&#39;
+...     def __init__(self,name,age):
+...         person.__init__(self,name,&#39;male&#39;,age)   调用父类函数，并进行修改
+...     def print_gender(self):                            直接默认为‘male’
+...         print(&#39;HE is %s&#39; % self.gender)
+...         
+&gt;&gt;&gt; class female(person):
+...     &#39;The female class&#39;
+...     def __init__(self,name,age):
+...         person.__init__(self,name,&#39;female&#39;,age)
+...     def print_gender(self):
+...         print(&#39;She is %s&#39; % self.gender)
+...         
+&gt;&gt;&gt; a = male(&#39;a&#39;,10)
+&gt;&gt;&gt; b = female(&#39;b&#39;,9)
+&gt;&gt;&gt; a.gender
+&#39;male&#39;
+&gt;&gt;&gt; b.gender
+&#39;female&#39;
+</code></pre>
+<p>默认情况下，构造函数从父类继承；但是有时候有一些参数有默认值，可以直接指定，无需再传入</p>
+<h4 id="多重继承"><a href="#多重继承" class="headerlink" title="多重继承"></a>多重继承</h4><p><img src="https://p4.cdn.img9.top/ipfs/QmWg45c4UqHgCbKghbdvUSsfE4RMvYpZwXCyWC8LmZMRom?4.png" alt="图4-2-2"> <br /><br>多重继承用于实现子类对多个父类的继承<br>通过多重继承，可以混合不同类的功能，实现更加复杂的需求 <br /></p>
+<p>class A( ): <br /><br>class B( ): <br /><br>class C(A, B ): <br /></p>
+<pre><code>&gt;&gt;&gt; class fat(person): 
+...     &#39;the fat class&#39;
+...     def print_wight(self):
+...         print(&#39;fat&#39;)
+...         
+&gt;&gt;&gt; class thin (person):
+...     &#39;the fat class&#39;
+...     
+&gt;&gt;&gt; class thin (person):
+...     &#39;the thin class&#39;
+...     def print_weight(self):
+...         print(&#39;thin&#39;)
+...         
+&gt;&gt;&gt; class mf(male,fat):            多重继承
+...     pass
+...     
+&gt;&gt;&gt; class ft(female,thin):         多重继承
+...     pass 
+...     
+&gt;&gt;&gt; a = mf(&#39;a&#39;,10)
+&gt;&gt;&gt; b = ft(&#39;b&#39;,9)
+&gt;&gt;&gt; print(a.print_wight())
+fat
+None
+&gt;&gt;&gt; print(b.print_weight())
+thin
+None
+</code></pre>
+<h3 id="多态"><a href="#多态" class="headerlink" title="多态"></a>多态</h3><p>多态是面向对象语言的一个基本特性，多态意味着变量并不知道引用的对象是什么，根据引用对象的不同表现不同的行为方式</p>
+<pre><code>&gt;&gt;&gt; from random import choice
+&gt;&gt;&gt; obj = choice([a,b])
+&gt;&gt;&gt; print(obj.print_gender())
+HE is male
+None
+&gt;&gt;&gt; obj = choice([a,b])
+&gt;&gt;&gt; print(obj.print_gender())
+HE is male
+None
+&gt;&gt;&gt; obj = choice([a,b])
+&gt;&gt;&gt; print(obj.print_gender())
+She is female
+None
+</code></pre>
+<h3 id="私有变量"><a href="#私有变量" class="headerlink" title="私有变量"></a>私有变量</h3><p>默认情况下，类内部所定义的变量通过点号方法可以访问并修改，这种变量称为公有变量 <br /><br>公有变量可被用户修改，导致对象内部状态不一致，此时便需要私有变量（Private） <br /><br>私有变量即在原有变量的前面加上两个下划线，例如_ _ value <br /></p>
+<h4 id="常规公有变量能被访问并修改"><a href="#常规公有变量能被访问并修改" class="headerlink" title="常规公有变量能被访问并修改"></a>常规公有变量能被访问并修改</h4><pre><code>&gt;&gt;&gt; class person:
+    &#39;The person Class&#39;
+    def __init__(self,name,gender,age):                            
+        self.name = name
+        self.gender = gender
+        self.age = age
+&gt;&gt;&gt; a = person(&#39;a&#39;,&#39;male&#39;,10)
+&gt;&gt;&gt; a.age
+10
+&gt;&gt;&gt; a.gender
+&#39;male&#39;
+&gt;&gt;&gt; a.age = 20
+&gt;&gt;&gt; a.age
+20
+</code></pre>
+<h4 id="通过私有变量实现访问限制"><a href="#通过私有变量实现访问限制" class="headerlink" title="通过私有变量实现访问限制"></a>通过私有变量实现访问限制</h4><pre><code>&gt;&gt;&gt; class person:
+    &#39;The person Class&#39;
+    def __init__(self,name,gender,age):                            
+        self.__name = name                   私有变量加入两个下划线
+        self.__gender = gender
+        self.__age = age
+&gt;&gt;&gt; a = person(&#39;a&#39;,&#39;male&#39;,10)           
+&gt;&gt;&gt; a.person__name                        常规的句点访问方式被拒绝
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: &#39;person&#39; object has no attribute &#39;person__name&#39;
+&gt;&gt;&gt; a.person__age
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: &#39;person&#39; object has no attribute &#39;person__age&#39;
+&gt;&gt;&gt; a._person__age
+10
+通过点号方式中加入类名可以访问，但是不建议
+</code></pre>
+<h4 id="通过获取函数实现私有变量值访问"><a href="#通过获取函数实现私有变量值访问" class="headerlink" title="通过获取函数实现私有变量值访问"></a>通过获取函数实现私有变量值访问</h4><pre><code>&gt;&gt;&gt; class person:
+    &#39;The person Class&#39;
+    def __init__(self,name,gender,age):
+        self.__name = name
+        self.__gender = gender
+        self.__age = age
+    def print_gender(self):
+        print(&#39;%s:%s&#39;%(self.__name,self.__gender))
+    def print_age(self):
+        print(&#39;%s:%s&#39;%(self.__name,self.__age))
+&gt;&gt;&gt; a = person(&#39;a&#39;,&#39;male&#39;,10)
+&gt;&gt;&gt; b = person(&#39;b&#39;,&#39;female&#39;,11)
+&gt;&gt;&gt; a.print_age()
+a:10
+&gt;&gt;&gt; a.print_gender()
+a:male
+</code></pre>
+<h4 id="通过设置函数设置条件变量"><a href="#通过设置函数设置条件变量" class="headerlink" title="通过设置函数设置条件变量"></a>通过设置函数设置条件变量</h4><pre><code>&gt;&gt;&gt; class person:
+    &#39;The person Class&#39;
+    def __init__(self,name,gender,age):
+        self.__name = name
+        self.__gender = gender
+        self.__age = age
+  def set_gender(self,gender):
+    self.__gender = gender
+    def set_age(self,age):    
+        if 0 &lt;= age &lt;= 100:
+            self.__age = age
+&gt;&gt;&gt; def print_gender(self):
+        print(&#39;%s:%s&#39;%(self.__name,self.__gender))
+&gt;&gt;&gt; def print_age(self):
+        print(&#39;%s:%s&#39;%(self.__name,self.__age))
+&gt;&gt;&gt; a = person(&#39;a&#39;,&#39;male&#39;,10)
+&gt;&gt;&gt; DaXiong.print_age()
+Daxiong: 10
+&gt;&gt;&gt; DaXiong.set_age(101)
+&gt;&gt;&gt; DaXiong.print_age()
+Daxiong: 10
+</code></pre>
+<h3 id="装饰器-1"><a href="#装饰器-1" class="headerlink" title="装饰器"></a>装饰器</h3><p>私有变量章节中，我们通过获取和设置函数，实现更安全的访问和设置 <br /><br>但是，在进行访问和设置时，相对显得比较麻烦？ <br /><br>有没有更好的方式？实现以下的需求&#x3D;&gt; <br /><br>既能检查参数，又能想属性一样方便地访问和修改类的变量 <br /><br>可以让调用者写出简短的代码，同时保证对参数进行必要的检查 <br /><br>这就需要 @property 装饰器来实现了 <br /></p>
+<pre><code>&gt;&gt;&gt; class person(object):
+...     def __int__(self,name,gender,age):
+...         self.__name = name
+...         self.__gender = gender
+...         self.__age = age
+...         
+&gt;&gt;&gt; @property
+... def age(self):    
+...     return self.__age
+...     
+&gt;&gt;&gt; @age.setter
+... def age(self,value):
+...     if value &lt; 0 or value &gt;100:
+...         raise ValueError(&#39;invalid age!&#39;)
+...     self.__age = value      
+...     
+</code></pre>
+<h2 id="面向对象编程"><a href="#面向对象编程" class="headerlink" title="面向对象编程"></a>面向对象编程</h2><h3 id="对象基础"><a href="#对象基础" class="headerlink" title="对象基础"></a>对象基础</h3><p>Python是一种“面向对象编程”的语言，所以Python语言中，一切皆对象！<br /><br>Python语言中，所有能够被处理的、被解决的“东西”，都称之为对象（Object） <br /><br>本质上讲，对象是一组数据以及能处理这些数据的函数 <br /><br><img src="https://p2.cdn.img9.top/ipfs/Qmb9zWaciticJp54Rz1JrVSdxE2fexWvo2Y7sTqWSkxGJo?2.png" alt="图4-3-1"> <br /></p>
+<h4 id="对象的特征"><a href="#对象的特征" class="headerlink" title="对象的特征"></a>对象的特征</h4><p>值value：对象表示的数据项 <br /><br>身份id：唯一性身份标志，是该对象的内存地址，可用内建函数id()获得 <br /><br>类型tpye：对象的类型决定了该对象可以保存什么类型的值，可进行什么样的操作，以及遵循什么样的规则，可以type()获得 <br /></p>
+<h4 id="对象的行为"><a href="#对象的行为" class="headerlink" title="对象的行为"></a>对象的行为</h4><p>对象的操作、功能、方法等，是一种动态信息。 <br /><br>我们将能对象能做的，统称为 “方法&#x2F;属性&#x2F;操作” <br /><br>方法method <br /><br>函数function <br /><br>操作operation <br /></p>
+<h3 id="编程方法"><a href="#编程方法" class="headerlink" title="编程方法"></a>编程方法</h3><p><img src="https://p1.cdn.img9.top/ipfs/QmUYy5CbETouRv3RFh6nLd1W58swaathzk29oJHi4d2g54?1.png" alt="图4-3-2"> <br /><br>围绕“do”解决、处理、流程为依据来进行编程，称为“面向过程编程” <br /><br>围绕“things”东西、事情、数据为依据来进行编程，称为“面向对象编程” <br /></p>
+<h1 id="输入输出"><a href="#输入输出" class="headerlink" title="输入输出"></a>输入输出</h1><h2 id="输入输出-1"><a href="#输入输出-1" class="headerlink" title="输入输出"></a>输入输出</h2><h3 id="屏幕输出"><a href="#屏幕输出" class="headerlink" title="屏幕输出"></a>屏幕输出</h3><p>print <br /><br>在3.x版本，print为一个函数 <br /></p>
+<h3 id="键盘输入"><a href="#键盘输入" class="headerlink" title="键盘输入"></a>键盘输入</h3><h4 id="raw-input"><a href="#raw-input" class="headerlink" title="raw_input"></a>raw_input</h4><p>用于接收键盘输入 <br /><br>i &#x3D; raw_input( ) <br /></p>
+<p>s &#x3D; raw_input(‘请输入您的账号:’) <br /><br>print ‘您的账号是:’, s <br /></p>
+<h4 id="input"><a href="#input" class="headerlink" title="input"></a>input</h4><p>用于接入键盘输入，输入内容可以是表达式 <br /><br>i &#x3D; input( ) <br /></p>
+<p>s &#x3D; input(‘请输入您的公式:’) <br /><br>print ‘您的结果是:’, s <br /></p>
+<h2 id="文件处理"><a href="#文件处理" class="headerlink" title="文件处理"></a>文件处理</h2><p>file_object &#x3D; open(file_name， access_mode,  buffering) <br /><br>file_name 是包含要打开的文件名字的字符串, 它可以是相对路径或者绝对路径 <br /></p>
+<h3 id="文件打开"><a href="#文件打开" class="headerlink" title="文件打开"></a>文件打开</h3><h4 id="r"><a href="#r" class="headerlink" title="r"></a>r</h4><p>r         以只读方式打开文件 <br /><br>r+       以读写方式打开文件 <br /><br>rb       以二进制方式只读打开文件 <br /><br>rb+    以二进制读写打开文件 <br /></p>
+<h4 id="w"><a href="#w" class="headerlink" title="w"></a>w</h4><p>w         以写入方式打开文件 <br /><br>w+       以读写方式打开文件 <br /><br>wb        以二进制方式写入打开文件 <br /><br>wb+      以二进制方式读写打开文件 <br /><br>若文件存在，则覆盖 <br /><br>若文件不存在，则创建 <br /></p>
+<h4 id="a"><a href="#a" class="headerlink" title="a"></a>a</h4><p>a            以增加方式打开文件，文件指针放在原有内容后面 <br /><br>a+          以读写方式打开文件，文件指针放在原有内容后面 <br /><br>ab           以二进制方式打开文件并增加内容，文件指针放在原有内容后面 <br /><br>ab+        以二进制方式读写文件并增加内容，文件指针放在原有内容后面 <br /><br>若文件不存在，则创建 <br /></p>
+<pre><code>file1 = open(&#39;newfile.txt&#39;, &#39;r&#39;)
+file1 = open(&#39;newfile.txt&#39;, &#39;w&#39;)
+file1 = open(&#39;newfile.txt&#39;, &#39;a&#39;)
+</code></pre>
+<h3 id="文件关闭"><a href="#文件关闭" class="headerlink" title="文件关闭"></a>文件关闭</h3><p>file.close() <br /><br>关闭文件，结束文件调用，节省内存空间 <br /></p>
+<h3 id="文件写入"><a href="#文件写入" class="headerlink" title="文件写入"></a>文件写入</h3><p>file.write() <br /><br>write()方法不会在字符串的结尾添加换行符\n，若需要换行，需自行添加</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;w&#39;)
+&gt;&gt;&gt; file1.write(&#39;123\n456\n789\n&#39;)
+12
+&gt;&gt;&gt; file1.close()
+</code></pre>
+<h3 id="文件读取"><a href="#文件读取" class="headerlink" title="文件读取"></a>文件读取</h3><h4 id="file-read"><a href="#file-read" class="headerlink" title="file.read()"></a>file.read()</h4><p>读取文件所有字节,可以指定字节数,不指定或未负则读取所有</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;r&#39;)
+&gt;&gt;&gt; s = file1.read()
+&gt;&gt;&gt; print(s)
+123
+456
+789
+
+&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;r&#39;)
+&gt;&gt;&gt; s = file1.read(6)
+&gt;&gt;&gt; print(s)
+123
+45
+</code></pre>
+<h4 id="file-readline"><a href="#file-readline" class="headerlink" title="file.readline()"></a>file.readline()</h4><p>读取一行,包括’\n’字符</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;r&#39;)
+&gt;&gt;&gt; s = file1.readline()
+&gt;&gt;&gt; print(s)
+123
+&gt;&gt;&gt; s = file1.readline()
+&gt;&gt;&gt; print(s)
+456
+&gt;&gt;&gt; print(s)
+456
+&gt;&gt;&gt; s = file1.readline()
+&gt;&gt;&gt; print(s)
+789
+</code></pre>
+<h4 id="file-readlines"><a href="#file-readlines" class="headerlink" title="file.readlines()"></a>file.readlines()</h4><p>读取所有行并返回列表，每行返回列表</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;r&#39;)
+&gt;&gt;&gt; s = file1.readlines()
+&gt;&gt;&gt; print(s)
+[&#39;123\n&#39;, &#39;456\n&#39;, &#39;789\n&#39;]
+</code></pre>
+<h3 id="文件增加"><a href="#文件增加" class="headerlink" title="文件增加"></a>文件增加</h3><p>以a方式打开，代表不覆盖原来内容，在原有基础上增加 <br /><br>file &#x3D; open(‘file_name’, ‘a’) <br /><br>file.write() <br /></p>
+<h3 id="文件偏移"><a href="#文件偏移" class="headerlink" title="文件偏移"></a>文件偏移</h3><h4 id="file-tell"><a href="#file-tell" class="headerlink" title="file.tell( )"></a>file.tell( )</h4><p>表示当前指针所在的位置</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;r+&#39;)
+&gt;&gt;&gt; print(file1.tell())
+0
+&gt;&gt;&gt; file1.write(&#39;add line 1\n&#39;)
+11
+&gt;&gt;&gt; print(file1.tell())
+12
+</code></pre>
+<h4 id="file-seek"><a href="#file-seek" class="headerlink" title="file.seek( )"></a>file.seek( )</h4><p>指定指针偏移的位置<br>file.seek(off, whence&#x3D;0) 在文件中移动文件指针, 从 whence ( 0 代表文件其始, 1 代表当前位置，2 代表文件末尾)偏移 off 字节</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;w+&#39;)
+&gt;&gt;&gt; print(file1.tell())
+0
+SyntaxError: invalid syntax
+&gt;&gt;&gt; file1.seek(10,0)
+10
+</code></pre>
+<h3 id="文件重命名"><a href="#文件重命名" class="headerlink" title="文件重命名"></a>文件重命名</h3><p>导入系统模块 <br /><br>import os <br /><br>os.rename(‘原文件名称’,’重命名文件名称’) <br /></p>
+<h3 id="文件删除"><a href="#文件删除" class="headerlink" title="文件删除"></a>文件删除</h3><p>import os <br /><br>os.remove(‘文件名称’) <br /></p>
+<h2 id="目标处理"><a href="#目标处理" class="headerlink" title="目标处理"></a>目标处理</h2><h3 id="os模块"><a href="#os模块" class="headerlink" title="os模块"></a>os模块</h3><h4 id="获取目录"><a href="#获取目录" class="headerlink" title="获取目录"></a>获取目录</h4><p>os.getcwd()           获取当前工作目录</p>
+<h4 id="创建目录"><a href="#创建目录" class="headerlink" title="创建目录"></a>创建目录</h4><p>os.mkdir()              创建新的目录</p>
+<h4 id="删除目录"><a href="#删除目录" class="headerlink" title="删除目录"></a>删除目录</h4><p>os.rmdir( )             删除指定目录</p>
+<h4 id="目录内容"><a href="#目录内容" class="headerlink" title="目录内容"></a>目录内容</h4><p>os.listdir()              列出指定目录下的文件和文件夹</p>
+<pre><code>os.listdir(os.getcwd())
+</code></pre>
+<h4 id="移动目录"><a href="#移动目录" class="headerlink" title="移动目录"></a>移动目录</h4><p>os.chdir()              移动当前工作目录到其他目录</p>
+<pre><code>os.chdir(&#39;newdir&#39;)
+</code></pre>
+<h3 id="os-path模块"><a href="#os-path模块" class="headerlink" title="os.path模块"></a>os.path模块</h3><h4 id="查询文件"><a href="#查询文件" class="headerlink" title="查询文件"></a>查询文件</h4><p>os.path.isfile</p>
+<pre><code>&gt;&gt;&gt; os.path.isfile(&#39;newfile.txt&#39;)
+True
+</code></pre>
+<h4 id="查询目录"><a href="#查询目录" class="headerlink" title="查询目录"></a>查询目录</h4><p>os.path.isdir</p>
+<pre><code>&gt;&gt;&gt; os.path.isdir(&#39;testdir&#39;)
+False
+</code></pre>
+<h4 id="查询大小"><a href="#查询大小" class="headerlink" title="查询大小"></a>查询大小</h4><p>os.path.getsize</p>
+<pre><code>&gt;&gt;&gt; os.path.getsize(&#39;newfile.txt&#39;)
+0
+&gt;&gt;&gt; file1 = open(&#39;newfile.txt&#39;,&#39;w&#39;)
+&gt;&gt;&gt; file1.write(&#39;23333&#39;)
+5
+&gt;&gt;&gt; file1.close()
+&gt;&gt;&gt; os.path.getsize(&#39;newfile.txt&#39;)
+5
+</code></pre>
+<h2 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h2><p>我们用Python对象（变量&#x2F;函数&#x2F;方法）所进行的操作是在内存中，若Python程序（或系统）关闭，则内存被清除 <br /><br>为了将我们所操作的内容永久存储（保存到硬盘），需要引入”序列化”（顺序化），即pickling&#x2F;serialization <br /><br>序列化将复杂数据结构（对象）转换为一个二进制数据集合（数据流）, 这样就可以把数据永久存储或通过网络发送, 然后再重新把数据流恢复原来的对象内容 <br /><br>变量&#x2F;对象等从内存中变成可存储或传输的过程称之为序列化 <br /></p>
+<h3 id="pickling"><a href="#pickling" class="headerlink" title="pickling"></a>pickling</h3><p>提供Python对象的序列化和存储转换功能</p>
+<h4 id="pickling-dump"><a href="#pickling-dump" class="headerlink" title="pickling.dump( )"></a>pickling.dump( )</h4><p>接收一个文件句柄和一个数据对象作为参数, 把数据对象以特定格式保存到给定文件里</p>
+<h4 id="pickling-load"><a href="#pickling-load" class="headerlink" title="pickling.load( )"></a>pickling.load( )</h4><p>从文件中取出已保存的对象时, pickle 知道如何恢复这些对象到它们本来的格式<br><img src="https://p1.cdn.img9.top/ipfs/QmcLB4u2bJRXvg4Cu16XgXcqzmYfEwa3pmjCHTCzp8KM6q?1.png" alt="图5-4-1"> <br /></p>
+<h3 id="marshal"><a href="#marshal" class="headerlink" title="marshal"></a>marshal</h3><p>提供类似字典和文件的对象，可以完成字符串的永久性存储</p>
+<h3 id="shelve"><a href="#shelve" class="headerlink" title="shelve"></a>shelve</h3><p>同时具备pickling和marshal的功能</p>
+<h1 id="异常处理"><a href="#异常处理" class="headerlink" title="异常处理"></a>异常处理</h1><h2 id="异常概述"><a href="#异常概述" class="headerlink" title="异常概述"></a>异常概述</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p><img src="http://p0.i.img9.top/ipfs/QmX7nxPJzShoBVvJ2AtPg6zDtGN5nPTD1QoHGLPZp3viHF?0.png" alt="图6-1-1"> <br /><br>什么是异常？举个例子，我们将“建房子”看出一个程序，这里涉及到材料准备、图纸设计、装修施工等各个环节 <br /><br>整个建房子的过程，可能出现各种各样的问题，材料是否准备充足？施工方是否人员到齐？设计是否有存在问题？装修是否有偷工减料？ <br /><br>“建房子”这事情一个系统工程，任何一个环节出现问题，这个事件就无法进行，例如没有材料或者工人没到场等等；这里程序运行就相当于“建房子”的过程 <br /></p>
+<h3 id="定义-9"><a href="#定义-9" class="headerlink" title="定义"></a>定义</h3><p><img src="http://p1.i.img9.top/ipfs/QmTk8AEF8h3ARcUC7sZgtMqzCk4rNqLcN9ZJJYeZTCW4Tj?1.png" alt="图6-1-2"> <br /><br>程序运行会出现各种各样的问题，例如语法编写错误或文件读写错误等，出现各种各样的bug <br /><br>默认情况下，程序会马上停止执行，并根据错误情况，反馈异常情况（显示栈追踪） <br /><br>本质上讲，异常是一种类，并且有很多子类，基类为BaseException</p>
+<h3 id="举例-14"><a href="#举例-14" class="headerlink" title="举例"></a>举例</h3><h4 id="IOError"><a href="#IOError" class="headerlink" title="IOError"></a>IOError</h4><p>输入输出异常</p>
+<pre><code>&gt;&gt;&gt; file1 = open(&#39;file.txt&#39;,&#39;r&#39;)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;              
+FileNotFoundError: [Errno 2] No such file or directory: &#39;file.txt&#39;
+</code></pre>
+<p>根本找不到‘file.txt’这个文件</p>
+<h4 id="ZeroDivisionError"><a href="#ZeroDivisionError" class="headerlink" title="ZeroDivisionError"></a>ZeroDivisionError</h4><p>分母为0异常</p>
+<pre><code>&gt;&gt;&gt; a = 1
+&gt;&gt;&gt; b = 0
+&gt;&gt;&gt; print(a/b)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+ZeroDivisionError: division by zero
+</code></pre>
+<h4 id="TypeError"><a href="#TypeError" class="headerlink" title="TypeError"></a>TypeError</h4><p>类型异常，操作对本类型失效</p>
+<pre><code>&gt;&gt;&gt; a = 1
+&gt;&gt;&gt; b = &#39;a&#39;
+&gt;&gt;&gt; a + b
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+TypeError: unsupported operand type(s) for +: &#39;int&#39; and &#39;str&#39;
+</code></pre>
+<h4 id="ValueError"><a href="#ValueError" class="headerlink" title="ValueError"></a>ValueError</h4><p>参数异常，无效的参数</p>
+<pre><code>&gt;&gt;&gt; num = int(&#39;a&#39;)
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+ValueError: invalid literal for int() with base 10: &#39;a&#39;
+</code></pre>
+<h4 id="SyntaxError"><a href="#SyntaxError" class="headerlink" title="SyntaxError"></a>SyntaxError</h4><p>语法异常</p>
+<pre><code>&gt;&gt;&gt; a = 1 +
+  File &quot;&lt;input&gt;&quot;, line 1
+    a = 1 +
+          ^
+SyntaxError: invalid syntax
+</code></pre>
+<h4 id="NameError"><a href="#NameError" class="headerlink" title="NameError"></a>NameError</h4><p>名字异常，对象未定义</p>
+<pre><code>&gt;&gt;&gt; a + c
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+NameError: name &#39;c&#39; is not defined
+</code></pre>
+<h4 id="AttributeError"><a href="#AttributeError" class="headerlink" title="AttributeError"></a>AttributeError</h4><pre><code>属性异常，对象没有此属性/方法
+&gt;&gt;&gt; b.counn()
+Traceback (most recent call last):
+  File &quot;&lt;input&gt;&quot;, line 1, in &lt;module&gt;
+AttributeError: &#39;str&#39; object has no attribute &#39;counn&#39;
+</code></pre>
+<h2 id="异常处理-1"><a href="#异常处理-1" class="headerlink" title="异常处理"></a>异常处理</h2><h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p><img src="https://p3.cdn.img9.top/ipfs/QmPEVUeTM8Mu9ZyiTpBZMVNjH72vgEyxrGqEnytV94nmXX?3.png" alt="图6-2-1"> <br /><br>异常错误会导致程序中止运行，我们可以对异常进行捕获，进行进一步操作 <br /><br>异常所引发的栈追踪对用户不友好，对于提供给用户使用的软件，异常处理是非常用必要的 <br /></p>
+<h3 id="异常捕获"><a href="#异常捕获" class="headerlink" title="异常捕获"></a>异常捕获</h3><p>try…except… <br /><br>执行try语句，若没有异常，则正常执行，忽略except代码块 <br /><br>若出现异常，则跳过try语句，执行except代码块 <br /><br>try&#x2F;except块的工作原理有点像if语句，if语句根据布尔表达式的结果决定如何做，而try&#x2F;except块根据是否出现了异</p>
+<h4 id="捕获一个异常"><a href="#捕获一个异常" class="headerlink" title="捕获一个异常"></a>捕获一个异常</h4><pre><code>&gt;&gt;&gt; try:
+...     a = 1
+...     b = &#39;hello&#39;
+...     print(a + b)
+... except TypeError:    
+...     print(&#39;error!please try again&#39;)
+...     
+error!please try again
+</code></pre>
+<h4 id="捕获多个异常，同一处理结果"><a href="#捕获多个异常，同一处理结果" class="headerlink" title="捕获多个异常，同一处理结果"></a>捕获多个异常，同一处理结果</h4><pre><code>except (TypeError, ValueError):
+</code></pre>
+<h4 id="捕获多个异常，不同处理结果"><a href="#捕获多个异常，不同处理结果" class="headerlink" title="捕获多个异常，不同处理结果"></a>捕获多个异常，不同处理结果</h4><pre><code>except TypeError :
+    print &#39;Invalid type,Please enter an integer value!&#39;
+except ValueError:
+    print &#39;Invalid value,Please enter an integer value!&#39;
+</code></pre>
+<h4 id="捕获所有异常"><a href="#捕获所有异常" class="headerlink" title="捕获所有异常"></a>捕获所有异常</h4><pre><code>except :
+</code></pre>
+<h4 id="捕获异常，与while循环语句结合"><a href="#捕获异常，与while循环语句结合" class="headerlink" title="捕获异常，与while循环语句结合"></a>捕获异常，与while循环语句结合</h4><pre><code>&gt;&gt;&gt; def get_age():
+...     while True:
+...         try:
+...             n = int(input(&#39;How old are you?&#39;))
+...             return n      
+...         except:     
+...             print(&#39;please enter an integer value&#39;)
+...             
+&gt;&gt;&gt; get_age()
+How old are you?
+please enter an integer value
+How old are you?&gt;? 1
+1
+</code></pre>
+<h4 id="捕获异常，与else语句结合"><a href="#捕获异常，与else语句结合" class="headerlink" title="捕获异常，与else语句结合"></a>捕获异常，与else语句结合</h4><pre><code>&gt;&gt;&gt; try:
+...     a = 1
+...     b = 2
+...     print(a)
+... except TypeErrpr:    
+...     print(&#39;invalid type,please try again&#39;)
+... else:
+...     print(b)
+...     
+1
+2
+</code></pre>
+<h3 id="异常清理"><a href="#异常清理" class="headerlink" title="异常清理"></a>异常清理</h3><p>finally语句用于实现异常清理，不管最终try语句是否有异常，都必须执行finally语句 <br /><br>例如打开一个文件进行操作，不管是否异常，都必须在处理之后将其关闭，通过finally语句可以解决 <br /></p>
+<h4 id="try…finally"><a href="#try…finally" class="headerlink" title="try…finally"></a>try…finally</h4><pre><code>try:
+    file1 = open(&#39;file.txt&#39;,&#39;w&#39;)
+    file1.read()
+finally:
+    file1.close()
+    print &#39;close the file1&#39;
+</code></pre>
+<h4 id="try…except…finally"><a href="#try…except…finally" class="headerlink" title="try…except…finally"></a>try…except…finally</h4><pre><code>try:
+    file1 = open(&#39;file.txt&#39;,&#39;w&#39;)
+    file1.read()
+except IOError:
+    print &#39;IOError, please try again!&#39;
+finally:
+    file1.close()
+    print &#39;close the file1&#39;
+</code></pre>
+<h4 id="try…except…else…finally"><a href="#try…except…else…finally" class="headerlink" title="try…except…else…finally"></a>try…except…else…finally</h4><pre><code>try:
+    file1 = open(&#39;file.txt&#39;,&#39;w+&#39;)
+    file1.read()
+except IOError:
+    print &#39;IOError, please try again!&#39;
+else:
+    print &#39;good!&#39;
+finally:
+    file1.close()
+    print &#39;close the file1&#39;
+</code></pre>
+<h4 id="with…as"><a href="#with…as" class="headerlink" title="with…as"></a>with…as</h4><pre><code>    with open(&#39;file.txt&#39;,&#39;w&#39;) as f:
+        f.read()
+</code></pre>
+<h3 id="异常触发"><a href="#异常触发" class="headerlink" title="异常触发"></a>异常触发</h3><h4 id="raise"><a href="#raise" class="headerlink" title="raise"></a>raise</h4><p>Raise用于抛出异常，异常可以自己定义 <br /><br>raise [SomeException [, args [, traceback]]] <br /><br>第一个参数，SomeExcpetion是触发异常的名字 <br /><br>第二个符号为可选的 args(比如参数,值),来传给异常 <br /><br>最后一项参数,traceback,同样是可选的 <br /><br><img src="https://p1.cdn.img9.top/ipfs/Qmf9JQs84WFE5EtjzyQTqGqcsYXWqm8JdioGo4fzUG4H91?1.png" alt="图6-2-2"> <br /></p>
+<h4 id="assert"><a href="#assert" class="headerlink" title="assert"></a>assert</h4><p>Assert断言是有条件地触发异常，如果不满足则抛出AssertionError异常 <br /><br>相比raise，多了条件判断；但是不用像raise一样，抛出各种异常类型 <br /><br>assert expression[, arguments] <br /><br><img src="https://p4.cdn.img9.top/ipfs/QmQ42Pd4YBZ9cXceuxXRPGFqi3gh4dhTmzQYz7TbY5bMiq?4.png" alt="图6-2-3"> <br /></p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/09/07/python/">https://perfect-time.xyz/2018/09/07/python/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/09/07/python/">September 7th 2018, 10:59:49 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/10/08/PKIstudy/" title= PKI学习笔记 >
+                    <div class="nextTitle">PKI学习笔记</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/08/02/sql/" title= sql注入笔记 >
+                    <div class="prevTitle">sql注入笔记</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "python学习笔记", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">对象类型</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E5%90%88"><span class="toc-number">1.1.</span> <span class="toc-text">集合</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9B%86%E5%90%88%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">集合的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.1.2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.1.3.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E5%BE%81"><span class="toc-number">1.1.1.4.</span> <span class="toc-text">特征</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.1.2.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%A4%E9%9B%86"><span class="toc-number">1.1.2.1.</span> <span class="toc-text">交集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E9%9B%86"><span class="toc-number">1.1.2.2.</span> <span class="toc-text">并集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%AE%E9%9B%86"><span class="toc-number">1.1.2.3.</span> <span class="toc-text">差集</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0"><span class="toc-number">1.1.3.</span> <span class="toc-text">内置函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%A4%E9%9B%86-1"><span class="toc-number">1.1.3.1.</span> <span class="toc-text">交集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B9%B6%E9%9B%86-1"><span class="toc-number">1.1.3.2.</span> <span class="toc-text">并集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%AE%E9%9B%86-1"><span class="toc-number">1.1.3.3.</span> <span class="toc-text">差集</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0"><span class="toc-number">1.1.3.4.</span> <span class="toc-text">增加</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">1.1.3.5.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B8%85%E9%99%A4"><span class="toc-number">1.1.3.6.</span> <span class="toc-text">清除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A4%E6%96%AD"><span class="toc-number">1.1.3.7.</span> <span class="toc-text">判断</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%98%A0%E5%B0%84"><span class="toc-number">1.2.</span> <span class="toc-text">映射</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E5%85%B8%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">字典的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E5%85%B8%E7%9A%84%E5%AE%9A%E4%B9%89-1"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">字典的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E5%85%B8%E7%9A%84%E5%8A%9F%E8%83%BD"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">字典的功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-1"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8E%9F%E7%90%86"><span class="toc-number">1.2.1.4.</span> <span class="toc-text">原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E5%BE%81-1"><span class="toc-number">1.2.1.5.</span> <span class="toc-text">特征</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">查找操作符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">成员操作符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">内置函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E5%AD%97"><span class="toc-number">1.3.</span> <span class="toc-text">数字</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%97%EF%BC%9A%E5%86%85%E5%BB%BA%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.</span> <span class="toc-text">数字：内建函数</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E8%AE%A1%E7%AE%97%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.1.</span> <span class="toc-text">数值计算函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.2.</span> <span class="toc-text">类型转换函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.3.</span> <span class="toc-text">进制转换函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ASCII%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.3.1.4.</span> <span class="toc-text">ASCII转换函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E6%A8%A1%E5%9D%97"><span class="toc-number">1.3.2.</span> <span class="toc-text">内置模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#math"><span class="toc-number">1.3.2.1.</span> <span class="toc-text">math</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#random"><span class="toc-number">1.3.2.2.</span> <span class="toc-text">random</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">1.4.</span> <span class="toc-text">变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97"><span class="toc-number">1.5.</span> <span class="toc-text">序列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E8%A1%A8"><span class="toc-number">1.5.1.</span> <span class="toc-text">列表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.5.1.1.</span> <span class="toc-text">列表的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.1.2.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.5.1.2.1.</span> <span class="toc-text">索引操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%87%E7%89%87%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.5.1.2.2.</span> <span class="toc-text">切片操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.5.1.2.3.</span> <span class="toc-text">连接操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%A4%8D%E6%93%8D%E4%BD%9C%E7%AC%A6"><span class="toc-number">1.5.1.2.4.</span> <span class="toc-text">重复操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.5.1.2.5.</span> <span class="toc-text">成员操作符</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0-2"><span class="toc-number">1.5.1.3.</span> <span class="toc-text">内置函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0%EF%BC%88%E5%AD%97%E7%AC%A6%E4%B8%B2%E4%B9%9F%E9%80%9A%E7%94%A8%E7%9A%84%E5%87%BD%E6%95%B0%EF%BC%89"><span class="toc-number">1.5.1.3.1.</span> <span class="toc-text">内置函数（字符串也通用的函数）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E5%A2%9E%E5%8A%A0"><span class="toc-number">1.5.1.3.2.</span> <span class="toc-text">列表增加</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E5%88%A0%E9%99%A4"><span class="toc-number">1.5.1.3.3.</span> <span class="toc-text">列表删除</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E6%90%9C%E7%B4%A2"><span class="toc-number">1.5.1.3.4.</span> <span class="toc-text">列表搜索</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E6%8E%92%E5%BA%8F"><span class="toc-number">1.5.1.3.5.</span> <span class="toc-text">列表排序</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">1.5.1.4.</span> <span class="toc-text">进阶操作</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%83%E7%BB%84"><span class="toc-number">1.5.2.</span> <span class="toc-text">元组</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%83%E7%BB%84%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.5.2.1.</span> <span class="toc-text">元组的定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6-3"><span class="toc-number">1.5.2.2.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.5.2.2.1.</span> <span class="toc-text">索引操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%87%E7%89%87%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.5.2.2.2.</span> <span class="toc-text">切片操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.5.2.2.3.</span> <span class="toc-text">连接操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%A4%8D%E6%93%8D%E4%BD%9C%E7%AC%A6-1"><span class="toc-number">1.5.2.2.4.</span> <span class="toc-text">重复操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.2.2.5.</span> <span class="toc-text">成员操作符</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0-3"><span class="toc-number">1.5.2.3.</span> <span class="toc-text">内置函数</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">1.5.3.</span> <span class="toc-text">字符串</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">字符串的定义</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8D%95%E5%BC%95%E5%8F%B7%E5%8F%8C%E5%BC%95%E5%8F%B7%E4%BB%A5%E5%8F%8A%E4%B8%89%E5%BC%95%E5%8F%B7"><span class="toc-number">1.5.3.1.1.</span> <span class="toc-text">单引号双引号以及三引号</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E6%80%A7%E5%92%8C%E4%B8%8D%E5%8F%AF%E9%80%86%E6%80%A7"><span class="toc-number">1.5.3.1.2.</span> <span class="toc-text">有序性和不可逆性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%AC%A6-4"><span class="toc-number">1.5.3.2.</span> <span class="toc-text">操作符</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.3.2.1.</span> <span class="toc-text">索引操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%87%E7%89%87%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.3.2.2.</span> <span class="toc-text">切片操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.3.2.3.</span> <span class="toc-text">连接操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%87%8D%E5%A4%8D%E6%93%8D%E4%BD%9C%E7%AC%A6-2"><span class="toc-number">1.5.3.2.4.</span> <span class="toc-text">重复操作符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%88%90%E5%91%98%E6%93%8D%E4%BD%9C%E7%AC%A6-3"><span class="toc-number">1.5.3.2.5.</span> <span class="toc-text">成员操作符</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E5%87%BD%E6%95%B0-4"><span class="toc-number">1.5.3.3.</span> <span class="toc-text">内置函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A4%E6%96%AD%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.1.</span> <span class="toc-text">判断函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.2.</span> <span class="toc-text">搜索函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.3.</span> <span class="toc-text">格式函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%89%A5%E7%A6%BB%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.4.</span> <span class="toc-text">剥离函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8B%86%E5%88%86%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.5.</span> <span class="toc-text">拆分函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.6.</span> <span class="toc-text">替换函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E5%87%BD%E6%95%B0"><span class="toc-number">1.5.3.3.7.</span> <span class="toc-text">大小写函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E6%93%8D%E4%BD%9C-1"><span class="toc-number">1.5.3.4.</span> <span class="toc-text">进阶操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81"><span class="toc-number">1.5.3.4.1.</span> <span class="toc-text">字符编码</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BD%AC%E4%B9%89%E5%AD%97%E7%AC%A6"><span class="toc-number">1.5.3.4.2.</span> <span class="toc-text">转义字符</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%AD%97%E7%AC%A6"><span class="toc-number">1.5.3.4.3.</span> <span class="toc-text">格式化字符</span></a></li></ol></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-number">2.</span> <span class="toc-text">流程控制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%AF%AD%E5%8F%A5-if"><span class="toc-number">2.1.</span> <span class="toc-text">条件语句-if</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="toc-number">2.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-2"><span class="toc-number">2.1.2.</span> <span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95if%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.1.2.1.</span> <span class="toc-text">单if条件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9Aif%E6%9D%A1%E4%BB%B6"><span class="toc-number">2.1.2.2.</span> <span class="toc-text">多if条件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-number">2.1.3.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8D%95%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">2.1.3.1.</span> <span class="toc-text">单条件判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">2.1.3.2.</span> <span class="toc-text">多条件判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E6%9D%A1%E4%BB%B6%E5%90%8C%E6%97%B6%E5%88%A4%E6%96%AD"><span class="toc-number">2.1.3.3.</span> <span class="toc-text">多条件同时判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B5%8C%E5%A5%97%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">2.1.3.4.</span> <span class="toc-text">嵌套条件判断</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.1.3.5.</span> <span class="toc-text">条件表达式</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.2.</span> <span class="toc-text">循环语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="toc-number">2.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-3"><span class="toc-number">2.2.2.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-1"><span class="toc-number">2.2.3.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">遍历字符串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E5%88%97%E8%A1%A8"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">遍历列表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E5%92%8C"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">计算和</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%A1%E7%AE%97%E4%B9%98%E9%98%B6"><span class="toc-number">2.2.3.4.</span> <span class="toc-text">计算乘阶</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88else"><span class="toc-number">2.2.3.5.</span> <span class="toc-text">for语句结合else</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88range"><span class="toc-number">2.2.3.6.</span> <span class="toc-text">for语句结合range( )</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88zip"><span class="toc-number">2.2.3.7.</span> <span class="toc-text">for语句结合zip( )</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88map"><span class="toc-number">2.2.3.8.</span> <span class="toc-text">for语句结合map( )</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#for%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88enumerate"><span class="toc-number">2.2.3.9.</span> <span class="toc-text">for语句结合enumerate( )</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.3.</span> <span class="toc-text">条件循环语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="toc-number">2.3.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-4"><span class="toc-number">2.3.2.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-2"><span class="toc-number">2.3.3.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%87%BA1%E5%88%B010"><span class="toc-number">2.3.3.1.</span> <span class="toc-text">输出1到10</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BE%93%E5%87%BA0%E5%88%B010%E6%95%B0%E5%AD%97%E7%9B%B8%E5%8A%A0%E7%9A%84%E7%BB%93%E6%9E%9C"><span class="toc-number">2.3.3.2.</span> <span class="toc-text">输出0到10数字相加的结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#while%E4%B8%8Eelse%E7%BB%93%E5%90%88"><span class="toc-number">2.3.3.3.</span> <span class="toc-text">while与else结合</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6"><span class="toc-number">2.4.</span> <span class="toc-text">循环控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#break"><span class="toc-number">2.4.1.</span> <span class="toc-text">break</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-4"><span class="toc-number">2.4.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-3"><span class="toc-number">2.4.1.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#continue"><span class="toc-number">2.4.2.</span> <span class="toc-text">continue</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-5"><span class="toc-number">2.4.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-4"><span class="toc-number">2.4.2.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pass"><span class="toc-number">2.4.3.</span> <span class="toc-text">pass</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-6"><span class="toc-number">2.4.3.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-5"><span class="toc-number">2.4.3.2.</span> <span class="toc-text">举例</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.5.</span> <span class="toc-text">进阶语句</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">2.5.1.</span> <span class="toc-text">迭代器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AF%AD%E6%B3%95"><span class="toc-number">2.5.1.1.</span> <span class="toc-text">定义和语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-6"><span class="toc-number">2.5.1.2.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E8%BF%AD%E4%BB%A3%E5%88%97%E8%A1%A8"><span class="toc-number">2.5.1.2.1.</span> <span class="toc-text">手工迭代列表</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%89%8B%E5%B7%A5%E8%BF%AD%E4%BB%A3%E5%AD%97%E5%85%B8"><span class="toc-number">2.5.1.2.2.</span> <span class="toc-text">手工迭代字典</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E8%A1%A8%E8%A7%A3%E6%9E%90"><span class="toc-number">2.5.2.</span> <span class="toc-text">列表解析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AF%AD%E6%B3%95-1"><span class="toc-number">2.5.2.1.</span> <span class="toc-text">定义和语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-7"><span class="toc-number">2.5.2.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%99%A8%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-number">2.5.3.</span> <span class="toc-text">生成器表达式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AF%AD%E6%B3%95-2"><span class="toc-number">2.5.3.1.</span> <span class="toc-text">定义和语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-8"><span class="toc-number">2.5.3.2.</span> <span class="toc-text">举例</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E6%A8%A1%E5%9D%97"><span class="toc-number">3.</span> <span class="toc-text">函数模块</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E5%8A%9F%E8%83%BD"><span class="toc-number">3.1.1.</span> <span class="toc-text">定义和功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-1"><span class="toc-number">3.1.2.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.2.1.</span> <span class="toc-text">调用函数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.2.2.</span> <span class="toc-text">创建函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-5"><span class="toc-number">3.1.2.2.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-9"><span class="toc-number">3.1.2.2.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.</span> <span class="toc-text">函数的参数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.1.</span> <span class="toc-text">位置参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.2.</span> <span class="toc-text">默认参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E5%AD%97%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.3.</span> <span class="toc-text">关键字参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%AF%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.4.</span> <span class="toc-text">可变长参数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B7%B7%E5%90%88%E5%8F%82%E6%95%B0"><span class="toc-number">3.1.2.3.5.</span> <span class="toc-text">混合参数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%98%E9%87%8F%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.1.2.4.</span> <span class="toc-text">变量作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">3.1.2.4.1.</span> <span class="toc-text">局部变量</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F"><span class="toc-number">3.1.2.4.2.</span> <span class="toc-text">全局变量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6"><span class="toc-number">3.1.3.</span> <span class="toc-text">进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BC%96%E7%A8%8B"><span class="toc-number">3.1.3.1.</span> <span class="toc-text">函数式编程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%85%E7%BD%AE%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.2.</span> <span class="toc-text">内置高阶函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#lambda%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.2.1.</span> <span class="toc-text">lambda函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#map%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.2.2.</span> <span class="toc-text">map函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#reduce%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.2.3.</span> <span class="toc-text">reduce函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#filter%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.2.4.</span> <span class="toc-text">filter函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%94%E5%9B%9E%E5%87%BD%E6%95%B0"><span class="toc-number">3.1.3.3.</span> <span class="toc-text">返回函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AD%E5%8C%85"><span class="toc-number">3.1.3.3.1.</span> <span class="toc-text">闭包</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">3.1.3.4.</span> <span class="toc-text">装饰器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8D%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%A3%85%E9%A5%B0%E5%99%A8"><span class="toc-number">3.1.3.4.1.</span> <span class="toc-text">不带参数的装饰器</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E5%99%A8"><span class="toc-number">3.1.3.5.</span> <span class="toc-text">生成器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97"><span class="toc-number">3.2.</span> <span class="toc-text">模块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-7"><span class="toc-number">3.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E7%90%86-2"><span class="toc-number">3.2.3.</span> <span class="toc-text">原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%88%9B%E5%BB%BA"><span class="toc-number">3.2.3.1.</span> <span class="toc-text">模块创建</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E5%AF%BC%E5%85%A5"><span class="toc-number">3.2.3.2.</span> <span class="toc-text">模块导入</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-6"><span class="toc-number">3.2.3.2.1.</span> <span class="toc-text">语法 </span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#import-Module"><span class="toc-number">3.2.3.2.1.1.</span> <span class="toc-text">import Module</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#from-Module-import-Func"><span class="toc-number">3.2.3.2.1.2.</span> <span class="toc-text">from Module import Func</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#from-Module-import"><span class="toc-number">3.2.3.2.1.3.</span> <span class="toc-text">from Module import *</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#reload-Module"><span class="toc-number">3.2.3.2.1.4.</span> <span class="toc-text">reload Module</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">3.2.3.2.2.</span> <span class="toc-text">流程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-10"><span class="toc-number">3.2.3.2.3.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.3.3.</span> <span class="toc-text">模块路径</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%90%9C%E7%B4%A2%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.3.3.1.</span> <span class="toc-text">搜索路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.3.3.2.</span> <span class="toc-text">查看路径</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%B7%AF%E5%BE%84"><span class="toc-number">3.2.3.3.3.</span> <span class="toc-text">配置路径</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E4%BA%92%E5%AF%BC"><span class="toc-number">3.2.3.4.</span> <span class="toc-text">模块互导</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E9%98%B6-1"><span class="toc-number">3.2.4.</span> <span class="toc-text">进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%91%BD%E5%90%8D%E7%A9%BA%E9%97%B4%E5%92%8C%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.2.4.1.</span> <span class="toc-text">命名空间和作用域</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E5%8A%9F%E8%83%BD-1"><span class="toc-number">3.2.4.1.1.</span> <span class="toc-text">定义和功能</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-11"><span class="toc-number">3.2.4.1.2.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#Local%E6%9C%AC%E5%9C%B0%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.2.4.1.2.1.</span> <span class="toc-text">Local本地作用域</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Enclosing%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.2.4.1.2.2.</span> <span class="toc-text">Enclosing作用域</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Global%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.2.4.1.2.3.</span> <span class="toc-text">Global作用域</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Bulti-in%E4%BD%9C%E7%94%A8%E5%9F%9F"><span class="toc-number">3.2.4.1.2.4.</span> <span class="toc-text">Bulti-in作用域</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8C%85%EF%BC%88package%EF%BC%89"><span class="toc-number">3.2.4.2.</span> <span class="toc-text">包（package）</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="toc-number">4.</span> <span class="toc-text">面向对象</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%9F%BA%E7%A1%80"><span class="toc-number">4.1.</span> <span class="toc-text">类的基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%B1%BB"><span class="toc-number">4.1.1.</span> <span class="toc-text">什么是类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-8"><span class="toc-number">4.1.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD-2"><span class="toc-number">4.1.1.2.</span> <span class="toc-text">功能</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95-7"><span class="toc-number">4.1.1.3.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-12"><span class="toc-number">4.1.1.4.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%AE%9E%E4%BE%8B"><span class="toc-number">4.1.2.</span> <span class="toc-text">类的实例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%92%8C%E8%AF%AD%E6%B3%95-3"><span class="toc-number">4.1.2.1.</span> <span class="toc-text">定义和语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-13"><span class="toc-number">4.1.2.2.</span> <span class="toc-text">举例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.</span> <span class="toc-text">类的属性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E6%A6%82%E8%BF%B0"><span class="toc-number">4.1.3.1.</span> <span class="toc-text">属性概述</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E8%AF%AD%E6%B3%95"><span class="toc-number">4.1.3.2.</span> <span class="toc-text">调用语法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E6%93%8D%E4%BD%9C"><span class="toc-number">4.1.3.3.</span> <span class="toc-text">属性操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E8%AE%BF%E9%97%AE"><span class="toc-number">4.1.3.3.1.</span> <span class="toc-text">属性访问</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%95%B0%E6%8D%AE%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.3.1.1.</span> <span class="toc-text">访问数据属性</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%96%B9%E6%B3%95%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.3.1.2.</span> <span class="toc-text">访问方法属性</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B1%9E%E6%80%A7%E4%BF%AE%E6%94%B9"><span class="toc-number">4.1.3.3.2.</span> <span class="toc-text">属性修改</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E5%8A%A0%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.3.3.</span> <span class="toc-text">增加属性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.3.4.</span> <span class="toc-text">查看属性</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E7%B1%BB%E5%B1%9E%E6%80%A7"><span class="toc-number">4.1.3.4.</span> <span class="toc-text">特殊类属性</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B1%BB%E7%9A%84%E8%BF%9B%E9%98%B6"><span class="toc-number">4.2.</span> <span class="toc-text">类的进阶</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-number">4.2.1.</span> <span class="toc-text">继承</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%90%E7%B1%BB"><span class="toc-number">4.2.1.1.</span> <span class="toc-text">创建子类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF%E5%88%A4%E6%96%AD%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.1.1.1.</span> <span class="toc-text">继承判断函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%90%E7%B1%BB-1"><span class="toc-number">4.2.1.1.2.</span> <span class="toc-text">创建子类</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%96%B9%E6%B3%95%E5%AE%9A%E5%88%B6"><span class="toc-number">4.2.1.2.</span> <span class="toc-text">方法定制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E5%88%B6%E6%96%B9%E6%B3%95"><span class="toc-number">4.2.1.2.1.</span> <span class="toc-text">定制方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E5%88%B6%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.1.2.2.</span> <span class="toc-text">定制构造函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E9%87%8D%E7%BB%A7%E6%89%BF"><span class="toc-number">4.2.1.3.</span> <span class="toc-text">多重继承</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E6%80%81"><span class="toc-number">4.2.2.</span> <span class="toc-text">多态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%81%E6%9C%89%E5%8F%98%E9%87%8F"><span class="toc-number">4.2.3.</span> <span class="toc-text">私有变量</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%84%E5%85%AC%E6%9C%89%E5%8F%98%E9%87%8F%E8%83%BD%E8%A2%AB%E8%AE%BF%E9%97%AE%E5%B9%B6%E4%BF%AE%E6%94%B9"><span class="toc-number">4.2.3.1.</span> <span class="toc-text">常规公有变量能被访问并修改</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E7%A7%81%E6%9C%89%E5%8F%98%E9%87%8F%E5%AE%9E%E7%8E%B0%E8%AE%BF%E9%97%AE%E9%99%90%E5%88%B6"><span class="toc-number">4.2.3.2.</span> <span class="toc-text">通过私有变量实现访问限制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E8%8E%B7%E5%8F%96%E5%87%BD%E6%95%B0%E5%AE%9E%E7%8E%B0%E7%A7%81%E6%9C%89%E5%8F%98%E9%87%8F%E5%80%BC%E8%AE%BF%E9%97%AE"><span class="toc-number">4.2.3.3.</span> <span class="toc-text">通过获取函数实现私有变量值访问</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E8%AE%BE%E7%BD%AE%E5%87%BD%E6%95%B0%E8%AE%BE%E7%BD%AE%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F"><span class="toc-number">4.2.3.4.</span> <span class="toc-text">通过设置函数设置条件变量</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A3%85%E9%A5%B0%E5%99%A8-1"><span class="toc-number">4.2.4.</span> <span class="toc-text">装饰器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%BC%96%E7%A8%8B"><span class="toc-number">4.3.</span> <span class="toc-text">面向对象编程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E5%9F%BA%E7%A1%80"><span class="toc-number">4.3.1.</span> <span class="toc-text">对象基础</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%89%B9%E5%BE%81"><span class="toc-number">4.3.1.1.</span> <span class="toc-text">对象的特征</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E7%9A%84%E8%A1%8C%E4%B8%BA"><span class="toc-number">4.3.1.2.</span> <span class="toc-text">对象的行为</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%96%E7%A8%8B%E6%96%B9%E6%B3%95"><span class="toc-number">4.3.2.</span> <span class="toc-text">编程方法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA"><span class="toc-number">5.</span> <span class="toc-text">输入输出</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA-1"><span class="toc-number">5.1.</span> <span class="toc-text">输入输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%8F%E5%B9%95%E8%BE%93%E5%87%BA"><span class="toc-number">5.1.1.</span> <span class="toc-text">屏幕输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%AE%E7%9B%98%E8%BE%93%E5%85%A5"><span class="toc-number">5.1.2.</span> <span class="toc-text">键盘输入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#raw-input"><span class="toc-number">5.1.2.1.</span> <span class="toc-text">raw_input</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#input"><span class="toc-number">5.1.2.2.</span> <span class="toc-text">input</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%A4%84%E7%90%86"><span class="toc-number">5.2.</span> <span class="toc-text">文件处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%89%93%E5%BC%80"><span class="toc-number">5.2.1.</span> <span class="toc-text">文件打开</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#r"><span class="toc-number">5.2.1.1.</span> <span class="toc-text">r</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#w"><span class="toc-number">5.2.1.2.</span> <span class="toc-text">w</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#a"><span class="toc-number">5.2.1.3.</span> <span class="toc-text">a</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%85%B3%E9%97%AD"><span class="toc-number">5.2.2.</span> <span class="toc-text">文件关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5"><span class="toc-number">5.2.3.</span> <span class="toc-text">文件写入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96"><span class="toc-number">5.2.4.</span> <span class="toc-text">文件读取</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#file-read"><span class="toc-number">5.2.4.1.</span> <span class="toc-text">file.read()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#file-readline"><span class="toc-number">5.2.4.2.</span> <span class="toc-text">file.readline()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#file-readlines"><span class="toc-number">5.2.4.3.</span> <span class="toc-text">file.readlines()</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%A2%9E%E5%8A%A0"><span class="toc-number">5.2.5.</span> <span class="toc-text">文件增加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%81%8F%E7%A7%BB"><span class="toc-number">5.2.6.</span> <span class="toc-text">文件偏移</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#file-tell"><span class="toc-number">5.2.6.1.</span> <span class="toc-text">file.tell( )</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#file-seek"><span class="toc-number">5.2.6.2.</span> <span class="toc-text">file.seek( )</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E9%87%8D%E5%91%BD%E5%90%8D"><span class="toc-number">5.2.7.</span> <span class="toc-text">文件重命名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%88%A0%E9%99%A4"><span class="toc-number">5.2.8.</span> <span class="toc-text">文件删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87%E5%A4%84%E7%90%86"><span class="toc-number">5.3.</span> <span class="toc-text">目标处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#os%E6%A8%A1%E5%9D%97"><span class="toc-number">5.3.1.</span> <span class="toc-text">os模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8E%B7%E5%8F%96%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.1.1.</span> <span class="toc-text">获取目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.1.2.</span> <span class="toc-text">创建目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.1.3.</span> <span class="toc-text">删除目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E5%86%85%E5%AE%B9"><span class="toc-number">5.3.1.4.</span> <span class="toc-text">目录内容</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.1.5.</span> <span class="toc-text">移动目录</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#os-path%E6%A8%A1%E5%9D%97"><span class="toc-number">5.3.2.</span> <span class="toc-text">os.path模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%96%87%E4%BB%B6"><span class="toc-number">5.3.2.1.</span> <span class="toc-text">查询文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%9B%AE%E5%BD%95"><span class="toc-number">5.3.2.2.</span> <span class="toc-text">查询目录</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%A4%A7%E5%B0%8F"><span class="toc-number">5.3.2.3.</span> <span class="toc-text">查询大小</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%8F%E5%88%97%E5%8C%96"><span class="toc-number">5.4.</span> <span class="toc-text">序列化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pickling"><span class="toc-number">5.4.1.</span> <span class="toc-text">pickling</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pickling-dump"><span class="toc-number">5.4.1.1.</span> <span class="toc-text">pickling.dump( )</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pickling-load"><span class="toc-number">5.4.1.2.</span> <span class="toc-text">pickling.load( )</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#marshal"><span class="toc-number">5.4.2.</span> <span class="toc-text">marshal</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shelve"><span class="toc-number">5.4.3.</span> <span class="toc-text">shelve</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86"><span class="toc-number">6.</span> <span class="toc-text">异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E6%A6%82%E8%BF%B0"><span class="toc-number">6.1.</span> <span class="toc-text">异常概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">6.1.1.</span> <span class="toc-text">背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-9"><span class="toc-number">6.1.2.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-14"><span class="toc-number">6.1.3.</span> <span class="toc-text">举例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#IOError"><span class="toc-number">6.1.3.1.</span> <span class="toc-text">IOError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ZeroDivisionError"><span class="toc-number">6.1.3.2.</span> <span class="toc-text">ZeroDivisionError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#TypeError"><span class="toc-number">6.1.3.3.</span> <span class="toc-text">TypeError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ValueError"><span class="toc-number">6.1.3.4.</span> <span class="toc-text">ValueError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SyntaxError"><span class="toc-number">6.1.3.5.</span> <span class="toc-text">SyntaxError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#NameError"><span class="toc-number">6.1.3.6.</span> <span class="toc-text">NameError</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#AttributeError"><span class="toc-number">6.1.3.7.</span> <span class="toc-text">AttributeError</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86-1"><span class="toc-number">6.2.</span> <span class="toc-text">异常处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">6.2.1.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E6%8D%95%E8%8E%B7"><span class="toc-number">6.2.2.</span> <span class="toc-text">异常捕获</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E4%B8%80%E4%B8%AA%E5%BC%82%E5%B8%B8"><span class="toc-number">6.2.2.1.</span> <span class="toc-text">捕获一个异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E5%A4%9A%E4%B8%AA%E5%BC%82%E5%B8%B8%EF%BC%8C%E5%90%8C%E4%B8%80%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%9C"><span class="toc-number">6.2.2.2.</span> <span class="toc-text">捕获多个异常，同一处理结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E5%A4%9A%E4%B8%AA%E5%BC%82%E5%B8%B8%EF%BC%8C%E4%B8%8D%E5%90%8C%E5%A4%84%E7%90%86%E7%BB%93%E6%9E%9C"><span class="toc-number">6.2.2.3.</span> <span class="toc-text">捕获多个异常，不同处理结果</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E6%89%80%E6%9C%89%E5%BC%82%E5%B8%B8"><span class="toc-number">6.2.2.4.</span> <span class="toc-text">捕获所有异常</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8%EF%BC%8C%E4%B8%8Ewhile%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88"><span class="toc-number">6.2.2.5.</span> <span class="toc-text">捕获异常，与while循环语句结合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8D%95%E8%8E%B7%E5%BC%82%E5%B8%B8%EF%BC%8C%E4%B8%8Eelse%E8%AF%AD%E5%8F%A5%E7%BB%93%E5%90%88"><span class="toc-number">6.2.2.6.</span> <span class="toc-text">捕获异常，与else语句结合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E6%B8%85%E7%90%86"><span class="toc-number">6.2.3.</span> <span class="toc-text">异常清理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#try%E2%80%A6finally"><span class="toc-number">6.2.3.1.</span> <span class="toc-text">try…finally</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#try%E2%80%A6except%E2%80%A6finally"><span class="toc-number">6.2.3.2.</span> <span class="toc-text">try…except…finally</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#try%E2%80%A6except%E2%80%A6else%E2%80%A6finally"><span class="toc-number">6.2.3.3.</span> <span class="toc-text">try…except…else…finally</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#with%E2%80%A6as"><span class="toc-number">6.2.3.4.</span> <span class="toc-text">with…as</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E5%B8%B8%E8%A7%A6%E5%8F%91"><span class="toc-number">6.2.4.</span> <span class="toc-text">异常触发</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#raise"><span class="toc-number">6.2.4.1.</span> <span class="toc-text">raise</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#assert"><span class="toc-number">6.2.4.2.</span> <span class="toc-text">assert</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+

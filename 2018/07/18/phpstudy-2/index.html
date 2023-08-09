@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="LINK">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="LINK">
+    <meta name="keywords" content="Hexo | LINK">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>php中一些比较实用的技巧 · my world</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180630 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180630 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+<meta name="generator" content="Hexo 7.0.0-rc2"></head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >LINK</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">php中一些比较实用的技巧</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>LINK</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            php中一些比较实用的技巧
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "php学习">php学习</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1.5k</span> / Reading time: <span class="post-count">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/07/18</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>整理一些可能会用到的东西</p>
+<span id="more"></span>
+<h1 id="两个变量互换位置"><a href="#两个变量互换位置" class="headerlink" title="两个变量互换位置"></a>两个变量互换位置</h1><h2 id="借助第三个变量"><a href="#借助第三个变量" class="headerlink" title="借助第三个变量"></a>借助第三个变量</h2><pre><code>$v1 = 10;
+$v2 = 20;
+$tmp = $v1;
+$v1 = $v2;
+$v2 = $vtmp;
+echo $v1,$v2;
+</code></pre>
+<h2 id="利用加减法"><a href="#利用加减法" class="headerlink" title="利用加减法"></a>利用加减法</h2><pre><code>$v1 = 10;
+$v2 = 20;
+$v1 = $v1 + $v2;
+$v2 = $v1- $v2;
+$v1 = $v1 - $v2;
+echo $v1,$v2;
+</code></pre>
+<h2 id="利用异或"><a href="#利用异或" class="headerlink" title="利用异或"></a>利用异或</h2><pre><code>$v1 = 10;    	 	//$v1=01010
+$v2 = 20;			//$v2=10100
+$v1 = $v1 ^ $v2;	//$v1=11110
+$v2 = $v1 ^ $v2;	//$v2=01010
+$v1 = $v1 ^ $v2;	//$v1=10100
+</code></pre>
+<p>用异或来获取两个数直接的不同点，在拥有不同点的情况下遇到任何一个数都推出另外一个数，本质上跟加减法类似</p>
+<h1 id="进制转换函数"><a href="#进制转换函数" class="headerlink" title="进制转换函数"></a>进制转换函数</h1><p>dec decimal 十进制 <br /><br>bin binary 二进制  <br /><br>oct octet 八进制 <br /><br>hex hex 十六进制 <br /><br>将两个进制的简写写在一起即为进制转换函数 <br /><br>比如：decbin() 十进制转换为二进制 <br /><br>dechex() 十进制转换为十六进制 <br /></p>
+<h1 id="php中的输出语句"><a href="#php中的输出语句" class="headerlink" title="php中的输出语句"></a>php中的输出语句</h1><h2 id="echo"><a href="#echo" class="headerlink" title="echo"></a>echo</h2><p>echo在输出时将输出的内容转换为字符串再输出，所以只能输出标量数据，在输出true和false时，会输出1和字符空。再输出数组时，会报错 </p>
+<h2 id="print"><a href="#print" class="headerlink" title="print()"></a>print()</h2><p>和echo一样,区别在于print()是一个函数，会返回值，而echo是语法结构，不会返回值</p>
+<h2 id="print-r"><a href="#print-r" class="headerlink" title="print_r()"></a>print_r()</h2><p>可以输出标量以及复合数据类型，但是布尔值还是只会输出1或者字符空</p>
+<h2 id="var-dump"><a href="#var-dump" class="headerlink" title="var_dump()"></a>var_dump()</h2><p>可以输出值以及其类型</p>
+<h2 id="sprintf"><a href="#sprintf" class="headerlink" title="sprintf()"></a>sprintf()</h2><p>用于格式化输出 <br /><br>语法： <br /><br>    sprintf(格式化字符串，变量1，变量2，…..) <br /><br>格式化占位符： <br /><br>%b	二进制 <br /><br>%d	十进制 <br /><br>%o	八进制 <br /><br>%f	浮点 <br /><br>%x	十六进制 <br /></p>
+<pre><code>&lt;?php
+    $v1 = 255;
+echo sprintf(&#39;二进制为:%b&lt;br /&gt;十进制为:%d&lt;br /&gt;八进制为:%o&lt;br /&gt;十六进制为:%x&#39;,$v1,$v1,$v1,$v1);
+</code></pre>
+<p>结果：</p>
+<pre><code>二进制为：11111111
+十进制为：255
+八进制为：377
+十六进制为：ff
+</code></pre>
+<p>%f用于输出浮点数，默认显示小数后6位，可以指定显示几位小数，比如指定显示两位：%.2f</p>
+<h1 id="PHP标签语法"><a href="#PHP标签语法" class="headerlink" title="PHP标签语法"></a>PHP标签语法</h1><p>当在HTML插入PHP代码的时候使用PHP标签语法 <br /></p>
+<pre><code>&lt;?php for($i=1;$i&lt;=4;$i++)&#123;?&gt;
+    &lt;span&gt;&lt;?php echo $i?&gt;&lt;/span&gt;
+&lt;?php &#125;?&gt; // 结尾 &#125; 前面必须要加空格，不然会报错
+
+// if标签语法
+// 标准语法
+&lt;?php if(...):?&gt;
+  // 语句体
+&lt;?php endif ?&gt;
+
+// 简化语法
+&lt;?php if(...)&#123;&gt;
+  // 语句体
+&lt;?php &#125;?&gt;
+
+//for标签语法
+// 标准语法
+&lt;?php for(...):?&gt;
+  // 循环体
+&lt;?php endif ?&gt;
+
+&lt;?php for(...)&#123;?&gt;
+  // 循环体
+&lt;?php &#125;?&gt;
+</code></pre>
+<h1 id="系统函数"><a href="#系统函数" class="headerlink" title="系统函数"></a>系统函数</h1><h2 id="日期和时间函数"><a href="#日期和时间函数" class="headerlink" title="日期和时间函数"></a>日期和时间函数</h2><p>time() <br /><br>    用于获取当前时间的时间戳，单位是秒。时间戳是从时间原点至现在的一个秒数。 <br /><br>    时间原点：计算机中规定从1970年1月1日0时0分0秒那一刻作为时间原点 <br /><br>microtime() <br /><br>    用于计算毫秒，毫秒永远小于1 <br /><br>date(format [,time]) <br /><br>    用于格式化时间信息 <br /><br>    format用于格式化时间的字符串，time表示需要格式化的时间戳 <br /><br>mktime(时，分，秒，月，日，年) <br /><br>    用于获取一个指定的时间戳  <br /><br>strtotime(string) <br /><br>    讲一个以字符形式描述的时间转换为时间戳，可以快速运算出例如密码更换策略等</p>
+<h1 id="遍历数组"><a href="#遍历数组" class="headerlink" title="遍历数组"></a>遍历数组</h1><h2 id="while-each-list遍历"><a href="#while-each-list遍历" class="headerlink" title="while-each-list遍历"></a>while-each-list遍历</h2><p>使用while、each、list语法结构来遍历数组 <br /></p>
+<h3 id="each"><a href="#each" class="headerlink" title="each"></a>each</h3><p>each(数组) <br /><br>    用于获取当前指针所指的键名与键值</p>
+<pre><code>$arr = [&#39;key&#39;=&gt;&#39;value&#39;];
+print_r(each($arr));
+Array
+(
+    [1] =&gt; value
+    [value] =&gt; value
+    [0] =&gt; key
+    [key] =&gt; key
+)
+</code></pre>
+<h3 id="list"><a href="#list" class="headerlink" title="list"></a>list</h3><p>list(); <br /><br>将数组中的索引元素赋值给变量列表中的变量。 <br /></p>
+<pre><code>$arr = [10,20,30,40];
+list($a, $b, $c, $d) = $arr;
+</code></pre>
+<p>用each+list遍历数组：</p>
+<pre><code>$arr = array(&#39;one&#39;=&gt;&#39;1&#39;, &#39;two&#39;=&gt;&#39;2&#39;, &#39;three&#39;=&gt;&#39;3&#39;);
+while(list($k,$v) = each($arr))&#123;
+  echo $k.&#39;=&gt;&#39;.$v,&#39;&lt;br/&gt;&#39;;
+&#125;
+</code></pre>
+<p>先将each($arr)的值赋给list($k,$v)，然后拿list($k,$v)作为表达式，即$k,当遍历有值的时候，$k&#x3D;true,当遍历到最后的null的时候$k&#x3D;flase</p>
+<h2 id="foreach-list遍历"><a href="#foreach-list遍历" class="headerlink" title="foreach-list遍历"></a>foreach-list遍历</h2><pre><code>// php&gt;5.6
+// 注意：list只能使用索引数组
+$arr = [
+  [1,2,3,4]
+];
+
+foreach($arr as list($a, $b, $c, $d))&#123;
+  echo $a,$b,$c,$d;
+&#125;
+</code></pre>
+<h1 id="数组算法"><a href="#数组算法" class="headerlink" title="数组算法"></a>数组算法</h1><h2 id="排序法"><a href="#排序法" class="headerlink" title="排序法"></a>排序法</h2><h3 id="冒泡排序法"><a href="#冒泡排序法" class="headerlink" title="冒泡排序法"></a>冒泡排序法</h3><p>注意内循环的条件与外循环的条件 <br /><br>外循环中，由于是交换两个数，只需要循环数组数-1即可 <br /><br>内循环中，由于每一个循环都会把最大值放到最右边，所以最右边的界限需要不断改变 <br /></p>
+<pre><code>$arr = [10,5,100,255,64,1];
+$len = count($arr);
+for($i=1;$i&lt;$len ;$i++)&#123;
+    for($j=0;$j&lt;$len-$i;$j++)&#123;
+        if($arr[$j]&gt;$arr[$j+1])&#123;
+            $temp = $arr[$j];
+            $arr[$j] = $arr[$j+1];
+            $arr[$j+1] = $temp;
+        &#125;
+    &#125;
+&#125;
+foreach($arr as $value)&#123;
+    echo &#39;[&#39;.$value.&#39;],&#39;;
+&#125;
+</code></pre>
+<h3 id="插入排序法"><a href="#插入排序法" class="headerlink" title="插入排序法"></a>插入排序法</h3><p>1、从第一个元素开始，第一个元素已经被排列 <br /><br>2、在取下一个元素，将其和已经排序的元素中从后往前比较 <br /><br>3、如果以排列元素大于新元素，那么交换两者位置 <br /><br>4、重复步骤3，直到以排序元素小于或者等于新元素 <br /><br>5、重复2-4步骤 <br /></p>
+<pre><code>$arr = [10,5,100,255,64,1];
+for($i=1;$i&lt;count($arr);$i++)&#123;
+    $tmp = $arr[$i];
+    for($j=$i-1;$j&gt;=0;$j--)&#123;
+        if($arr[$j]&gt;$arr[$j+1])&#123;
+            $arr[$j+1] = $arr[$j];
+            $arr[$j] = $tmp;
+        &#125;
+    &#125;
+&#125;	
+print_r($arr);
+</code></pre>
+<h2 id="查找算法"><a href="#查找算法" class="headerlink" title="查找算法"></a>查找算法</h2><h3 id="顺序查找法"><a href="#顺序查找法" class="headerlink" title="顺序查找法"></a>顺序查找法</h3><pre><code>unction searchArr($arr, $search)&#123;
+    for($i=0;$i&lt;=count($arr);$i++)&#123;
+        if($arr[$i]==$search)&#123;
+            echo $search;
+            break;
+        &#125;
+    &#125;
+&#125;
+
+$arr = [10,5,100,255,64,1];
+searchArr($arr, &#39;64&#39;);
+</code></pre>
+<h3 id="二分查找法"><a href="#二分查找法" class="headerlink" title="二分查找法"></a>二分查找法</h3><p>前提为数组有序并不重复 <br /><br>可以简单的把数组想象成一个轴，对轴进行二分 <br /></p>
+<pre><code>$arr = [1,2,3,4,5,6,12,15,17,18,32,55,73,74,89];
+
+
+function searchArr($arr, $search)&#123;
+    $left = 0;
+    $right = count($arr);
+    while($left &lt;= $right)&#123;
+        $mid = ceil(($left + $right) / 2);
+        if($search &gt; $arr[$mid])&#123;
+            $left = $mid + 1;
+        &#125;elseif($search &lt; $arr[$mid])&#123;
+            $right = $mid - 1;
+        &#125;else&#123;
+            return &#39;yes&#39;;
+        &#125;
+    &#125;
+    return &#39;no,not exists&#39;;
+&#125;
+echo searchArr($arr, 15);
+</code></pre>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://perfect-time.xyz">LINK</a>
+            <p>原文链接: <a href="https://perfect-time.xyz/2018/07/18/phpstudy-2/">https://perfect-time.xyz/2018/07/18/phpstudy-2/</a>
+            <p>发表日期: <a href="https://perfect-time.xyz/2018/07/18/phpstudy-2/">July 18th 2018, 10:06:44 am</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/07/18/phpstudy-1/" title= php学习笔记-基础部分 >
+                    <div class="nextTitle">php学习笔记-基础部分</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/07/13/dvwa-medium/" title= 基于DVWA的web漏洞原理-medium >
+                    <div class="prevTitle">基于DVWA的web漏洞原理-medium</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+<div id="container"></div>
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+    var gitment = new Gitment({
+        // id: "php中一些比较实用的技巧", // 可选。默认为 location.href
+        owner: 'a1055883471',
+        repo: 'a1055883471.github.io',
+        oauth: {
+            client_id: '4514a03a15dc92fbdd90',
+            client_secret: 'cdffbd6889428a82f7232c85f4ccd95cf70b2211',
+        },
+    })
+    gitment.render('container')
+
+</script>
+
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mail.qq.com/cgi-bin/qm_share?t=qm_mailme&email=gPf3966ytbewsMDx8a7j7_0" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="//github.com/a1055883471" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="/assets/qrcode_1530688616677.jpg" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%A4%E4%B8%AA%E5%8F%98%E9%87%8F%E4%BA%92%E6%8D%A2%E4%BD%8D%E7%BD%AE"><span class="toc-number">1.</span> <span class="toc-text">两个变量互换位置</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%80%9F%E5%8A%A9%E7%AC%AC%E4%B8%89%E4%B8%AA%E5%8F%98%E9%87%8F"><span class="toc-number">1.1.</span> <span class="toc-text">借助第三个变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%8A%A0%E5%87%8F%E6%B3%95"><span class="toc-number">1.2.</span> <span class="toc-text">利用加减法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E5%BC%82%E6%88%96"><span class="toc-number">1.3.</span> <span class="toc-text">利用异或</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%BF%9B%E5%88%B6%E8%BD%AC%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">进制转换函数</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#php%E4%B8%AD%E7%9A%84%E8%BE%93%E5%87%BA%E8%AF%AD%E5%8F%A5"><span class="toc-number">3.</span> <span class="toc-text">php中的输出语句</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#echo"><span class="toc-number">3.1.</span> <span class="toc-text">echo</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#print"><span class="toc-number">3.2.</span> <span class="toc-text">print()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#print-r"><span class="toc-number">3.3.</span> <span class="toc-text">print_r()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#var-dump"><span class="toc-number">3.4.</span> <span class="toc-text">var_dump()</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sprintf"><span class="toc-number">3.5.</span> <span class="toc-text">sprintf()</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#PHP%E6%A0%87%E7%AD%BE%E8%AF%AD%E6%B3%95"><span class="toc-number">4.</span> <span class="toc-text">PHP标签语法</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0"><span class="toc-number">5.</span> <span class="toc-text">系统函数</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E5%92%8C%E6%97%B6%E9%97%B4%E5%87%BD%E6%95%B0"><span class="toc-number">5.1.</span> <span class="toc-text">日期和时间函数</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84"><span class="toc-number">6.</span> <span class="toc-text">遍历数组</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#while-each-list%E9%81%8D%E5%8E%86"><span class="toc-number">6.1.</span> <span class="toc-text">while-each-list遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#each"><span class="toc-number">6.1.1.</span> <span class="toc-text">each</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#list"><span class="toc-number">6.1.2.</span> <span class="toc-text">list</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#foreach-list%E9%81%8D%E5%8E%86"><span class="toc-number">6.2.</span> <span class="toc-text">foreach-list遍历</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E7%BB%84%E7%AE%97%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">数组算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E6%B3%95"><span class="toc-number">7.1.</span> <span class="toc-text">排序法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%92%E6%B3%A1%E6%8E%92%E5%BA%8F%E6%B3%95"><span class="toc-number">7.1.1.</span> <span class="toc-text">冒泡排序法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F%E6%B3%95"><span class="toc-number">7.1.2.</span> <span class="toc-text">插入排序法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E6%89%BE%E7%AE%97%E6%B3%95"><span class="toc-number">7.2.</span> <span class="toc-text">查找算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%BA%E5%BA%8F%E6%9F%A5%E6%89%BE%E6%B3%95"><span class="toc-number">7.2.1.</span> <span class="toc-text">顺序查找法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E5%88%86%E6%9F%A5%E6%89%BE%E6%B3%95"><span class="toc-number">7.2.2.</span> <span class="toc-text">二分查找法</span></a></li></ol></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 17
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2023 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/10</span><a class="archive-post-title" href= "/2023/08/10/Intranet_attack/" >内网攻防</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/geeksycsec/" >极客大挑战第⑨季-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">12/06</span><a class="archive-post-title" href= "/2018/12/06/shiyan8/" >实验吧-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/26</span><a class="archive-post-title" href= "/2018/10/26/CGCTF-wp/" >cgctf-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/22</span><a class="archive-post-title" href= "/2018/10/22/bugku-wp/" >bugku-web-wp</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/18</span><a class="archive-post-title" href= "/2018/10/18/python-auto-script/" >python自动化脚本学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">10/08</span><a class="archive-post-title" href= "/2018/10/08/PKIstudy/" >PKI学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/07</span><a class="archive-post-title" href= "/2018/09/07/python/" >python学习笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/02</span><a class="archive-post-title" href= "/2018/08/02/sql/" >sql注入笔记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/29</span><a class="archive-post-title" href= "/2018/07/29/phpstudy-3/" >php学习笔记-核心编程</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/27</span><a class="archive-post-title" href= "/2018/07/27/sqli-labs/" >sqli-libs解题思路-Basic Challenges</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/19</span><a class="archive-post-title" href= "/2018/07/19/dvwa-low/" >基于DVWA的web漏洞原理-low</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-1/" >php学习笔记-基础部分</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/2018/07/18/phpstudy-2/" >php中一些比较实用的技巧</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-medium/" >基于DVWA的web漏洞原理-medium</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/13</span><a class="archive-post-title" href= "/2018/07/13/dvwa-high/" >基于DVWA的web漏洞原理-high</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/05</span><a class="archive-post-title" href= "/2018/07/05/problem/" >搭博客过程中遇到的一些问题</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="内网攻防"><span class="iconfont-archer">&#xe606;</span>内网攻防</span>
+    
+        <span class="sidebar-tag-name" data-tags="wp"><span class="iconfont-archer">&#xe606;</span>wp</span>
+    
+        <span class="sidebar-tag-name" data-tags="dvwa"><span class="iconfont-archer">&#xe606;</span>dvwa</span>
+    
+        <span class="sidebar-tag-name" data-tags="PKI"><span class="iconfont-archer">&#xe606;</span>PKI</span>
+    
+        <span class="sidebar-tag-name" data-tags="php学习"><span class="iconfont-archer">&#xe606;</span>php学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="脚本"><span class="iconfont-archer">&#xe606;</span>脚本</span>
+    
+        <span class="sidebar-tag-name" data-tags="sql注入"><span class="iconfont-archer">&#xe606;</span>sql注入</span>
+    
+        <span class="sidebar-tag-name" data-tags="sqli-libs"><span class="iconfont-archer">&#xe606;</span>sqli-libs</span>
+    
+        <span class="sidebar-tag-name" data-tags="python学习"><span class="iconfont-archer">&#xe606;</span>python学习</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="内网"><span class="iconfont-archer">&#xe60a;</span>内网</span>
+    
+        <span class="sidebar-category-name" data-categories="ctf"><span class="iconfont-archer">&#xe60a;</span>ctf</span>
+    
+        <span class="sidebar-category-name" data-categories="web安全"><span class="iconfont-archer">&#xe60a;</span>web安全</span>
+    
+        <span class="sidebar-category-name" data-categories="笔记"><span class="iconfont-archer">&#xe60a;</span>笔记</span>
+    
+        <span class="sidebar-category-name" data-categories="其他"><span class="iconfont-archer">&#xe60a;</span>其他</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "LINK"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    </body>
+</html>
+
+
